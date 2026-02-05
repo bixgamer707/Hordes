@@ -1,0 +1,285 @@
+# ============================================
+# HORDES - Mensajes en Español (es_es.yml)
+# ============================================
+# Todos los mensajes del plugin en un solo lugar
+# Soporta códigos de color (&a, &c, etc.) y colores HEX (#FF5733)
+# Placeholders: {0}, {1}, {2} se reemplazan con valores
+# PlaceholderAPI: %placeholder% funciona automáticamente
+# ============================================
+
+Messages:
+
+  # ============================================
+  # MENSAJES DE ARENA
+  # ============================================
+  arena:
+    # Mensajes de Unión/Salida
+    player-joined: "&a{0} &7se ha unido a la arena! &e({1}/{2})"
+    already-joined: "&c¡Ya estás en una arena!"
+    player-left: "&c{0} &7ha abandonado la arena. &e({1}/{2})"
+
+    # Mensajes de Estado
+    not-joinable: "&cEsta arena no está disponible en este momento."
+    disabled: "&cEsta arena está desactivada actualmente."
+    full: "&c¡Esta arena está llena!"
+    no-permission: "&cNo tienes permiso para unirte a esta arena."
+
+    # Mensajes de Cuenta Atrás
+    countdown: "&eLa arena comienza en &a{0} &esegundos..."
+    countdown-cancelled: "&cCuenta atrás cancelada - no hay suficientes jugadores."
+
+    # Mensajes de Inicio/Fin
+    started: "&a&l¡La arena ha comenzado! ¡Buena suerte!"
+    victory: "&a&l✔ ¡VICTORIA! &7Completaste la arena en &e{0}s"
+    defeat: "&c&l✘ ¡DERROTA! &7Sobreviviste por &e{0}s"
+
+    # Mensajes de Oleada
+    wave-starting: "&e&lOleada {0}/{1} &7está comenzando..."
+    wave-completed: "&a&l¡Oleada {0} completada! &7(&e{1}s&7)"
+    all-spawned: "&7¡Todos los enemigos han aparecido para esta oleada!"
+    progress: "&e{0}/{1} &7enemigos restantes"
+    next-wave-in: "&eSiguiente oleada en &a{0} &esegundos..."
+    waiting-for-progression: "&e¡Todos los enemigos derrotados! &aInteractúa con el botón para continuar."
+
+    # Mensajes de Muerte del Jugador
+    player-died: "&c¡{0} ha muerto! &e({1} &7jugadores restantes&e)"
+    death-kicked: "&cHas sido eliminado de la arena."
+    death-spectate: "&eAhora estás espectando. Usa &a/hordes leave &epara salir."
+    death-rejoin: "&ePuedes volver a unirte en &a{0} &esegundos."
+    death-respawned: "&a¡Has reaparecido!"
+
+    # Mensajes de Enfriamiento
+    cooldown: "&cDebes esperar &e{0} &cantes de unirte a otra arena."
+
+    # Mensajes de Restricción
+    cannot-drop-items: "&c¡No puedes soltar objetos en la arena!"
+    cannot-pickup-items: "&c¡No puedes recoger objetos en la arena!"
+    cannot-teleport: "&c¡No puedes teletransportarte mientras estás en una arena!"
+    cannot-use-command: "&c¡No puedes usar ese comando en la arena!"
+
+  # ============================================
+  # MENSAJES DE OLEADA
+  # ============================================
+  wave:
+    starting: "&e&l¡Oleada {0} &7está comenzando..."
+    completed: "&a&l¡Oleada {0} &7completada!"
+    all-spawned: "&7¡Todos los enemigos han aparecido!"
+    next-wave-in: "&eSiguiente oleada en &a{0} &esegundos..."
+    waiting-for-progression: "&e¡Derrota a todos los enemigos para continuar!"
+
+  # ============================================
+  # MENSAJES DE COMANDOS
+  # ============================================
+  commands:
+    # Generales
+    no-permission: "&cNo tienes permiso para usar este comando."
+    player-only: "&cEste comando solo puede ser usado por jugadores."
+    invalid-usage: "&c¡Uso inválido! Usa: {0}"
+    arena-not-found: "&cArena '&e{0}&c' no encontrada."
+
+    # Ayuda - Lista optimizada
+    help:
+      - "&e&l▬▬▬▬▬▬▬▬ &6&lComandos de Hordes &e&l▬▬▬▬▬▬▬▬"
+      - "&a/hordes join <arena> &7- Unirse a una arena"
+      - "&a/hordes leave &7- Abandonar la arena actual"
+      - "&a/hordes list &7- Listar todas las arenas"
+      - "&a/hordes info <arena> &7- Información de la arena"
+      - "&a/hordes stats &7- Ver tus estadísticas"
+      - "&a/hordes top [categoría] &7- Ver clasificaciones"
+      - "&a/hordes gui &7- Abrir GUI de selección de arena"
+      - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+    # Comando Join
+    join-usage: "&cUso: /hordes join <arena>"
+    join-success: "&a¡Te has unido a la arena exitosamente!"
+    join-failed: "&cNo se pudo unir a la arena. Verifica los requisitos."
+
+    # Comando Leave
+    leave-not-in-arena: "&c¡No estás en una arena!"
+    leave-success: "&aHas abandonado la arena."
+
+    # Comando List
+    list-empty: "&cNo hay arenas disponibles."
+    list-header: "&e&l--- Arenas Disponibles ---"
+    list-format: "&7- &e{0} &7({1}) - &a{2}&7/&a{3} &7jugadores"
+
+    # Comando Info - Lista optimizada
+    info-usage: "&cUso: /hordes info <arena>"
+    info:
+      - "&e&l▬▬▬▬▬▬▬▬ &6Arena: {0} &e▬▬▬▬▬▬▬▬"
+      - "&7Nombre Mostrado: &e{1}"
+      - "&7Estado: {2}"
+      - "&7Jugadores: &a{3}&7/&a{4}"
+      - "&7Oleadas Totales: &e{5}"
+      - "&7Modo: &e{6}"
+      - "&7Progresión: &e{7}"
+      - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+    # Comando Stats - Lista optimizada
+    stats-no-data: "&cNo se encontraron datos de estadísticas."
+    stats-disabled:
+      - "&c✘ El seguimiento de estadísticas está desactivado"
+      - "&7Pide a un administrador que lo active en config.yml"
+    stats:
+      - "&e&l▬▬▬▬▬▬▬▬ &6&lTus Estadísticas &e&l▬▬▬▬▬▬▬▬"
+      - ""
+      - "&e❖ Estadísticas Globales:"
+      - "  &7Completaciones: &a{0}"
+      - "  &7Intentos: &e{1}"
+      - "  &7Tasa de Victoria: &a{2}%"
+      - ""
+      - "&e❖ Estadísticas de Combate:"
+      - "  &7Asesinatos: &a{3}"
+      - "  &7Muertes: &c{4}"
+      - "  &7Ratio K/D: &e{5}"
+      - ""
+      - "&e❖ Récords Personales:"
+      - "  &7Oleada Más Alta: &a{6}"
+      - "  &7Tiempo Más Rápido: &e{7}"
+      - "  &7Tiempo Total de Juego: &e{8}"
+      - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+    # Comando Top - Lista optimizada
+    top-invalid-category: "&cCategoría inválida. Usa: completions, kills, speed, winrate"
+    top-no-data: "  &7Aún no hay datos disponibles"
+    top-header:
+      - "&e&l▬▬▬▬▬▬▬▬ &6&lTop {0} - {1} &e&l▬▬▬▬▬▬▬▬"
+      - ""
+    top-footer: "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+  # ============================================
+  # COMANDOS DE ADMINISTRADOR - Lista optimizada
+  # ============================================
+  admin:
+    # Ayuda
+    help:
+      - "&c&l▬▬▬▬▬▬▬ &4&lComandos de Admin de Hordes &c&l▬▬▬▬▬▬▬"
+      - "&a/hordesadmin reload &7- Recargar configuraciones"
+      - "&a/hordesadmin create <arena> &7- Asistente para crear arena"
+      - "&a/hordesadmin delete <arena> &7- Eliminar arena"
+      - "&a/hordesadmin setspawn <arena> <tipo> &7- Establecer punto de aparición"
+      - "&a/hordesadmin forcestart <arena> &7- Forzar inicio de arena"
+      - "&a/hordesadmin forcestop <arena> &7- Forzar parada de arena"
+      - "&a/hordesadmin tp <arena> &7- Teletransportarse a la arena"
+      - "&a/hordesadmin debug &7- Mostrar información de depuración"
+      - "&c&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+    # Debug - Lista optimizada
+    debug:
+      - "&e&l--- Información de Depuración ---"
+      - "&7Arenas cargadas: &e{0}"
+      - "&7Arenas activas: &e{1}"
+      - "&7Enfriamientos activos: &e{2}"
+      - "&7Economía habilitada: &e{3}"
+      - "&7MythicMobs habilitado: &e{4}"
+
+    # Recargar
+    admin-reload: "&a¡Configuración recargada exitosamente!"
+    admin-reload-failed: "&cError al recargar la configuración. Revisa la consola para más detalles."
+
+    # Crear Arena - Lista optimizada
+    create-usage: "&cUso: /hordesadmin create <arena>"
+    create-already-exists: "&c¡La arena '&e{0}&c' ya existe!"
+    create:
+      - "&a&l✔ ¡Arena '&e{0}&a&l' creada exitosamente!"
+      - ""
+      - "&e&l❖ Siguientes Pasos:"
+      - "&71. Edita &earenas.yml &7para configurar la arena"
+      - "&72. Establece puntos de aparición:"
+      - "   &a/hordesadmin setspawn {0} lobby"
+      - "   &a/hordesadmin setspawn {0} arena"
+      - "   &a/hordesadmin setspawn {0} exit"
+      - "&73. Configura oleadas en &emobs.yml"
+      - "&74. Recarga: &a/hordesadmin reload"
+      - ""
+      - "&e&l❖ Plantillas Disponibles:"
+      - "&7Elige una plantilla en &earenas.yml &7o crea una personalizada"
+
+    # Eliminar Arena
+    delete-usage: "&cUso: /hordesadmin delete <arena>"
+    delete-stopped: "&eArena detenida antes de la eliminación."
+    delete-instruction: "&eEscribe &a/hordesadmin delete {0} confirm &epara confirmar la eliminación."
+
+    # SetSpawn - Lista optimizada
+    setspawn-usage: "&cUso: /hordesadmin setspawn <arena> <lobby|arena|exit>"
+    setspawn-arena-not-found: "&cArena '&e{0}&c' no encontrada."
+    setspawn-invalid-type: "&cTipo inválido. Usa: lobby, arena o exit"
+    setspawn:
+      - "&a&l✔ ¡Punto de aparición establecido!"
+      - ""
+      - "&7Arena: &e{0}"
+      - "&7Tipo: &e{1}"
+      - "&7Ubicación:"
+      - "  &7Mundo: &e{2}"
+      - "  &7X: &e{3}"
+      - "  &7Y: &e{4}"
+      - "  &7Z: &e{5}"
+      - "  &7Yaw: &e{6}"
+      - "  &7Pitch: &e{7}"
+      - ""
+      - "&e&l⚠ Importante:"
+      - "&7Esto se guardó en &earenas.yml"
+      - "&7Ejecuta &a/hordesadmin reload &7para aplicar cambios"
+    setspawn-failed: "&cError al guardar el punto de aparición. Revisa la consola."
+    setspawn-check-console: "&cOcurrió un error. Revisa la consola para más detalles."
+
+    # ForceStart
+    forcestart-usage: "&cUso: /hordesadmin forcestart <arena>"
+    forcestart-not-waiting: "&cLa arena no está en estado ESPERANDO."
+    forcestart-no-players: "&cNo hay jugadores en la arena para comenzar."
+    forcestart-starting: "&aForzando inicio de la arena..."
+    forcestart-note: "&e&l⚠ Nota: Esto omite el requisito de jugadores mínimos"
+    forcestart-players: "&7Jugadores en la arena: &e{0}"
+
+    # ForceStop
+    forcestop-usage: "&cUso: /hordesadmin forcestop <arena>"
+
+    # Teleport
+    tp-usage: "&cUso: /hordesadmin tp <arena>"
+    tp-success: "&aTeletransportado a la arena &e{0}"
+
+  # ============================================
+  # MENSAJES DE ESTADÍSTICAS
+  # ============================================
+  statistics:
+    enabled: "&aSeguimiento de estadísticas habilitado"
+    disabled: "&cSeguimiento de estadísticas deshabilitado"
+    data-saved: "&aEstadísticas guardadas exitosamente"
+    data-loaded: "&aEstadísticas cargadas exitosamente"
+
+  # ============================================
+  # MENSAJES DE CLASIFICACIONES
+  # ============================================
+  leaderboard:
+    disabled: "&cLas clasificaciones están deshabilitadas"
+    position: "{0} &7#{1} &f{2} &7- &e{3}"
+    completions: "Completaciones"
+    kills: "Asesinatos"
+    speed: "Velocidad"
+    winrate: "Tasa de Victoria"
+
+  # ============================================
+  # MENSAJES DE RECOMPENSAS
+  # ============================================
+  rewards:
+    completion: "&a&l✔ Recompensa de Completación: &e+${0}"
+    progressive: "&a&l✔ Recompensa Oleada {0}: &e+${1}"
+    money: "&a&l+${0}"
+    items: "&a&l+{0} objetos"
+
+  # ============================================
+  # MENSAJES DE ERROR
+  # ============================================
+  errors:
+    generic: "&cOcurrió un error. Por favor contacta a un administrador."
+    config-error: "&cError de configuración. Revisa la consola para más detalles."
+    plugin-error: "&cOcurrió un error del plugin. Por favor revisa la consola."
+
+  # ============================================
+  # MENSAJES DE INFORMACIÓN
+  # ============================================
+  info:
+    plugin-enabled: "&a¡Hordes ha sido activado!"
+    plugin-disabled: "&c¡Hordes ha sido desactivado!"
+    arena-created: "&aArena creada: {0}"
+    arena-deleted: "&cArena eliminada: {0}"

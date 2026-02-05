@@ -1,0 +1,581 @@
+# ==========================================
+# HORDES - GUIs Configuration v2.0
+# ==========================================
+# EVERYTHING is configurable here:
+# - Item positions (slot, ranges, patterns)
+# - Materials, amounts, CustomModelData
+# - Names, lore, colors
+# - Actions, sounds, behaviors
+# ==========================================
+
+guis:
+  
+  # ==========================================
+  # ARENA SELECTION GUI
+  # ==========================================
+  arena-selection:
+    # Basic settings
+    title: "&6&lSelect an Arena"
+    rows: 6  # 1-6 rows
+    
+    # Sounds
+    sounds:
+      open: "UI_BUTTON_CLICK"
+      close: "UI_BUTTON_CLICK"
+      page: "ITEM_BOOK_PAGE_TURN"
+    
+    # Items in the GUI
+    items:
+      # Border filler
+      border:
+        slot: "border"  # Special: border, all, corners, or range like "0-8"
+        material: "GRAY_STAINED_GLASS_PANE"
+        name: " "
+        amount: 1
+        hide-attributes: true
+      
+      # Close button
+      close-button:
+        slot: 49
+        material: "BARRIER"
+        name: "&c&l✖ Close"
+        lore:
+          - "&7Click to close this menu"
+        action: "close"
+        glow: false
+      
+      # Info/Help item
+      info:
+        slot: 4
+        material: "BOOK"
+        name: "&e&lℹ How to Use"
+        lore:
+          - "&7Left-click an arena to &ajoin"
+          - ""
+          - "&7Total Arenas: &e{arena_count}"
+        amount: 1
+      
+      # Previous page
+      previous-page:
+        slot: 45
+        material: "ARROW"
+        name: "&e← Previous Page"
+        lore:
+          - "&7Page &e{current_page}&7/&e{total_pages}"
+        action: "previous-page"
+        # Only shown if there's a previous page (handled in code)
+      
+      # Next page
+      next-page:
+        slot: 53
+        material: "ARROW"
+        name: "&eNext Page →"
+        lore:
+          - "&7Page &e{current_page}&7/&e{total_pages}"
+        action: "next-page"
+      
+      # Arena items (dynamically generated in slots 10-43)
+      # Configuration for how arena items should look:
+      arena-item:
+        # This is a template, actual items are generated dynamically
+        material-waiting: "GREEN_WOOL"
+        material-starting: "YELLOW_WOOL"
+        material-active: "ORANGE_WOOL"
+        material-ending: "RED_WOOL"
+        material-disabled: "GRAY_WOOL"
+        
+        name: "{arena_name}"
+        lore:
+          - "&7Status: {arena_status}"
+          - "&7Players: &e{current_players}&7/&e{max_players}"
+          - "&7Waves: &e{total_waves}"
+          - "&7Current Wave: &e{current_wave}"
+          - ""
+          - "&a▸ Left-click to join"
+          - "&e▸ Right-click for info"
+        
+        # Actions are handled in code (join, info, etc.)
+
+  # ==========================================
+  # ARENA INFO GUI
+  # ==========================================
+  arena-info:
+    title: "&6&lArena: {arena_name}"
+    rows: 5
+    
+    sounds:
+      open: "UI_BUTTON_CLICK"
+      close: "UI_BUTTON_CLICK"
+    
+    items:
+      # Border
+      border:
+        slot: "border"
+        material: "GRAY_STAINED_GLASS_PANE"
+        name: " "
+      
+      # Arena status
+      status:
+        slot: 4
+        material: "BEACON"
+        name: "&e&lArena Status"
+        lore:
+          - "&7Name: &e{arena_name}"
+          - "&7State: {arena_state}"
+          - "&7Players: &e{current_players}&7/&e{max_players}"
+          - ""
+          - "{joinable_status}"
+        glow: true
+      
+      # General info
+      general-info:
+        slot: 10
+        material: "PAPER"
+        name: "&e&lGeneral Information"
+        lore:
+          - "&7Min Players: &e{min_players}"
+          - "&7Max Players: &e{max_players}"
+          - "&7Mode: &e{mode}"
+          - "&7Progression: &e{progression}"
+        amount: 1
+      
+      # Wave info
+      wave-info:
+        slot: 12
+        material: "IRON_SWORD"
+        name: "&c&lWave Information"
+        lore:
+          - "&7Total Waves: &e{total_waves}"
+          - "&7Wave Delay: &e{wave_delay}s"
+          - "&7Current Wave: &a{current_wave}"
+        amount: 1
+      
+      # Rewards
+      rewards:
+        slot: 14
+        material: "DIAMOND"
+        name: "&6&lRewards"
+        lore:
+          - "&7Type: &e{reward_type}"
+          - "&7Money: &a${money_reward}"
+          - "&7Items: &e{item_count} items"
+        amount: 1
+      
+      # Difficulty
+      difficulty:
+        slot: 16
+        material: "REDSTONE"  # Changes dynamically
+        name: "&e&lDifficulty"
+        lore:
+          - "&7Difficulty: {difficulty}"
+          - "&7Est. Time: &e~{estimated_time} min"
+        amount: 1
+      
+      # Players list
+      players-list:
+        slot: 22
+        material: "PLAYER_HEAD"
+        skull-owner: "{player}"  # Shows player's own head
+        name: "&b&lPlayers in Arena"
+        lore:
+          - "&7Players: &e{current_players}"
+          - ""
+          - "{player_list}"
+          - ""
+          - "&eClick to refresh"
+        action: "refresh"
+      
+      # Join button
+      join-button:
+        slot: 32
+        material: "EMERALD"
+        name: "&a&l▶ JOIN ARENA"
+        lore:
+          - "&7Click to join this arena!"
+        action: "join-arena:{arena_id}"
+        glow: true
+      
+      # Back button
+      back:
+        slot: 39
+        material: "ARROW"
+        name: "&c← Back"
+        lore:
+          - "&7Return to arena selection"
+        action: "back"
+      
+      # Close
+      close:
+        slot: 41
+        material: "BARRIER"
+        name: "&c&l✖ Close"
+        action: "close"
+
+  # ==========================================
+  # STATISTICS GUI
+  # ==========================================
+  statistics:
+    title: "&6&lYour Statistics"
+    rows: 5
+    
+    items:
+      border:
+        slot: "border"
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: " "
+      
+      # Player head
+      player-head:
+        slot: 4
+        material: "PLAYER_HEAD"
+        skull-owner: "{player}"
+        name: "&e&l{player}'s Statistics"
+        lore:
+          - "&7Rank: &e{rank}"
+          - "&7Member since: &e{member_since}"
+      
+      # Global stats
+      global-stats:
+        slot: 11
+        material: "BOOK"
+        name: "&e&lGlobal Statistics"
+        lore:
+          - "&7Completions: &a{completions}"
+          - "&7Attempts: &e{attempts}"
+          - "&7Win Rate: &a{win_rate}%"
+          - ""
+          - "&7Arenas Completed: &e{arenas_completed}"
+        amount: 1
+        custom-model-data: 0  # Optional: for resource packs
+      
+      # Combat stats
+      combat-stats:
+        slot: 13
+        material: "DIAMOND_SWORD"
+        name: "&c&lCombat Statistics"
+        lore:
+          - "&7Total Kills: &a{total_kills}"
+          - "&7Total Deaths: &c{total_deaths}"
+          - "&7K/D Ratio: &e{kd_ratio}"
+          - ""
+          - "&7Longest Killstreak: &a{longest_killstreak}"
+        amount: 1
+        glow: false
+        unbreakable: true
+        hide-attributes: true
+      
+      # Personal records
+      records:
+        slot: 15
+        material: "GOLD_INGOT"
+        name: "&6&lPersonal Records"
+        lore:
+          - "&7Highest Wave: &a{highest_wave}"
+          - "&7Fastest Time: &e{fastest_time}"
+          - "&7Most Kills (1 Arena): &a{most_kills}"
+          - ""
+          - "&7Total Playtime: &e{total_playtime}"
+        amount: 1
+        glow: true
+      
+      # Per-arena stats button
+      arena-stats:
+        slot: 30
+        material: "WRITABLE_BOOK"
+        name: "&b&lPer-Arena Statistics"
+        lore:
+          - "&7Click to view detailed stats"
+          - "&7for each arena"
+        action: "gui:arena-statistics"
+      
+      # Leaderboard button
+      leaderboard:
+        slot: 32
+        material: "GOLDEN_APPLE"
+        name: "&e&lView Leaderboards"
+        lore:
+          - "&7See top players"
+        action: "gui:leaderboard"
+        glow: true
+      
+      # Close
+      close:
+        slot: 40
+        material: "BARRIER"
+        name: "&c&l✖ Close"
+        action: "close"
+
+  # ==========================================
+  # LEADERBOARD GUI
+  # ==========================================
+  leaderboard:
+    title: "&6&lLeaderboards"
+    rows: 6
+    
+    items:
+      border:
+        slot: "border"
+        material: "YELLOW_STAINED_GLASS_PANE"
+        name: " "
+      
+      # Category buttons
+      category-completions:
+        slot: 10
+        material: "EMERALD"
+        name: "&a&lTop Completions"
+        lore:
+          - "&7View players with most"
+          - "&7arena completions"
+          - ""
+          - "&eClick to view"
+        action: "category:completions"
+      
+      category-kills:
+        slot: 12
+        material: "DIAMOND_SWORD"
+        name: "&c&lTop Kills"
+        lore:
+          - "&7View players with most kills"
+          - ""
+          - "&eClick to view"
+        action: "category:kills"
+      
+      category-speed:
+        slot: 14
+        material: "GOLDEN_BOOTS"
+        name: "&e&lFastest Times"
+        lore:
+          - "&7View fastest completion times"
+          - ""
+          - "&eClick to view"
+        action: "category:speed"
+        glow: true
+      
+      category-winrate:
+        slot: 16
+        material: "GOLD_INGOT"
+        name: "&6&lTop Win Rates"
+        lore:
+          - "&7View highest win rates"
+          - ""
+          - "&eClick to view"
+        action: "category:winrate"
+      
+      # Player entries (slots 19-43 dynamically generated)
+      player-entry:
+        # Template for leaderboard entries
+        material-1st: "GOLD_BLOCK"
+        material-2nd: "IRON_BLOCK"
+        material-3rd: "COPPER_BLOCK"
+        material-other: "PLAYER_HEAD"
+        
+        name: "{position_medal} &7#{position} &f{player_name}"
+        lore:
+          - "&7{stat_name}: &e{stat_value}"
+          - ""
+          - "&7Last seen: &e{last_seen}"
+        skull-owner: "{player_name}"
+      
+      # Your position
+      your-position:
+        slot: 49
+        material: "PLAYER_HEAD"
+        skull-owner: "{player}"
+        name: "&e&lYour Position"
+        lore:
+          - "&7Rank: &e#{your_rank}"
+          - "&7{stat_name}: &e{your_value}"
+        glow: true
+      
+      # Close
+      close:
+        slot: 45
+        material: "BARRIER"
+        name: "&c&l✖ Close"
+        action: "close"
+      
+      # Refresh
+      refresh:
+        slot: 53
+        material: "LIME_DYE"
+        name: "&a&l⟳ Refresh"
+        lore:
+          - "&7Update leaderboard data"
+        action: "refresh"
+
+  # ==========================================
+  # KIT SELECTION GUI
+  # ==========================================
+  kit-selection:
+    title: "&6&lSelect Your Kit"
+    rows: 5
+    
+    items:
+      border:
+        slot: "border"
+        material: "BLUE_STAINED_GLASS_PANE"
+        name: " "
+      
+      # Kit items (dynamically generated in slots 10-34)
+      kit-item:
+        # Template for kit items
+        name: "&e&l{kit_name}"
+        lore:
+          - "&7{kit_description}"
+          - ""
+          - "&7Contents:"
+          - "{kit_contents}"
+          - ""
+          - "{kit_status}"
+          - ""
+          - "&eClick to select"
+        
+        # Status variations
+        lore-unlocked: "&a✔ Unlocked"
+        lore-locked: "&c✖ Locked"
+        lore-selected: "&a&l✔ SELECTED"
+        lore-permission: "&7Requires: &e{permission}"
+        
+        action: "select-kit:{kit_id}"
+      
+      # Selected kit display
+      current-kit:
+        slot: 4
+        material: "CHEST"
+        name: "&6&lCurrently Selected"
+        lore:
+          - "&7Kit: &e{selected_kit}"
+          - ""
+          - "&7You'll receive this kit"
+          - "&7when the arena starts"
+        glow: true
+      
+      # Random kit
+      random-kit:
+        slot: 40
+        material: "ENDER_PEARL"
+        name: "&d&l? Random Kit"
+        lore:
+          - "&7Select a random kit"
+          - "&7from unlocked kits"
+        action: "select-kit:random"
+        glow: true
+      
+      # Back
+      back:
+        slot: 39
+        material: "ARROW"
+        name: "&c← Back"
+        action: "back"
+      
+      # Close
+      close:
+        slot: 41
+        material: "BARRIER"
+        name: "&c&l✖ Close"
+        action: "close"
+
+  # ==========================================
+  # ADMIN PANEL GUI
+  # ==========================================
+  admin-panel:
+    title: "&c&lAdmin Panel"
+    rows: 5
+    
+    items:
+      border:
+        slot: "border"
+        material: "RED_STAINED_GLASS_PANE"
+        name: " "
+      
+      # Arena management
+      arena-management:
+        slot: 11
+        material: "GRASS_BLOCK"
+        name: "&e&lArena Management"
+        lore:
+          - "&7Manage all arenas"
+          - "&7Create, edit, delete"
+          - ""
+          - "&eClick to open"
+        action: "gui:arena-management"
+        glow: true
+      
+      # Player management
+      player-management:
+        slot: 13
+        material: "PLAYER_HEAD"
+        skull-owner: "MHF_Question"
+        name: "&b&lPlayer Management"
+        lore:
+          - "&7View players in arenas"
+          - "&7Force join/leave"
+          - ""
+          - "&eClick to open"
+        action: "gui:player-management"
+      
+      # Configuration
+      config-editor:
+        slot: 15
+        material: "WRITABLE_BOOK"
+        name: "&a&lConfiguration"
+        lore:
+          - "&7Edit plugin settings"
+          - "&7Reload configuration"
+          - ""
+          - "&eClick to open"
+        action: "gui:config-editor"
+      
+      # Statistics viewer
+      stats-viewer:
+        slot: 20
+        material: "BOOK"
+        name: "&6&lStatistics Viewer"
+        lore:
+          - "&7View global statistics"
+          - "&7Export/reset data"
+          - ""
+          - "&eClick to open"
+        action: "gui:stats-viewer"
+      
+      # Reload plugin
+      reload:
+        slot: 22
+        material: "LIME_DYE"
+        name: "&a&l⟳ Reload Plugin"
+        lore:
+          - "&7Reload all configurations"
+          - ""
+          - "&cClick to reload"
+        action: "command:hordesadmin reload"
+      
+      # Server info
+      server-info:
+        slot: 24
+        material: "COMPASS"
+        name: "&e&lServer Info"
+        lore:
+          - "&7Plugin Version: &e{version}"
+          - "&7Total Arenas: &e{arena_count}"
+          - "&7Active Players: &e{active_players}"
+          - "&7Uptime: &e{uptime}"
+        amount: 1
+      
+      # Close
+      close:
+        slot: 40
+        material: "BARRIER"
+        name: "&c&l✖ Close"
+        action: "close"
+
+# ==========================================
+# NOTES:
+# ==========================================
+# - {placeholders} are replaced dynamically
+# - slot can be: number, range (0-8), or pattern (border, all, corners)
+# - material must be valid Bukkit Material
+# - action format: "type:value" (close, command, gui, back, etc.)
+# - custom-model-data for resource pack support
+# - glow: true adds enchantment glow
+# - skull-owner for player heads
+# ==========================================

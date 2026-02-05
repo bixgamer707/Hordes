@@ -1,0 +1,279 @@
+# ============================================
+# HORDES - Arena Configuration
+# ============================================
+# Define your arenas/dungeons here
+# Each arena is fully configurable
+# ============================================
+
+arenas:
+
+  # ============================================
+  # EXAMPLE 1: Beginner Arena (Classic Mode)
+  # ============================================
+  beginner_arena:
+    # Enable/disable this arena
+    enabled: true
+
+    # Display name (supports color codes)
+    display-name: "&a&lBeginner Arena"
+
+    # Player limits
+    min-players: 1
+    max-players: 4
+
+    # Locations (MUST BE CONFIGURED!)
+    # Use /hordesadmin setspawn to get coordinates
+    lobby-spawn:
+      world: world
+      x: 0
+      y: 64
+      z: 0
+      yaw: 0
+      pitch: 0
+
+    arena-spawn:
+      world: world
+      x: 10
+      y: 64
+      z: 10
+      yaw: 90
+      pitch: 0
+
+    exit-location:
+      world: world
+      x: 0
+      y: 64
+      z: 0
+      yaw: 180
+      pitch: 0
+
+    # Wave settings
+    waves: 3
+    wave-delay: 10
+    wave-progression: AUTOMATIC
+
+    # Countdown
+    countdown-time: 10
+    auto-start: true
+
+    # Cooldown (seconds)
+    cooldown: 300
+    global-cooldown: false
+
+    # WorldGuard region (optional)
+    # worldguard-region: "beginner_arena_lobby"
+
+    # Survival Mode (Arena Mode - clears inventory)
+    survival-mode:
+      enabled: false
+      save-inventory: true
+      clear-inventory: true
+      force-gamemode: true
+      gamemode: SURVIVAL
+      allow-pvp: false
+
+    # Death Handling
+    death-handling:
+      action: KICK
+      can-rejoin: false
+      spectate-on-death: false
+      teleport-on-death: true
+      rejoin-cooldown: 0
+
+    # Item Handling
+    item-handling:
+      keep-inventory-on-death: true
+      drop-items-on-death: false
+      drop-mode: ALL_PLAYERS
+
+    # Rewards
+    rewards:
+      enabled: true
+      type: COMPLETION_ONLY
+      money: 100
+      items:
+        - "DIAMOND 3"
+        - "GOLDEN_APPLE 5"
+      commands: []
+      progressive-multiplier: 0
+
+  # ============================================
+  # EXAMPLE 2: Survival Dungeon
+  # ============================================
+  crypt_dungeon:
+    enabled: true
+    display-name: "&8&lCrypt Dungeon"
+
+    min-players: 1
+    max-players: 3
+
+    # Configure these locations!
+    lobby-spawn:
+      world: world
+      x: 100
+      y: 64
+      z: 100
+
+    arena-spawn:
+      world: world
+      x: 150
+      y: 65
+      z: 150
+
+    exit-location:
+      world: world
+      x: 100
+      y: 64
+      z: 100
+
+    waves: 5
+    wave-delay: 15
+    wave-progression: AUTOMATIC
+
+    countdown-time: 5
+    auto-start: true
+
+    cooldown: 3600
+    global-cooldown: false
+
+    # Survival Mode (keeps inventory)
+    survival-mode:
+      enabled: true
+      save-inventory: false
+      clear-inventory: false
+      force-gamemode: false
+      gamemode: SURVIVAL
+      allow-pvp: false
+
+    # Death Handling (spectator mode)
+    death-handling:
+      action: SPECTATE
+      can-rejoin: false
+      spectate-on-death: true
+      teleport-on-death: true
+      rejoin-cooldown: 0
+
+    # Item Handling (lose items on death)
+    item-handling:
+      keep-inventory-on-death: false
+      drop-items-on-death: true
+      drop-mode: ARENA_PLAYERS
+
+    # Rewards (progressive + completion)
+    rewards:
+      enabled: true
+      type: BOTH
+      money: 500
+      items:
+        - "DIAMOND 5"
+        - "NETHERITE_SCRAP 1"
+        - "ENCHANTED_GOLDEN_APPLE 3"
+      commands:
+        - "give %player% custom_reward 1"
+      progressive-multiplier: 0.1
+
+  # ============================================
+  # EXAMPLE 3: Boss Raid
+  # ============================================
+  dragon_raid:
+    enabled: false
+    display-name: "&4&lDragon Raid"
+
+    min-players: 3
+    max-players: 6
+
+    lobby-spawn:
+      world: world
+      x: 200
+      y: 64
+      z: 200
+
+    arena-spawn:
+      world: world
+      x: 250
+      y: 100
+      z: 250
+
+    exit-location:
+      world: world
+      x: 200
+      y: 64
+      z: 200
+
+    waves: 3
+    wave-delay: 30
+    wave-progression: MANUAL
+
+    countdown-time: 20
+    auto-start: true
+
+    cooldown: 86400
+    global-cooldown: false
+
+    # Hybrid mode
+    survival-mode:
+      enabled: true
+      save-inventory: true
+      clear-inventory: true
+      force-gamemode: true
+      gamemode: SURVIVAL
+      allow-pvp: false
+
+    # Can respawn
+    death-handling:
+      action: RESPAWN
+      can-rejoin: false
+      spectate-on-death: false
+      teleport-on-death: false
+      rejoin-cooldown: 0
+
+    # Items teleport with player
+    item-handling:
+      keep-inventory-on-death: false
+      drop-items-on-death: true
+      drop-mode: TELEPORT_WITH_PLAYER
+
+    # Big rewards
+    rewards:
+      enabled: true
+      type: BOTH
+      money: 5000
+      items:
+        - "DRAGON_HEAD 1"
+        - "ELYTRA 1"
+        - "NETHERITE_INGOT 10"
+      commands:
+        - "lp user %player% permission set hordes.dragon.completed"
+      progressive-multiplier: 0.2
+
+# ============================================
+# Configuration Notes:
+# ============================================
+#
+# WAVE PROGRESSION:
+#   AUTOMATIC - Auto-advance after killing all mobs
+#   MANUAL - Requires button/sign interaction
+#   MIXED - Per-wave configuration (future)
+#
+# DEATH ACTION:
+#   KICK - Remove from arena
+#   SPECTATE - Spectator mode
+#   REJOIN - Can rejoin with cooldown
+#   RESPAWN - Respawn in arena
+#
+# ITEM DROP MODE:
+#   ALL_PLAYERS - Anyone can pickup
+#   ARENA_PLAYERS - Only participants
+#   OWNER_ONLY - Only dead player
+#   TELEPORT_WITH_PLAYER - Items follow player
+#
+# REWARD TYPE:
+#   COMPLETION_ONLY - Only on full clear
+#   PROGRESSIVE - Per wave
+#   BOTH - Progressive + completion bonus
+#
+# SURVIVAL MODE:
+#   enabled: true - Dungeon mode (keeps inventory/gamemode)
+#   enabled: false - Arena mode (clears inventory, gives kit)
+#
+# ============================================

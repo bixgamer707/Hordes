@@ -1,0 +1,198 @@
+# ============================================
+# HORDES - Main Configuration
+# ============================================
+# Plugin Version: 2.0.0
+# Author: bixgamer707
+# ============================================
+
+# General settings
+settings:
+  # Plugin prefix for messages
+  prefix: "&8[&cHordes&8]&7"
+  
+  # Enable debug mode (shows stack traces and verbose logging)
+  debug-mode: false
+  
+  # Language (currently only 'en' supported)
+  language: en_us.yml
+  
+  # Auto-save interval (in minutes)
+  # Statistics and data auto-save
+  auto-save-interval: 5
+
+# Feature toggles
+features:
+  # WorldGuard integration
+  # Enables region-based auto-join
+  worldguard-integration: true
+  
+  # MythicMobs integration
+  # Allows using MythicMobs in waves
+  mythicmobs-integration: true
+  
+  # Vault economy integration
+  # Required for money rewards
+  vault-economy: true
+  
+  # PlaceholderAPI integration
+  placeholderapi: true
+
+# Default values for arenas
+# These are used when values are not specified in arenas.yml
+defaults:
+  # Countdown time before arena starts (seconds)
+  countdown-time: 10
+  
+  # Delay between waves (seconds)
+  wave-delay: 10
+  
+  # Cooldown duration (seconds)
+  # 3600 = 1 hour
+  cooldown: 3600
+  
+  # Minimum players to start
+  min-players: 1
+  
+  # Maximum players allowed
+  max-players: 4
+  
+  # Auto-start when minimum players reached
+  auto-start: true
+
+# Arena defaults
+arena-defaults:
+  # Survival mode settings
+  survival-mode:
+    enabled: false
+    save-inventory: true
+    clear-inventory: true
+    force-gamemode: true
+    gamemode: SURVIVAL
+    allow-pvp: false
+  
+  # Death handling
+  death-handling:
+    action: KICK
+    can-rejoin: false
+    spectate-on-death: true
+    teleport-on-death: true
+    rejoin-cooldown: 60
+  
+  # Item handling
+  item-handling:
+    keep-inventory-on-death: true
+    drop-items-on-death: false
+    drop-mode: ALL_PLAYERS
+  
+  # Wave progression
+  wave-progression: AUTOMATIC
+
+# Mob spawn defaults
+mob-defaults:
+  # Default spawn delay (ticks)
+  # 20 ticks = 1 second
+  spawn-delay: 20
+  
+  # Default mobs per spawn cycle
+  mobs-per-spawn: 1
+  
+  # Default health multiplier
+  health-multiplier: 1.0
+  
+  # Default damage multiplier
+  damage-multiplier: 1.0
+
+# Reward defaults
+reward-defaults:
+  # Enable rewards
+  enabled: true
+  
+  # Reward type
+  # Options: COMPLETION_ONLY, PROGRESSIVE, BOTH
+  type: COMPLETION_ONLY
+  
+  # Progressive multiplier (% of full reward per wave)
+  progressive-multiplier: 0.1
+
+# Performance settings
+performance:
+  # Maximum concurrent arenas
+  # 0 = unlimited
+  max-concurrent-arenas: 0
+  
+  # Cleanup interval (minutes)
+  # How often to cleanup expired cooldowns, etc.
+  cleanup-interval: 5
+  
+  # Enable async operations where possible
+  async-operations: true
+
+# Command settings
+commands:
+  # Blocked commands during arena
+  # Players cannot use these commands while in an arena
+  blocked-commands:
+    - "/spawn"
+    - "/home"
+    - "/tp"
+    - "/tpa"
+    - "/warp"
+  
+  # Allow /hordes leave always
+  allow-leave-command: true
+
+# Statistics (future feature)
+statistics:
+  # Enable statistics tracking
+  enabled: true
+  
+  # Storage type: YAML, SQLITE, MYSQL
+  storage-type: YAML
+  
+  # Track player stats
+  track-kills: true
+  track-deaths: true
+  track-completions: true
+  track-playtime: true
+
+# Sound Effects
+sounds:
+  # Enable sound effects
+  enabled: true
+  
+  # Sound for wave start
+  wave-start: "ENTITY_ENDER_DRAGON_GROWL"
+  
+  # Sound for wave complete
+  wave-complete: "ENTITY_PLAYER_LEVELUP"
+  
+  # Sound for arena victory
+  arena-victory: "UI_TOAST_CHALLENGE_COMPLETE"
+  
+  # Sound for arena defeat
+  arena-defeat: "ENTITY_WITHER_DEATH"
+  
+  # Sound for player death
+  player-death: "ENTITY_PLAYER_DEATH"
+
+# MySQL settings (if statistics.storage-type = MYSQL)
+mysql:
+  enabled: false
+  host: localhost
+  port: 3306
+  database: hordes
+  username: root
+  password: password
+  # Connection pool settings
+  pool-size: 10
+
+# Messages dont edit this
+messages:
+  # Use messages.yml for all messages
+  # This allows easy translation
+  use-messages-file: true
+
+# ============================================
+# DO NOT EDIT BELOW THIS LINE
+# ============================================
+config-version: 2

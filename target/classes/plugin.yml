@@ -1,0 +1,142 @@
+name: Hordes
+version: 2.0.0
+main: me.bixgamer707.hordes.Hordes
+author: bixgamer707
+api-version: 1.16
+description: Advanced dungeon and arena system with configurable waves, rewards, and progression
+website: https://github.com/bixgamer707/hordes
+
+# Soft dependencies (optional)
+softdepend:
+  - Vault
+  - WorldGuard
+  - PlaceholderAPI
+  - MythicMobs
+
+# Commands
+commands:
+  hordes:
+    description: Main Hordes command
+    aliases: [hd, horde]
+    usage: |
+      /<command> join <arena> - Join an arena
+      /<command> leave - Leave current arena
+      /<command> list - List all arenas
+      /<command> info <arena> - Get arena information
+      /<command> stats - View your statistics
+    permission: hordes.use
+
+  hordesadmin:
+    description: Hordes admin commands
+    aliases: [hda, hordeadmin]
+    usage: |
+      /<command> reload - Reload configurations
+      /<command> create <arena> - Create a new arena
+      /<command> delete <arena> - Delete an arena
+      /<command> setspawn <arena> <type> - Set spawn points
+      /<command> forcestart <arena> - Force start an arena
+      /<command> forcestop <arena> - Force stop an arena
+      /<command> tp <arena> - Teleport to arena
+      /<command> debug - Show debug information
+    permission: hordes.admin
+
+# Permissions
+permissions:
+
+  # Player permissions
+  hordes.use:
+    description: Allows using basic Hordes commands
+    default: true
+    children:
+      hordes.join: true
+      hordes.leave: true
+      hordes.list: true
+      hordes.info: true
+      hordes.stats: true
+
+  hordes.join:
+    description: Allows joining arenas
+    default: true
+
+  hordes.join.*:
+    description: Allows joining all arenas
+    default: true
+    children:
+      hordes.join: true
+
+  hordes.leave:
+    description: Allows leaving arenas
+    default: true
+
+  hordes.list:
+    description: Allows listing arenas
+    default: true
+
+  hordes.info:
+    description: Allows viewing arena information
+    default: true
+
+  hordes.stats:
+    description: Allows viewing statistics
+    default: true
+
+  # VIP permissions
+  hordes.vip:
+    description: VIP permissions
+    default: false
+    children:
+      hordes.use: true
+      hordes.cooldown.bypass: true
+
+  hordes.cooldown.bypass:
+    description: Bypass arena cooldowns
+    default: false
+
+  # Admin permissions
+  hordes.admin:
+    description: Full admin access to Hordes
+    default: op
+    children:
+      hordes.use: true
+      hordes.admin.reload: true
+      hordes.admin.create: true
+      hordes.admin.delete: true
+      hordes.admin.setspawn: true
+      hordes.admin.forcestart: true
+      hordes.admin.forcestop: true
+      hordes.admin.tp: true
+      hordes.admin.debug: true
+      hordes.cooldown.bypass: true
+      hordes.join.*: true
+
+  hordes.admin.reload:
+    description: Reload plugin configurations
+    default: op
+
+  hordes.admin.create:
+    description: Create arenas
+    default: op
+
+  hordes.admin.delete:
+    description: Delete arenas
+    default: op
+
+  hordes.admin.setspawn:
+    description: Set spawn points
+    default: op
+
+  hordes.admin.forcestart:
+    description: Force start arenas
+    default: op
+
+  hordes.admin.forcestop:
+    description: Force stop arenas
+    default: op
+
+  hordes.admin.tp:
+    description: Teleport to arenas
+    default: op
+
+  hordes.admin.debug:
+    description: View debug information
+    default: op

@@ -1,0 +1,285 @@
+# ============================================
+# HORDES - English Messages (en_us.yml)
+# ============================================
+# All plugin messages in one place
+# Supports color codes (&a, &c, etc.) and HEX colors (#FF5733)
+# Placeholders: {0}, {1}, {2} are replaced with values
+# PlaceholderAPI: %placeholder% works automatically
+# ============================================
+
+Messages:
+
+  # ============================================
+  # ARENA MESSAGES
+  # ============================================
+  arena:
+    # Join/Leave Messages
+    player-joined: "&a{0} &7has joined the arena! &e({1}/{2})"
+    already-joined: "&cYou are already in an arena!"
+    player-left: "&c{0} &7has left the arena. &e({1}/{2})"
+
+    # State Messages
+    not-joinable: "&cThis arena is not available right now."
+    disabled: "&cThis arena is currently disabled."
+    full: "&cThis arena is full!"
+    no-permission: "&cYou don't have permission to join this arena."
+
+    # Countdown Messages
+    countdown: "&eArena starting in &a{0} &eseconds..."
+    countdown-cancelled: "&cCountdown cancelled - not enough players."
+
+    # Start/End Messages
+    started: "&a&lThe arena has started! Good luck!"
+    victory: "&a&l✔ VICTORY! &7You completed the arena in &e{0}s"
+    defeat: "&c&l✘ DEFEAT! &7You survived for &e{0}s"
+
+    # Wave Messages
+    wave-starting: "&e&lWave {0}/{1} &7is starting..."
+    wave-completed: "&a&lWave {0} completed! &7(&e{1}s&7)"
+    all-spawned: "&7All mobs have spawned for this wave!"
+    progress: "&e{0}/{1} &7mobs remaining"
+    next-wave-in: "&eNext wave in &a{0} &eseconds..."
+    waiting-for-progression: "&eAll mobs defeated! &aInteract with the button to continue."
+
+    # Player Death Messages
+    player-died: "&c{0} has died! &e({1} &7players remaining&e)"
+    death-kicked: "&cYou have been removed from the arena."
+    death-spectate: "&eYou are now spectating. Use &a/hordes leave &eto exit."
+    death-rejoin: "&eYou can rejoin in &a{0} &eseconds."
+    death-respawned: "&aYou have respawned!"
+
+    # Cooldown Messages
+    cooldown: "&cYou must wait &e{0} &cbefore joining another arena."
+
+    # Restriction Messages
+    cannot-drop-items: "&cYou cannot drop items in the arena!"
+    cannot-pickup-items: "&cYou cannot pick up items in the arena!"
+    cannot-teleport: "&cYou cannot teleport while in an arena!"
+    cannot-use-command: "&cYou cannot use that command in the arena!"
+
+  # ============================================
+  # WAVE MESSAGES
+  # ============================================
+  wave:
+    starting: "&e&lWave {0} &7is starting..."
+    completed: "&a&lWave {0} &7completed!"
+    all-spawned: "&7All mobs have spawned!"
+    next-wave-in: "&eNext wave in &a{0} &eseconds..."
+    waiting-for-progression: "&eDefeat all mobs to continue!"
+
+  # ============================================
+  # COMMAND MESSAGES
+  # ============================================
+  commands:
+    # General
+    no-permission: "&cYou don't have permission to use this command."
+    player-only: "&cThis command can only be used by players."
+    invalid-usage: "&cInvalid usage! Use: {0}"
+    arena-not-found: "&cArena '&e{0}&c' not found."
+    admin-reload: "&aConfiguration reloaded successfully!"
+    admin-reload-failed: "&cFailed to reload configuration. Check console for errors."
+
+    # Help - Lista optimizada
+    help:
+      - "&e&l▬▬▬▬▬▬▬▬ &6&lHordes Commands &e&l▬▬▬▬▬▬▬▬"
+      - "&a/hordes join <arena> &7- Join an arena"
+      - "&a/hordes leave &7- Leave current arena"
+      - "&a/hordes list &7- List all arenas"
+      - "&a/hordes info <arena> &7- Arena information"
+      - "&a/hordes stats &7- View your statistics"
+      - "&a/hordes top [category] &7- View leaderboards"
+      - "&a/hordes gui &7- Open arena selection GUI"
+      - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+    # Join Command
+    join-usage: "&cUsage: /hordes join <arena>"
+    join-success: "&aSuccessfully joined the arena!"
+    join-failed: "&cCould not join the arena. Check the requirements."
+
+    # Leave Command
+    leave-not-in-arena: "&cYou are not in an arena!"
+    leave-success: "&aYou have left the arena."
+
+    # List Command
+    list-empty: "&cThere are no arenas available."
+    list-header: "&e&l--- Available Arenas ---"
+    list-format: "&7- &e{0} &7({1}) - &a{2}&7/&a{3} &7players"
+
+    # Info Command - Lista optimizada
+    info-usage: "&cUsage: /hordes info <arena>"
+    info:
+      - "&e&l▬▬▬▬▬▬▬▬ &6Arena: {0} &e▬▬▬▬▬▬▬▬"
+      - "&7Display Name: &e{1}"
+      - "&7State: {2}"
+      - "&7Players: &a{3}&7/&a{4}"
+      - "&7Total Waves: &e{5}"
+      - "&7Mode: &e{6}"
+      - "&7Progression: &e{7}"
+      - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+    # Stats Command - Lista optimizada
+    stats-no-data: "&cNo statistics data found."
+    stats-disabled:
+      - "&c✘ Statistics tracking is disabled"
+      - "&7Ask an admin to enable it in config.yml"
+    stats:
+      - "&e&l▬▬▬▬▬▬▬▬ &6&lYour Statistics &e&l▬▬▬▬▬▬▬▬"
+      - ""
+      - "&e❖ Global Stats:"
+      - "  &7Completions: &a{0}"
+      - "  &7Attempts: &e{1}"
+      - "  &7Win Rate: &a{2}%"
+      - ""
+      - "&e❖ Combat Stats:"
+      - "  &7Kills: &a{3}"
+      - "  &7Deaths: &c{4}"
+      - "  &7K/D Ratio: &e{5}"
+      - ""
+      - "&e❖ Personal Records:"
+      - "  &7Highest Wave: &a{6}"
+      - "  &7Fastest Time: &e{7}"
+      - "  &7Total Playtime: &e{8}"
+      - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+    # Top Command - Lista optimizada
+    top-invalid-category: "&cInvalid category. Use: completions, kills, speed, winrate"
+    top-no-data: "  &7No data available yet"
+    top-header:
+      - "&e&l▬▬▬▬▬▬▬▬ &6&lTop {0} - {1} &e&l▬▬▬▬▬▬▬▬"
+      - ""
+    top-footer: "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+  # ============================================
+  # ADMIN COMMANDS - Lista optimizada
+  # ============================================
+  admin:
+    # Help
+    help:
+      - "&c&l▬▬▬▬▬▬▬ &4&lHordes Admin Commands &c&l▬▬▬▬▬▬▬"
+      - "&a/hordesadmin reload &7- Reload configurations"
+      - "&a/hordesadmin create <arena> &7- Create arena wizard"
+      - "&a/hordesadmin delete <arena> &7- Delete arena"
+      - "&a/hordesadmin setspawn <arena> <type> &7- Set spawn point"
+      - "&a/hordesadmin forcestart <arena> &7- Force start arena"
+      - "&a/hordesadmin forcestop <arena> &7- Force stop arena"
+      - "&a/hordesadmin tp <arena> &7- Teleport to arena"
+      - "&a/hordesadmin debug &7- Show debug information"
+      - "&c&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+    # Debug - Lista optimizada
+    debug:
+      - "&e&l--- Debug Information ---"
+      - "&7Arenas loaded: &e{0}"
+      - "&7Active arenas: &e{1}"
+      - "&7Cooldowns active: &e{2}"
+      - "&7Economy enabled: &e{3}"
+      - "&7MythicMobs enabled: &e{4}"
+
+
+    # Create Arena - Lista optimizada
+    create-usage: "&cUsage: /hordesadmin create <arena>"
+    create-already-exists: "&cArena '&e{0}&c' already exists!"
+    create:
+      - "&a&l✔ Arena '&e{0}&a&l' created successfully!"
+      - ""
+      - "&e&l❖ Next Steps:"
+      - "&71. Edit &earenas.yml &7to configure the arena"
+      - "&72. Set spawn points:"
+      - "   &a/hordesadmin setspawn {0} lobby"
+      - "   &a/hordesadmin setspawn {0} arena"
+      - "   &a/hordesadmin setspawn {0} exit"
+      - "&73. Configure waves in &emobs.yml"
+      - "&74. Reload: &a/hordesadmin reload"
+      - ""
+      - "&e&l❖ Templates Available:"
+      - "&7Choose a template in &earenas.yml &7or create custom"
+
+    # Delete Arena
+    delete-usage: "&cUsage: /hordesadmin delete <arena>"
+    delete-stopped: "&eArena stopped before deletion."
+    delete-instruction: "&eType &a/hordesadmin delete {0} confirm &eto confirm deletion."
+
+    # SetSpawn - Lista optimizada
+    setspawn-usage: "&cUsage: /hordesadmin setspawn <arena> <lobby|arena|exit>"
+    setspawn-arena-not-found: "&cArena '&e{0}&c' not found."
+    setspawn-invalid-type: "&cInvalid type. Use: lobby, arena, or exit"
+    setspawn:
+      - "&a&l✔ Spawn point set!"
+      - ""
+      - "&7Arena: &e{0}"
+      - "&7Type: &e{1}"
+      - "&7Location:"
+      - "  &7World: &e{2}"
+      - "  &7X: &e{3}"
+      - "  &7Y: &e{4}"
+      - "  &7Z: &e{5}"
+      - "  &7Yaw: &e{6}"
+      - "  &7Pitch: &e{7}"
+      - ""
+      - "&e&l⚠ Important:"
+      - "&7This was saved to &earenas.yml"
+      - "&7Run &a/hordesadmin reload &7to apply changes"
+    setspawn-failed: "&cFailed to save spawn point. Check console."
+    setspawn-check-console: "&cError occurred. Check console for details."
+
+    # ForceStart
+    forcestart-usage: "&cUsage: /hordesadmin forcestart <arena>"
+    forcestart-not-waiting: "&cArena is not in WAITING state."
+    forcestart-no-players: "&cNo players in arena to start."
+    forcestart-starting: "&aForce starting arena..."
+    forcestart-note: "&e&l⚠ Note: This bypasses min-players requirement"
+    forcestart-players: "&7Players in arena: &e{0}"
+
+    # ForceStop
+    forcestop-usage: "&cUsage: /hordesadmin forcestop <arena>"
+    forcestop: "&aForce stopping arena..."
+
+    # Teleport
+    tp-usage: "&cUsage: /hordesadmin tp <arena>"
+    tp-success: "&aTeleported to arena &e{0}"
+
+  # ============================================
+  # STATISTICS MESSAGES
+  # ============================================
+  statistics:
+    enabled: "&aStatistics tracking enabled"
+    disabled: "&cStatistics tracking disabled"
+    data-saved: "&aStatistics saved successfully"
+    data-loaded: "&aStatistics loaded successfully"
+
+  # ============================================
+  # LEADERBOARD MESSAGES
+  # ============================================
+  leaderboard:
+    disabled: "&cLeaderboards are disabled"
+    position: "{0} &7#{1} &f{2} &7- &e{3}"
+    completions: "Completions"
+    kills: "Kills"
+    speed: "Speed"
+    winrate: "Win Rate"
+
+  # ============================================
+  # REWARD MESSAGES
+  # ============================================
+  rewards:
+    completion: "&a&l✔ Completion Reward: &e+${0}"
+    progressive: "&a&l✔ Wave {0} Reward: &e+${1}"
+    money: "&a&l+${0}"
+    items: "&a&l+{0} items"
+
+  # ============================================
+  # ERROR MESSAGES
+  # ============================================
+  errors:
+    generic: "&cAn error occurred. Please contact an administrator."
+    config-error: "&cConfiguration error. Check console for details."
+    plugin-error: "&cPlugin error occurred. Please check console."
+
+  # ============================================
+  # INFO MESSAGES
+  # ============================================
+  info:
+    plugin-enabled: "&aHordes has been enabled!"
+    plugin-disabled: "&cHordes has been disabled!"
+    arena-created: "&aArena created: {0}"
+    arena-deleted: "&cArena deleted: {0}"
