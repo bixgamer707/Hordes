@@ -175,6 +175,27 @@ sounds:
   # Sound for player death
   player-death: "ENTITY_PLAYER_DEATH"
 
+# ============================================
+# CHAT INPUT SYSTEM
+# ============================================
+chat-input:
+  # Default timeout in seconds (0 = no timeout)
+  default-timeout: 60
+
+  # Keyword to cancel input
+  cancel-keyword: "cancel"
+
+  # Show cancel hint message
+  send-cancel-hint: true
+
+  # Clear chat when starting input
+  clear-chat-on-start: true
+
+  # Timeout message
+  timeout-message: "&c&l⏱ Input timed out"
+
+  # Cancelled message
+  cancelled-message: "&c&l✖ Input cancelled"
 # MySQL settings (if statistics.storage-type = MYSQL)
 mysql:
   enabled: false

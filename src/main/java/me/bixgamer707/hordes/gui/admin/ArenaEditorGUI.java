@@ -3,13 +3,11 @@ package me.bixgamer707.hordes.gui.admin;
 import me.bixgamer707.hordes.Hordes;
 import me.bixgamer707.hordes.arena.Arena;
 import me.bixgamer707.hordes.gui.BaseGUI;
-import me.bixgamer707.hordes.text.Text;
-import org.bukkit.conversations.*;
+import me.bixgamer707.hordes.utils.InputValidators;
 import org.bukkit.entity.Player;
 
 /**
  * Arena editor GUI - 100% configurable
- * All sections, labels, and options from guis.yml
  */
 public class ArenaEditorGUI extends BaseGUI {
 
@@ -24,7 +22,6 @@ public class ArenaEditorGUI extends BaseGUI {
 
     @Override
     protected void buildDynamic() {
-        // Update all dynamic data from arena
         updateAllSections();
     }
 
@@ -32,7 +29,7 @@ public class ArenaEditorGUI extends BaseGUI {
      * Updates all sections with current arena data
      */
     private void updateAllSections() {
-        // Arena info (slot from config)
+        // Arena info
         updateItemLore("arena-info", new String[]{
                 arenaId,
                 arena.getConfig().getDisplayName(),
@@ -94,17 +91,14 @@ public class ArenaEditorGUI extends BaseGUI {
                 break;
 
             case "edit-players":
-                // Future: PlayerSettingsGUI
                 sendConfigMessage("admin.feature-coming-soon");
                 break;
 
             case "edit-waves":
-                // Future: WaveEditorGUI
                 sendConfigMessage("admin.feature-coming-soon");
                 break;
 
             case "edit-modes":
-                // Future: ModeSettingsGUI
                 sendConfigMessage("admin.feature-coming-soon");
                 break;
 
@@ -113,7 +107,6 @@ public class ArenaEditorGUI extends BaseGUI {
                 break;
 
             case "edit-rewards":
-                // Future: RewardEditorGUI
                 sendConfigMessage("admin.feature-coming-soon");
                 break;
 
@@ -136,105 +129,76 @@ public class ArenaEditorGUI extends BaseGUI {
     }
 
     /**
-     * Edit basic settings via conversation
+     * Edit basic settings via chat input
      */
     private void editBasicSettings() {
-        close();
-
-        // Send messages from config
         sendConfigMessage("admin.edit-basic-header");
         sendConfigMessage("admin.edit-basic-current", arena.getConfig().getDisplayName());
         sendConfigMessage("admin.edit-basic-prompt");
 
-        ConversationFactory factory = new ConversationFactory(plugin)
-                .withFirstPrompt(new StringPrompt() {
-                    @Override
-                    public String getPromptText(ConversationContext context) {
-                        return Text.createText(getConfigString("prompts.display-name", "Enter new display name:")).build();
-                    }
-
-                    @Override
-                    public Prompt acceptInput(ConversationContext context, String input) {
-                        if (input.equalsIgnoreCase("cancel")) {
-                            sendConfigMessage("admin.edit-cancelled");
-                            return Prompt.END_OF_CONVERSATION;
-                        }
-
-                        // Update display name
-                        plugin.getFileManager().getFile("arenas.yml")
-                                .set("arenas." + arenaId + ".display-name", input);
-                        plugin.getFileManager().getArenas().save();
-
-                        sendConfigMessage("admin.edit-basic-success", input);
-
-                        return Prompt.END_OF_CONVERSATION;
-                    }
-                })
-                .withLocalEcho(false)
-                .withTimeout(60)
-                .addConversationAbandonedListener(event -> {
-                    plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                        plugin.getArenaManager().loadArenas();
-                        Arena reloaded = plugin.getArenaManager().getArena(arenaId);
-                        if (reloaded != null) {
-                            new ArenaEditorGUI(plugin, player, reloaded).open();
-                        }
-                    }, 1L);
-                })
-                .buildConversation(player);
-
-        factory.begin();
+        plugin.getChatInputManager().requestInput(player)
+                .withPrompt(getConfigString("prompts.display-name",
+                        "&e&l❖ Enter new display name:"))
+                .withValidator(InputValidators.displayName())
+                .withInvalidMessage(getConfigString("prompts.display-name-invalid",
+                        "&c&l✖ Invalid name! Must be 3-32 characters"))
+                .withTimeout(getConfigInt("prompts.timeout", 60))
+                .onComplete(input -> handleDisplayNameInput(input))
+                .onCancel(() -> reopenEditor())
+                .start();
     }
 
     /**
-     * Edit WorldGuard region via conversation
+     * Handles display name input
+     */
+    private void handleDisplayNameInput(String displayName) {
+        // Update display name
+        plugin.getFileManager().getFile("arenas.yml")
+                .set("arenas." + arenaId + ".display-name", displayName);
+        plugin.getFileManager().getArenas().save();
+
+        sendConfigMessage("admin.edit-basic-success", displayName);
+        playSound("success");
+
+        // Reload and reopen
+        reloadAndReopen();
+    }
+
+    /**
+     * Edit WorldGuard region via chat input
      */
     private void editWorldGuardRegion() {
-        close();
-
         sendConfigMessage("admin.edit-worldguard-header");
+
         String current = arena.getConfig().getWorldGuardRegion();
         sendConfigMessage("admin.edit-worldguard-current", current != null ? current : "None");
         sendConfigMessage("admin.edit-worldguard-prompt");
 
-        ConversationFactory factory = new ConversationFactory(plugin)
-                .withFirstPrompt(new StringPrompt() {
-                    @Override
-                    public String getPromptText(ConversationContext context) {
-                        return Text.createText(getConfigString("prompts.worldguard-region", "Enter region name:")).build();
-                    }
+        plugin.getChatInputManager().requestInput(player)
+                .withPrompt(getConfigString("prompts.worldguard-region",
+                        "&e&l❖ Enter WorldGuard region name:"))
+                .withValidator(InputValidators.regionName())
+                .withInvalidMessage(getConfigString("prompts.region-invalid",
+                        "&c&l✖ Invalid region name! Max 64 characters"))
+                .withTimeout(getConfigInt("prompts.timeout", 60))
+                .onComplete(input -> handleWorldGuardRegionInput(input))
+                .onCancel(() -> reopenEditor())
+                .start();
+    }
 
-                    @Override
-                    public Prompt acceptInput(ConversationContext context, String input) {
-                        if (input.equalsIgnoreCase("cancel")) {
-                            sendConfigMessage("admin.edit-cancelled");
-                            return Prompt.END_OF_CONVERSATION;
-                        }
+    /**
+     * Handles WorldGuard region input
+     */
+    private void handleWorldGuardRegionInput(String regionName) {
+        plugin.getFileManager().getFile("arenas.yml")
+                .set("arenas." + arenaId + ".worldguard-region", regionName);
+        plugin.getFileManager().getArenas().save();
 
-                        plugin.getFileManager().getFile("arenas.yml")
-                                .set("arenas." + arenaId + ".worldguard-region", input);
-                        plugin.getFileManager().getArenas().save();
+        sendConfigMessage("admin.edit-worldguard-success", regionName);
+        playSound("success");
 
-
-                        sendConfigMessage("admin.edit-worldguard-success", input);
-
-                        return Prompt.END_OF_CONVERSATION;
-                    }
-                })
-                .withLocalEcho(false)
-                .withTimeout(60)
-                .addConversationAbandonedListener(event -> {
-                    plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                        plugin.getArenaManager().loadArenas();
-                        Arena reloaded = plugin.getArenaManager().getArena(arenaId);
-                        if (reloaded != null) {
-                            new ArenaEditorGUI(plugin, player, reloaded).open();
-                        }
-                    }, 1L);
-                })
-                .buildConversation(player);
-
-        factory.begin();
+        // Reload and reopen
+        reloadAndReopen();
     }
 
     /**
@@ -248,10 +212,10 @@ public class ArenaEditorGUI extends BaseGUI {
                 .set("arenas." + arenaId + ".enabled", newState);
         plugin.getFileManager().getArenas().save();
 
-
         sendConfigMessage(newState ? "admin.arena-enabled" : "admin.arena-disabled", arenaId);
         playSound("click");
-        refresh();
+
+        reloadAndReopen();
     }
 
     /**
@@ -260,7 +224,6 @@ public class ArenaEditorGUI extends BaseGUI {
     private void saveArena() {
         try {
             plugin.getFileManager().getArenas().save();
-
             plugin.getArenaManager().loadArenas();
 
             sendConfigMessage("admin.save-success");
@@ -284,6 +247,31 @@ public class ArenaEditorGUI extends BaseGUI {
         if (!success) {
             sendConfigMessage("admin.test-failed");
         }
+    }
+
+    /**
+     * Reloads arena manager and reopens editor
+     */
+    private void reloadAndReopen() {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            plugin.getArenaManager().loadArenas();
+            Arena reloaded = plugin.getArenaManager().getArena(arenaId);
+
+            if (reloaded != null) {
+                new ArenaEditorGUI(plugin, player, reloaded).open();
+            } else {
+                new ArenaListGUI(plugin, player).open();
+            }
+        }, 1L);
+    }
+
+    /**
+     * Reopens editor without reload
+     */
+    private void reopenEditor() {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            new ArenaEditorGUI(plugin, player, arena).open();
+        }, 1L);
     }
 
     @Override

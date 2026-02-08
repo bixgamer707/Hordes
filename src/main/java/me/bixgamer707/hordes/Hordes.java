@@ -17,6 +17,7 @@ import me.bixgamer707.hordes.placeholder.HordesExpansion;
 import me.bixgamer707.hordes.rewards.RewardManager;
 import me.bixgamer707.hordes.sound.SoundManager;
 import me.bixgamer707.hordes.statistics.StatisticsManager;
+import me.bixgamer707.hordes.utils.ChatInputManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,6 +43,7 @@ public class Hordes extends JavaPlugin {
     private LeaderboardManager leaderboardManager;
     private BossBarManager bossBarManager;
     private SoundManager soundManager;
+    private ChatInputManager chatInputManager;
     
     // Integrations
     private MythicMobsIntegration mythicMobsIntegration;
@@ -129,6 +131,10 @@ public class Hordes extends JavaPlugin {
         if (statisticsManager != null) {
             statisticsManager.save();
         }
+
+        if (chatInputManager != null) {
+            chatInputManager.cleanup();
+        }
         
         // Save configurations
         if (fileManager != null) {
@@ -159,6 +165,7 @@ public class Hordes extends JavaPlugin {
             leaderboardManager = new LeaderboardManager(this);
             bossBarManager = new BossBarManager(this);
             soundManager = new SoundManager(this);
+            chatInputManager = new ChatInputManager(this);
             
             // Mob handlers
             mythicMobsIntegration = new MythicMobsIntegration(this);
@@ -292,7 +299,11 @@ public class Hordes extends JavaPlugin {
         
         // Reload arenas
         arenaManager.reloadArenas();
-        
+
+        if (chatInputManager != null) {
+            chatInputManager.reload();
+        }
+
         // Reload integrations
         mythicMobsIntegration.reload();
         rewardManager.reload();
@@ -344,6 +355,10 @@ public class Hordes extends JavaPlugin {
 
     public SoundManager getSoundManager() {
         return soundManager;
+    }
+
+    public ChatInputManager getChatInputManager() {
+        return chatInputManager;
     }
 
     // Utility methods

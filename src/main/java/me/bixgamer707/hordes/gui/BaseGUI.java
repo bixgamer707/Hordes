@@ -526,6 +526,23 @@ public abstract class BaseGUI {
         player.sendMessage(Text.createText(message).build(player));
     }
 
+    protected void sendMessageListWithReplacements(String path, Object... replacements) {
+        List<String> messages = getConfigStringList("messages." + path);
+
+        if (messages.isEmpty()) {
+            sendConfigMessage(path, replacements);
+            return;
+        }
+
+        for (String message : messages) {
+            // Replace placeholders
+            for (int i = 0; i < replacements.length; i++) {
+                message = message.replace("{" + i + "}", String.valueOf(replacements[i]));
+            }
+            player.sendMessage(Text.createText(message).build(player));
+        }
+    }
+
     /**
      * Updates item lore by item ID from config
      */

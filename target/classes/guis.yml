@@ -7,7 +7,22 @@
 # - Names, lore, colors
 # - Actions, sounds, behaviors
 # ==========================================
+prompts:
+  # Timeout settings
+  timeout: 60  # seconds
+  timeout-message: "&c&l⏱ Input timed out"
 
+  # Arena ID prompt
+  arena-id: "&e&l❖ Enter Arena ID:"
+  arena-id-invalid: "&c&l✖ Invalid ID! Use only: &ea-z&c, &e0-9&c, &e_ &c(underscore)"
+
+  # Display name prompt
+  display-name: "&e&l❖ Enter new display name:"
+  display-name-invalid: "&c&l✖ Invalid name! Must be &e3-32 characters"
+
+  # WorldGuard region prompt
+  worldguard-region: "&e&l❖ Enter WorldGuard region name:"
+  region-invalid: "&c&l✖ Invalid region name! Max &e64 characters"
 guis:
   
   # ==========================================
@@ -51,7 +66,6 @@ guis:
         name: "&e&lℹ How to Use"
         lore:
           - "&7Left-click an arena to &ajoin"
-          - "&7Right-click for &edetailed info"
           - ""
           - "&7Total Arenas: &e{arena_count}"
         amount: 1

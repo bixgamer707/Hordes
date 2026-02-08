@@ -57,6 +57,9 @@ Messages:
     cannot-teleport: "&cYou cannot teleport while in an arena!"
     cannot-use-command: "&cYou cannot use that command in the arena!"
 
+    arena-cooldown: "&cYou must wait &e{0} &cbefore joining this arena again."
+    global-cooldown: "&cYou must wait &e{0} &cbefore joining any arena."
+
   # ============================================
   # WAVE MESSAGES
   # ============================================

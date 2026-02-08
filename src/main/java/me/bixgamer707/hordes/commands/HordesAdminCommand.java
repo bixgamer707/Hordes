@@ -5,6 +5,7 @@ import me.bixgamer707.hordes.arena.Arena;
 import me.bixgamer707.hordes.arena.ArenaManager;
 import me.bixgamer707.hordes.arena.ArenaState;
 import me.bixgamer707.hordes.config.SpawnConfigManager;
+import me.bixgamer707.hordes.gui.admin.ArenaListGUI;
 import me.bixgamer707.hordes.text.Text;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -31,7 +32,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
     
     private static final List<String> SUBCOMMANDS = Arrays.asList(
         "reload", "create", "delete", "setspawn", 
-        "forcestart", "forcestop", "tp", "debug"
+        "forcestart", "forcestop", "tp", "debug", "arenas"
     );
     
     private static final List<String> SPAWN_TYPES = Arrays.asList(
@@ -87,11 +88,28 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
             case "help":
                 sendHelp(sender);
                 return true;
-                
+            case "arenas":
+                handleArenas(sender);
             default:
                 sendMessage(sender, "commands.invalid-usage", "/hordesadmin help");
                 return true;
         }
+    }
+
+    private void handleArenas(CommandSender sender) {
+        if (!sender.hasPermission("hordes.admin.arenas")) {
+            sendMessage(sender, "commands.no-permission");
+            return;
+        }
+
+        if (arenaManager.getArenas().isEmpty()) {
+            sendMessage(sender, "commands.admin.arenas-none");
+            return;
+        }
+
+        ArenaListGUI gui = new ArenaListGUI(plugin, sender instanceof Player ? (Player) sender : null);
+
+        gui.open();
     }
 
     /**

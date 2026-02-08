@@ -48,14 +48,27 @@ Messages:
     death-rejoin: "&eYou can rejoin in &a{0} &eseconds."
     death-respawned: "&aYou have respawned!"
 
+    # Kill Notifications
+    kill-notification: "&7+1 Kill &e({0}/{1} mobs remaining)"
+    killstreak-5: "&a&l⚡ 5 KILL STREAK!"
+    killstreak-10: "&6&l⚡ 10 KILL STREAK!"
+    killstreak-15: "&c&l⚡ 15 KILL STREAK!"
+    killstreak-20: "&4&l⚡ 20 KILL STREAK!"
+    killstreak-mega: "&d&l⚡ MEGA KILL STREAK! &e({0} kills)"
+
     # Cooldown Messages
     cooldown: "&cYou must wait &e{0} &cbefore joining another arena."
+    arena-cooldown: "&cYou must wait &e{0} &cbefore joining &6{1} &cagain"
+    global-cooldown: "&c&l⏱ Global cooldown active! Wait &e{0}"
+    temp-cooldown: "&eYou can rejoin in &a{0}"
 
     # Restriction Messages
     cannot-drop-items: "&cYou cannot drop items in the arena!"
     cannot-pickup-items: "&cYou cannot pick up items in the arena!"
     cannot-teleport: "&cYou cannot teleport while in an arena!"
     cannot-use-command: "&cYou cannot use that command in the arena!"
+    cannot-leave-area: "&c&l✖ You cannot leave the arena area during combat!"
+    returned-to-arena: "&e⚠ You've been returned to the arena"
 
   # ============================================
   # WAVE MESSAGES
@@ -76,10 +89,8 @@ Messages:
     player-only: "&cThis command can only be used by players."
     invalid-usage: "&cInvalid usage! Use: {0}"
     arena-not-found: "&cArena '&e{0}&c' not found."
-    admin-reload: "&aConfiguration reloaded successfully!"
-    admin-reload-failed: "&cFailed to reload configuration. Check console for errors."
 
-    # Help - Lista optimizada
+    # Help
     help:
       - "&e&l▬▬▬▬▬▬▬▬ &6&lHordes Commands &e&l▬▬▬▬▬▬▬▬"
       - "&a/hordes join <arena> &7- Join an arena"
@@ -105,7 +116,7 @@ Messages:
     list-header: "&e&l--- Available Arenas ---"
     list-format: "&7- &e{0} &7({1}) - &a{2}&7/&a{3} &7players"
 
-    # Info Command - Lista optimizada
+    # Info Command
     info-usage: "&cUsage: /hordes info <arena>"
     info:
       - "&e&l▬▬▬▬▬▬▬▬ &6Arena: {0} &e▬▬▬▬▬▬▬▬"
@@ -117,7 +128,7 @@ Messages:
       - "&7Progression: &e{7}"
       - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
-    # Stats Command - Lista optimizada
+    # Stats Command
     stats-no-data: "&cNo statistics data found."
     stats-disabled:
       - "&c✘ Statistics tracking is disabled"
@@ -141,7 +152,7 @@ Messages:
       - "  &7Total Playtime: &e{8}"
       - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
-    # Top Command - Lista optimizada
+    # Top Command
     top-invalid-category: "&cInvalid category. Use: completions, kills, speed, winrate"
     top-no-data: "  &7No data available yet"
     top-header:
@@ -150,7 +161,7 @@ Messages:
     top-footer: "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
   # ============================================
-  # ADMIN COMMANDS - Lista optimizada
+  # ADMIN COMMANDS
   # ============================================
   admin:
     # Help
@@ -166,7 +177,7 @@ Messages:
       - "&a/hordesadmin debug &7- Show debug information"
       - "&c&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
-    # Debug - Lista optimizada
+    # Debug
     debug:
       - "&e&l--- Debug Information ---"
       - "&7Arenas loaded: &e{0}"
@@ -175,10 +186,16 @@ Messages:
       - "&7Economy enabled: &e{3}"
       - "&7MythicMobs enabled: &e{4}"
 
+    # Reload
+    reload-success: "&a✔ Configuration reloaded successfully!"
+    reload-failed: "&c✖ Reload failed. Check console for errors."
 
-    # Create Arena - Lista optimizada
+    # Create Arena
     create-usage: "&cUsage: /hordesadmin create <arena>"
     create-already-exists: "&cArena '&e{0}&c' already exists!"
+    create-header: "&e&l▬▬▬▬▬▬▬▬ &6Create New Arena &e&l▬▬▬▬▬▬▬▬"
+    create-prompt: "&7Follow the prompts to create your arena"
+    create-invalid-id: "&c&l✖ Invalid ID! Use only: &ea-z&c, &e0-9&c, &e_"
     create:
       - "&a&l✔ Arena '&e{0}&a&l' created successfully!"
       - ""
@@ -199,7 +216,7 @@ Messages:
     delete-stopped: "&eArena stopped before deletion."
     delete-instruction: "&eType &a/hordesadmin delete {0} confirm &eto confirm deletion."
 
-    # SetSpawn - Lista optimizada
+    # SetSpawn
     setspawn-usage: "&cUsage: /hordesadmin setspawn <arena> <lobby|arena|exit>"
     setspawn-arena-not-found: "&cArena '&e{0}&c' not found."
     setspawn-invalid-type: "&cInvalid type. Use: lobby, arena, or exit"
@@ -232,11 +249,57 @@ Messages:
 
     # ForceStop
     forcestop-usage: "&cUsage: /hordesadmin forcestop <arena>"
-    forcestop: "&aForce stopping arena..."
+    forcestop: "&aForce stopping arena &e{0}"
+    forcestop-success: "&a✔ Arena forcefully stopped"
 
     # Teleport
     tp-usage: "&cUsage: /hordesadmin tp <arena>"
     tp-success: "&aTeleported to arena &e{0}"
+
+    # Edit Settings
+    edit-basic-header: "&e&l▬▬▬▬▬▬▬▬ &6Edit Basic Settings &e&l▬▬▬▬▬▬▬▬"
+    edit-basic-current: "&7Current display name: &e{0}"
+    edit-basic-prompt: "&7Enter a new display name below"
+    edit-basic-success: "&a✔ Display name updated to: &e{0}"
+    edit-cancelled: "&c✖ Edit cancelled"
+
+    # WorldGuard
+    edit-worldguard-header: "&e&l▬▬▬▬▬▬▬▬ &6WorldGuard Region &e&l▬▬▬▬▬▬▬▬"
+    edit-worldguard-current: "&7Current region: &e{0}"
+    edit-worldguard-prompt: "&7Enter WorldGuard region name below"
+    edit-worldguard-success: "&a✔ Region set to: &e{0}"
+
+    # Spawn Editor
+    spawn-set-success: "&a✔ {0} spawn point set successfully!"
+    spawn-set-failed: "&c✖ Failed to set spawn point"
+
+    # General
+    feature-coming-soon: "&e⚠ This feature is coming soon!"
+    arena-enabled: "&a✔ Arena &e{0} &aenabled"
+    arena-disabled: "&c✖ Arena &e{0} &cdisabled"
+    save-success: "&a✔ Arena saved successfully!"
+    save-failed: "&c✖ Failed to save: {0}"
+    test-failed: "&c✖ Failed to join arena for testing"
+    arena-not-found: "&cArena '&e{0}&c' not found."
+
+  # ============================================
+  # GUI MESSAGES
+  # ============================================
+  gui:
+    # General
+    loading: "&e⟳ Loading..."
+    no-permission: "&c✖ You don't have permission to view this"
+    error: "&c✖ An error occurred"
+
+    # Arena selection
+    no-arenas: "&7No arenas available"
+    arena-full: "&c✖ This arena is full"
+    arena-not-available: "&c✖ Arena not available"
+
+    # Confirmation
+    confirm-delete: "&c&lAre you sure?"
+    confirm-yes: "&a✔ Confirm"
+    confirm-no: "&c✖ Cancel"
 
   # ============================================
   # STATISTICS MESSAGES
@@ -266,6 +329,12 @@ Messages:
     progressive: "&a&l✔ Wave {0} Reward: &e+${1}"
     money: "&a&l+${0}"
     items: "&a&l+{0} items"
+    received: "&a&l✔ Rewards Received!"
+    money-received: "&a+${0} &7added to your balance"
+    items-received: "&a+{0} items &7added to your inventory"
+    items-dropped: "&e⚠ Some items were dropped (inventory full)"
+    commands-executed: "&7Special rewards granted"
+    no-rewards: "&7No rewards for this arena"
 
   # ============================================
   # ERROR MESSAGES
