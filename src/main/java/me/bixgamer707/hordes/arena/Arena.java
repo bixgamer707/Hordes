@@ -291,7 +291,7 @@ public class Arena {
         
         // Track statistics
         if (plugin.getStatisticsManager() != null && plugin.getStatisticsManager().isEnabled()) {
-            plugin.getStatisticsManager().getStatistics(uuid, player.getName()).addDeath();
+            plugin.getStatisticsManager().getStatistics(uuid, player.getName()).addDeath(id);
             plugin.getStatisticsManager().markDirty(uuid);
         }
         
@@ -673,7 +673,7 @@ public class Arena {
                 if (hp != null) {
                     Player p = hp.getPlayer();
                     if (p != null) {
-                        plugin.getStatisticsManager().getStatistics(uuid, p.getName()).endSession();
+                        plugin.getStatisticsManager().getStatistics(uuid, p.getName()).endSession(id);
                         plugin.getStatisticsManager().getStatistics(uuid, p.getName()).addAttempt(id);
                         plugin.getStatisticsManager().markDirty(uuid);
                     }
@@ -849,18 +849,6 @@ public class Arena {
         player.sendMessage(Text.createText(message).build(player));
     }
 
-    /**
-     * Gets a formatted message (without sending)
-     */
-    private String getMessage(String path, Object... replacements) {
-        String message = Text.getMessages().getString("Messages." + path, path);
-        
-        for (int i = 0; i < replacements.length; i++) {
-            message = message.replace("{" + i + "}", String.valueOf(replacements[i]));
-        }
-        
-        return Text.createText(message).build();
-    }
 
     // Getters
     public String getId() { return id; }

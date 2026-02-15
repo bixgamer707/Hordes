@@ -4,6 +4,7 @@ import me.bixgamer707.hordes.Hordes;
 import me.bixgamer707.hordes.arena.Arena;
 import me.bixgamer707.hordes.gui.BaseGUI;
 import me.bixgamer707.hordes.text.Text;
+import me.bixgamer707.hordes.utils.InputValidators;
 import org.bukkit.Material;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
@@ -37,19 +38,19 @@ public class PlayerSettingsGUI extends BaseGUI {
     }
 
     private void updateMinPlayers() {
-        int slot = getConfigInt("items.min-players.slot", 11);
+        int slot = guiConfig.getInt("guis."+guiId+".items.min-players.slot", 11);
         int minPlayers = arena.getConfig().getMinPlayers();
         
         ItemStack item = new ItemStack(Material.valueOf(
-            getConfigString("items.min-players.material", "PLAYER_HEAD")));
+                guiConfig.getString("guis."+guiId+".items.min-players.material", "PLAYER_HEAD")));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
             meta.setDisplayName(Text.createText(
-                getConfigString("items.min-players.name", "&a&lMinimum Players")).build(player));
+                    guiConfig.getString("guis."+guiId+".items.min-players.name", "&a&lMinimum Players")).build(player));
             
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.min-players.lore")) {
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.min-players.lore")) {
                 lore.add(Text.createText(line.replace("{min_players}", String.valueOf(minPlayers)))
                     .build(player));
             }
@@ -62,19 +63,19 @@ public class PlayerSettingsGUI extends BaseGUI {
     }
 
     private void updateMaxPlayers() {
-        int slot = getConfigInt("items.max-players.slot", 13);
+        int slot = guiConfig.getInt("guis."+guiId+".items.max-players.slot", 13);
         int maxPlayers = arena.getConfig().getMaxPlayers();
         
         ItemStack item = new ItemStack(Material.valueOf(
-            getConfigString("items.max-players.material", "PLAYER_HEAD")));
+                guiConfig.getString("guis."+guiId+".items.max-players.material", "PLAYER_HEAD")));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
             meta.setDisplayName(Text.createText(
-                getConfigString("items.max-players.name", "&c&lMaximum Players")).build(player));
+                    guiConfig.getString("guis."+guiId+".items.max-players.name", "&c&lMaximum Players")).build(player));
             
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.max-players.lore")) {
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.max-players.lore")) {
                 lore.add(Text.createText(line.replace("{max_players}", String.valueOf(maxPlayers)))
                     .build(player));
             }
@@ -87,19 +88,19 @@ public class PlayerSettingsGUI extends BaseGUI {
     }
 
     private void updateCountdown() {
-        int slot = getConfigInt("items.countdown.slot", 15);
+        int slot = guiConfig.getInt("guis."+guiId+".items.countdown.slot", 15);
         int countdown = arena.getConfig().getCountdownTime();
         
         ItemStack item = new ItemStack(Material.valueOf(
-            getConfigString("items.countdown.material", "CLOCK")));
+                guiConfig.getString("guis."+guiId+".items.countdown.material", "CLOCK")));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
             meta.setDisplayName(Text.createText(
-                getConfigString("items.countdown.name", "&e&lCountdown Time")).build(player));
+                    guiConfig.getString("guis."+guiId+".items.countdown.name", "&e&lCountdown Time")).build(player));
             
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.countdown.lore")) {
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.countdown.lore")) {
                 lore.add(Text.createText(line.replace("{countdown}", String.valueOf(countdown)))
                     .build(player));
             }
@@ -112,21 +113,21 @@ public class PlayerSettingsGUI extends BaseGUI {
     }
 
     private void updateAutoStart() {
-        int slot = getConfigInt("items.auto-start.slot", 22);
+        int slot = guiConfig.getInt("guis."+guiId+".items.auto-start.slot", 22);
         boolean autoStart = arena.getConfig().isAutoStart();
         
         String materialKey = autoStart ? "material-enabled" : "material-disabled";
         ItemStack item = new ItemStack(Material.valueOf(
-            getConfigString("items.auto-start." + materialKey, autoStart ? "EMERALD" : "REDSTONE")));
+                guiConfig.getString("guis."+guiId+".items.auto-start." + materialKey, autoStart ? "EMERALD" : "REDSTONE")));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            String name = getConfigString("items.auto-start.name", "&6&lAuto-Start")
+            String name = guiConfig.getString("guis."+guiId+".items.auto-start.name", "&6&lAuto-Start")
                 .replace("{status}", autoStart ? "&aEnabled" : "&cDisabled");
             meta.setDisplayName(Text.createText(name).build(player));
             
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.auto-start.lore")) {
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.auto-start.lore")) {
                 lore.add(Text.createText(line.replace("{status}", autoStart ? "&aEnabled" : "&cDisabled"))
                     .build(player));
             }
@@ -140,129 +141,118 @@ public class PlayerSettingsGUI extends BaseGUI {
 
     private void editMinPlayers() {
         close();
-        
-        new ConversationFactory(plugin)
-            .withFirstPrompt(new NumericPrompt() {
-                @Override
-                public String getPromptText(ConversationContext context) {
-                    return Text.createText(getConfigString("prompts.min-players", 
-                        "Enter minimum players (1-100):")).build();
-                }
-                
-                @Override
-                protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
-                    int value = input.intValue();
-                    int maxPlayers = arena.getConfig().getMaxPlayers();
-                    
-                    if (value < 1 || value > maxPlayers) {
-                        player.sendMessage(Text.createText(
-                            getConfigString("messages.invalid-min-players", 
-                                "&cMinimum must be between 1 and {max}")
-                                .replace("{max}", String.valueOf(maxPlayers))).build(player));
-                        return this;
+        int maxPlayers = arena.getConfig().getMaxPlayers();
+
+        plugin.getChatInputManager().requestInput(player)
+                .withPrompt(Text.createTextWithLang(
+                                "prompts.min-players").build(player))
+                .withInvalidMessage(Text.createTextWithLang("prompts.invalid-min-players").build())
+                .withValidator(InputValidators.arenaId())
+                .onComplete(input -> {
+                    int value;
+                    try {
+                        value = Integer.parseInt(input);
+                    } catch (NumberFormatException e) {
+                        player.sendMessage(Text.createTextWithLang(
+                                        "prompts.invalid-min-players")
+                                .replace("{max}", String.valueOf(maxPlayers)).build(player));
+                        return;
                     }
-                    
+
+                    if (value < 1 || value > maxPlayers) {
+                        player.sendMessage(Text.createTextWithLang("prompts.invalid-min-players")
+                                .replace("{max}", String.valueOf(maxPlayers)).build());
+                        return;
+                    }
+
                     plugin.getFileManager().getArenas()
-                        .set("arenas." + arenaId + ".min-players", value);
+                            .set("arenas." + arenaId + ".min-players", value);
                     plugin.getFileManager().getArenas().save();
-                    
-                    player.sendMessage(Text.createText(
-                        getConfigString("messages.min-players-updated", 
-                            "&aMinimum players set to {value}")
-                            .replace("{value}", String.valueOf(value))).build(player));
-                    
-                    return Prompt.END_OF_CONVERSATION;
-                }
-            })
-            .withLocalEcho(false)
-            .withTimeout(60)
-            .addConversationAbandonedListener(event -> reopenGUI())
-            .buildConversation(player)
-            .begin();
+
+                    player.sendMessage(Text.createTextWithLang("prompts.min-players-updated")
+                            .replace("{value}", String.valueOf(value)).build());
+
+                    reopenGUI();
+                })
+                .onCancel(this::reopenGUI)
+                .start();
+
     }
 
     private void editMaxPlayers() {
         close();
-        
-        new ConversationFactory(plugin)
-            .withFirstPrompt(new NumericPrompt() {
-                @Override
-                public String getPromptText(ConversationContext context) {
-                    return Text.createText(getConfigString("prompts.max-players", 
-                        "Enter maximum players (1-100):")).build();
-                }
-                
-                @Override
-                protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
-                    int value = input.intValue();
-                    int minPlayers = arena.getConfig().getMinPlayers();
-                    
-                    if (value < minPlayers || value > 100) {
-                        player.sendMessage(Text.createText(
-                            getConfigString("messages.invalid-max-players", 
-                                "&cMaximum must be between {min} and 100")
-                                .replace("{min}", String.valueOf(minPlayers))).build(player));
-                        return this;
+
+        int minPlayers = arena.getConfig().getMinPlayers();
+
+        plugin.getChatInputManager().requestInput(player)
+                .withPrompt(Text.createTextWithLang(
+                                "prompts.max-players").build(player))
+                .withValidator(InputValidators.arenaId())
+                .onComplete(input -> {
+                    int value;
+                    try {
+                        value = Integer.parseInt(input);
+                    } catch (NumberFormatException e) {
+                        player.sendMessage(Text.createTextWithLang(
+                                        "prompts.invalid-max-players")
+                                .replace("{min}", String.valueOf(minPlayers)).build(player));
+                        return;
                     }
-                    
+
+                    if (value < minPlayers || value > 100) {
+                        player.sendMessage(Text.createTextWithLang("prompts.invalid-max-players")
+                                .replace("{min}", String.valueOf(minPlayers)).build(player));
+                        return;
+                    }
+
                     plugin.getFileManager().getArenas()
-                        .set("arenas." + arenaId + ".max-players", value);
+                            .set("arenas." + arenaId + ".max-players", value);
                     plugin.getFileManager().getArenas().save();
-                    
-                    player.sendMessage(Text.createText(
-                        getConfigString("messages.max-players-updated", 
-                            "&aMaximum players set to {value}")
-                            .replace("{value}", String.valueOf(value))).build(player));
-                    
-                    return Prompt.END_OF_CONVERSATION;
-                }
-            })
-            .withLocalEcho(false)
-            .withTimeout(60)
-            .addConversationAbandonedListener(event -> reopenGUI())
-            .buildConversation(player)
-            .begin();
+
+                    player.sendMessage(Text.createTextWithLang("prompts.max-players-updated")
+                            .replace("{value}", String.valueOf(value)).build(player));
+
+                    reopenGUI();
+                })
+                .onCancel(this::reopenGUI)
+                .start();
     }
 
     private void editCountdown() {
         close();
         
-        new ConversationFactory(plugin)
-            .withFirstPrompt(new NumericPrompt() {
-                @Override
-                public String getPromptText(ConversationContext context) {
-                    return Text.createText(getConfigString("prompts.countdown", 
-                        "Enter countdown time in seconds (5-60):")).build();
-                }
-                
-                @Override
-                protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
-                    int value = input.intValue();
-                    
-                    if (value < 5 || value > 60) {
-                        player.sendMessage(Text.createText(
-                            getConfigString("messages.invalid-countdown", 
-                                "&cCountdown must be between 5 and 60 seconds")).build(player));
-                        return this;
+        plugin.getChatInputManager().requestInput(player)
+                .withPrompt(Text.createTextWithLang(
+                                "prompts.countdown-time").build(player))
+                .withValidator(InputValidators.arenaId())
+                .onComplete(input -> {
+                    int value;
+                    try {
+                        value = Integer.parseInt(input);
+                    } catch (NumberFormatException e) {
+                        player.sendMessage(Text.createTextWithLang(
+                                        "prompts.invalid-countdown")
+                                .build(player));
+                        return;
                     }
-                    
+
+                    if (value < 0 || value > 500) {
+                        player.sendMessage(Text.createTextWithLang("prompts.invalid-countdown")
+                                .build(player));
+                        return;
+                    }
+
                     plugin.getFileManager().getArenas()
-                        .set("arenas." + arenaId + ".countdown-time", value);
+                            .set("arenas." + arenaId + ".countdown", value);
                     plugin.getFileManager().getArenas().save();
-                    
-                    player.sendMessage(Text.createText(
-                        getConfigString("messages.countdown-updated", 
-                            "&aCountdown time set to {value} seconds")
-                            .replace("{value}", String.valueOf(value))).build(player));
-                    
-                    return Prompt.END_OF_CONVERSATION;
-                }
-            })
-            .withLocalEcho(false)
-            .withTimeout(60)
-            .addConversationAbandonedListener(event -> reopenGUI())
-            .buildConversation(player)
-            .begin();
+
+                    player.sendMessage(Text.createTextWithLang("prompts.countdown-time-updated")
+                            .replace("{value}", String.valueOf(value)).build(player));
+
+                    reopenGUI();
+                })
+                .onCancel(this::reopenGUI)
+                .start();
     }
 
     private void toggleAutoStart() {
@@ -272,12 +262,10 @@ public class PlayerSettingsGUI extends BaseGUI {
             .set("arenas." + arenaId + ".auto-start", newValue);
         plugin.getFileManager().getArenas().save();
         
-        player.sendMessage(Text.createText(
-            getConfigString("messages.auto-start-toggled", 
-                "&aAuto-start {status}")
-                .replace("{status}", newValue ? "enabled" : "disabled")).build(player));
+        player.sendMessage(Text.createTextWithLang("prompts.auto-start-toggled")
+                .replace("{status}", newValue ? "enabled" : "disabled").build(player));
         
-        playSound(getConfigString("sounds.click", "UI_BUTTON_CLICK"));
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
         reopenGUI();
     }
 

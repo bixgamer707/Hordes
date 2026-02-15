@@ -68,7 +68,7 @@ public class FileManager{
 
     public File getMessages(){
         return getFile(
-                getConfig().contains("Settings.language") ? getConfig().getString("Settings.language") : "en_us.yml"
+                getConfig().contains("settings.language") ? getConfig().getString("settings.language") : "en_us.yml"
         );
     }
 

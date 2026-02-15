@@ -66,7 +66,7 @@ public class Text implements TextHandler {
      * @param player Jugador que recibirá el mensaje
      */
     public static void createTextWithLang(String path, Player player) {
-        createTextWithLang(path, player, player);
+        createTextsWithLang(path, player, player);
     }
 
     /**
@@ -75,7 +75,7 @@ public class Text implements TextHandler {
      * @param player Jugador que recibirá el mensaje
      * @param target Jugador del cual se tomarán los placeholders
      */
-    public static void createTextWithLang(String path, Player player, Player target) {
+    public static void createTextsWithLang(String path, Player player, Player target) {
         createTextWithLang(getMessages().getStringList("Messages." + path), player, target);
     }
 
@@ -204,6 +204,68 @@ public class Text implements TextHandler {
     }
 
     /**
+     * Sends a message to a player with placeholders
+     *
+     * @param player Player to send message to
+     * @param path Message path in messages file
+     * @param replacements Placeholder replacements for {0}, {1}, etc.
+     */
+    public static void sendMessage(Player player, String path, Object... replacements) {
+        String message = getMessage(path, replacements);
+        player.sendMessage(createText(message).build(player));
+    }
+
+    /**
+     * Sends a message to a CommandSender (player or console)
+     *
+     * @param sender CommandSender to send message to
+     * @param path Message path in messages file
+     * @param replacements Placeholder replacements
+     */
+    public static void sendMessage(CommandSender sender, String path, Object... replacements) {
+        String message = getMessage(path, replacements);
+
+        if (sender instanceof Player) {
+            sender.sendMessage(Text.createText(message).build((Player) sender));
+        } else {
+            sender.sendMessage(Text.createText(message).build());
+        }
+    }
+
+    /**
+     * Gets a formatted message without sending
+     *
+     * @param path Message path in messages file
+     * @param replacements Placeholder replacements
+     * @return Formatted and colorized message
+     */
+    public static String getMessage(String path, Object... replacements) {
+        String message = Text.getMessages().getString("Messages." + path, path);
+
+        // Replace {0}, {1}, {2}...
+        for (int i = 0; i < replacements.length; i++) {
+            message = message.replace("{" + i + "}", String.valueOf(replacements[i]));
+        }
+
+        return Text.createText(message).build();
+    }
+
+    /**
+     * Broadcasts a message to multiple players
+     *
+     * @param players Array of players
+     * @param path Message path
+     * @param replacements Placeholder replacements
+     */
+    public static void broadcast(Iterable<Player> players, String path, Object... replacements) {
+        String message = getMessage(path, replacements);
+
+        for (Player player : players) {
+            player.sendMessage(Text.createText(message).build(player));
+        }
+    }
+
+    /**
      * Obtiene el archivo de mensajes del plugin
      * @return Archivo de mensajes
      */
@@ -215,7 +277,7 @@ public class Text implements TextHandler {
      * Obtiene el archivo de configuración del plugin
      * @return Archivo de configuración
      */
-    public static File getConfig() {
+    public File getConfig() {
         return Hordes.getInstance().getFileManager().getConfig();
     }
 }

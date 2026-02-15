@@ -3,6 +3,7 @@ package me.bixgamer707.hordes.commands;
 import me.bixgamer707.hordes.Hordes;
 import me.bixgamer707.hordes.arena.Arena;
 import me.bixgamer707.hordes.arena.ArenaManager;
+import me.bixgamer707.hordes.gui.player.ArenaInfoGUI;
 import me.bixgamer707.hordes.gui.player.ArenaSelectionGUI;
 import me.bixgamer707.hordes.statistics.PlayerStatistics;
 import me.bixgamer707.hordes.text.Text;
@@ -240,7 +241,8 @@ public class HordesCommand implements CommandExecutor, TabCompleter {
             mode,                                           // {6}
             arena.getConfig().getProgressionType().name()   // {7}
         );
-        
+
+        new ArenaInfoGUI(plugin, (Player) sender, arena).open();
         return true;
     }
 
@@ -302,7 +304,7 @@ public class HordesCommand implements CommandExecutor, TabCompleter {
      * Sends a list of messages with placeholder replacements
      */
     private void sendMessageListWithReplacements(CommandSender sender, String path, Object... replacements) {
-        List<String> messages = Text.getMessages().getStringList("Messages." + path);
+        List<String> messages = plugin.getFileManager().getMessages().getStringList("Messages." + path);
         
         if (messages.isEmpty()) {
             sendMessage(sender, path, replacements);
@@ -419,7 +421,7 @@ public class HordesCommand implements CommandExecutor, TabCompleter {
      * Sends a list of messages
      */
     private void sendMessageList(CommandSender sender, String path) {
-        List<String> messages = Text.getMessages().getStringList("Messages." + path);
+        List<String> messages = plugin.getFileManager().getMessages().getStringList("Messages." + path);
         
         if (messages.isEmpty()) {
             sendMessage(sender, path);
@@ -439,7 +441,7 @@ public class HordesCommand implements CommandExecutor, TabCompleter {
      * Sends a formatted message
      */
     private void sendMessage(CommandSender sender, String path, Object... replacements) {
-        String message = Text.getMessages().getString("Messages." + path, path);
+        String message = plugin.getFileManager().getMessages().getString("Messages." + path, path);
         
         // Replace placeholders
         for (int i = 0; i < replacements.length; i++) {

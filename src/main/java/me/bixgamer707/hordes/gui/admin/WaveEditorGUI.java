@@ -27,8 +27,8 @@ public class WaveEditorGUI extends BaseGUI {
         this.arena = arena;
         this.arenaId = arena.getId();
         
-        this.wavesPerPage = getConfigInt("waves-per-page", 28);
-        this.waveSlots = parseSlots(getConfigString("wave-slots", "10-16,19-25,28-34,37-43"));
+        this.wavesPerPage = guiConfig.getInt("guis."+guiId+".waves-per-page", 28);
+        this.waveSlots = parseSlots(guiConfig.getString("guis."+guiId+".wave-slots", "10-16,19-25,28-34,37-43"));
         
         int totalWaves = arena.getConfig().getTotalWaves();
         this.maxPages = (int) Math.ceil((double) totalWaves / wavesPerPage);
@@ -83,24 +83,24 @@ public class WaveEditorGUI extends BaseGUI {
      */
     private ItemStack createWaveItem(int waveNumber) {
         // Get wave config from mobs.yml
-        boolean hasConfig = plugin.getFileManager().getFile("mobs.yml")
-            .contains("waves." + arenaId + ".wave-" + waveNumber);
+        boolean hasConfig = plugin.getFileManager().getMobs()
+            .contains(arenaId + ".wave-" + waveNumber);
         
         // Get material from GUI config
         String materialKey = "items.wave-item.material-" + (hasConfig ? "configured" : "not-configured");
-        Material material = Material.valueOf(getConfigString(materialKey, "GREEN_WOOL").toUpperCase());
+        Material material = Material.valueOf(guiConfig.getString("guis."+guiId+"."+materialKey, "GREEN_WOOL").toUpperCase());
         
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
             // Get name from config
-            String name = getConfigString("items.wave-item.name", "&e&lWave {wave_number}")
+            String name = guiConfig.getString("guis."+guiId+".items.wave-item.name", "&e&lWave {wave_number}")
                 .replace("{wave_number}", String.valueOf(waveNumber));
             meta.setDisplayName(Text.createText(name).build());
             
             // Get lore from config
-            List<String> loreTemplate = getConfigStringList("items.wave-item.lore");
+            List<String> loreTemplate = guiConfig.getStringList("guis."+guiId+".items.wave-item.lore");
             List<String> lore = new ArrayList<>();
             
             // Get wave info if exists
@@ -113,9 +113,9 @@ public class WaveEditorGUI extends BaseGUI {
             for (String line : loreTemplate) {
                 String processed = line
                     .replace("{wave_number}", String.valueOf(waveNumber))
-                    .replace("{status}", hasConfig ? 
-                        getConfigString("placeholders.wave-configured", "&a✔ Configured") : 
-                        getConfigString("placeholders.wave-not-configured", "&c✘ Not configured"))
+                    .replace("{status}", hasConfig ?
+                            guiConfig.getString("guis."+guiId+".placeholders.wave-configured", "&a✔ Configured") :
+                            guiConfig.getString("guis."+guiId+".placeholders.wave-not-configured", "&c✘ Not configured"))
                     .replace("{mobs_info}", mobsInfo);
                 
                 lore.add(Text.createText(processed).build(player));
@@ -133,8 +133,8 @@ public class WaveEditorGUI extends BaseGUI {
      */
     private String getMobsInfo(int waveNumber) {
         // Get from mobs.yml
-        var mobsConfig = plugin.getFileManager().getFile("mobs.yml")
-            .getConfigurationSection("waves." + arenaId + ".wave-" + waveNumber + ".mobs");
+        var mobsConfig = plugin.getFileManager().getMobs()
+            .getConfigurationSection(arenaId + ".wave-" + waveNumber + ".mobs");
         
         if (mobsConfig == null) {
             return "No mobs";
@@ -152,18 +152,17 @@ public class WaveEditorGUI extends BaseGUI {
      * Handles wave click
      */
     private void handleWaveClick(Player player, int waveNumber) {
-        String msg = getConfigString("messages.wave-edit-coming-soon", 
-            "§cWave editing coming soon! Wave {0}")
-            .replace("{0}", String.valueOf(waveNumber));
-        player.sendMessage(Text.createText(msg).build());
+        player.sendMessage(Text.createTextWithLang("admin.wave-edit-coming-soon")
+                .replace("{0}", String.valueOf(waveNumber))
+                .build());
     }
 
     /**
      * Updates pagination buttons
      */
     private void updatePaginationButtons() {
-        int prevSlot = getConfigInt("items.previous-page.slot", 45);
-        int nextSlot = getConfigInt("items.next-page.slot", 53);
+        int prevSlot = guiConfig.getInt("guis."+guiId+".items.previous-page.slot", 45);
+        int nextSlot = guiConfig.getInt("guis."+guiId+".items.next-page.slot", 53);
         
         if (currentPage > 0) {
             updateItemLore(prevSlot, new String[]{
@@ -185,17 +184,17 @@ public class WaveEditorGUI extends BaseGUI {
     }
 
     @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         if (actionType.equals("add-wave")) {
             // Add new wave
             int newWave = arena.getConfig().getTotalWaves() + 1;
             plugin.getFileManager().getFile("arenas.yml")
                 .set("arenas." + arenaId + ".total-waves", newWave);
             plugin.getFileManager().getArenas().save();
-            
-            String msg = getConfigString("messages.wave-added", 
-                "§a✔ Wave {0} added!").replace("{0}", String.valueOf(newWave));
-            player.sendMessage(Text.createText(msg).build());
+
+            player.sendMessage(Text.createTextWithLang("admin.wave-added")
+                            .replace("{count}", String.valueOf(newWave))
+                    .build());
             
             plugin.getArenaManager().loadArenas();
             refresh();

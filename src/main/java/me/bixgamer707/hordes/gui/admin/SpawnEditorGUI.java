@@ -31,9 +31,9 @@ public class SpawnEditorGUI extends BaseGUI {
     @Override
     protected void buildDynamic() {
         // Get configured slots for each spawn type
-        int lobbySlot = getConfigInt("spawn-slots.lobby", 11);
-        int arenaSlot = getConfigInt("spawn-slots.arena", 13);
-        int exitSlot = getConfigInt("spawn-slots.exit", 15);
+        int lobbySlot = guiConfig.getInt("guis."+guiId+".spawn-slots.lobby", 11);
+        int arenaSlot = guiConfig.getInt("guis."+guiId+".spawn-slots.arena", 13);
+        int exitSlot = guiConfig.getInt("guis."+guiId+".spawn-slots.exit", 15);
 
         createSpawnItem("lobby", lobbySlot);
         createSpawnItem("arena", arenaSlot);
@@ -48,8 +48,8 @@ public class SpawnEditorGUI extends BaseGUI {
         boolean hasSpawn = spawn != null;
 
         // Get materials from config
-        String materialKey = "spawn-item.material-" + (hasSpawn ? "set" : "not-set");
-        String materialName = getConfigString(materialKey, hasSpawn ? "GREEN_WOOL" : "RED_WOOL");
+        String materialKey = "guis."+guiId+".spawn-item.material-" + (hasSpawn ? "set" : "not-set");
+        String materialName = guiConfig.getString(materialKey, hasSpawn ? "GREEN_WOOL" : "RED_WOOL");
         Material material;
         try {
             material = Material.valueOf(materialName);
@@ -62,7 +62,7 @@ public class SpawnEditorGUI extends BaseGUI {
 
         if (meta != null) {
             // Get name from config
-            String nameTemplate = getConfigString("spawn-item.name", "&e{spawn_type} Spawn");
+            String nameTemplate = guiConfig.getString("guis."+guiId+".spawn-item.name", "&e{spawn_type} Spawn");
             String typeName = spawnType.substring(0, 1).toUpperCase() + spawnType.substring(1);
             String name = nameTemplate.replace("{spawn_type}", typeName);
             meta.setDisplayName(Text.createText(name).build(player));
@@ -124,20 +124,20 @@ public class SpawnEditorGUI extends BaseGUI {
         boolean success = spawnManager.setSpawn(arenaId, spawnType, playerLoc);
 
         if (success) {
-            sendConfigMessage("admin.spawn-set-success",
+            sendConfigMessage("Messages.admin.spawn-set-success", plugin.getFileManager().getMessages(),
                     spawnType.substring(0,1).toUpperCase() + spawnType.substring(1));
             playSound("success");
 
             plugin.getArenaManager().loadArenas();
             refresh();
         } else {
-            sendConfigMessage("admin.spawn-set-failed");
+            sendConfigMessage("Messages.admin.spawn-set-failed", plugin.getFileManager().getMessages());
             playSound("error");
         }
     }
 
     @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         // Custom actions for TP, clear, etc. from config
     }
 

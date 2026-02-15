@@ -64,7 +64,7 @@ public class EntityListener implements Listener {
 
                 // Track statistics
                 if (plugin.getStatisticsManager() != null && plugin.getStatisticsManager().isEnabled()) {
-                    plugin.getStatisticsManager().getStatistics(killer.getUniqueId(), killer.getName()).addKill();
+                    plugin.getStatisticsManager().getStatistics(killer.getUniqueId(), killer.getName()).addKill(arenaId);
                     plugin.getStatisticsManager().markDirty(killer.getUniqueId());
                 }
                 /*

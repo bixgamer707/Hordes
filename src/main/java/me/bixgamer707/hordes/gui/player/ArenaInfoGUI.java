@@ -315,23 +315,23 @@ public class ArenaInfoGUI extends BaseGUI {
     }
 
     @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         switch (actionType) {
             case "join-arena":
                 // Try to join the arena
                 boolean success = plugin.getArenaManager().joinArena(player, arena.getId());
                 if (success) {
                     close();
-                    playSound(getConfigString("sounds.success", "ENTITY_PLAYER_LEVELUP"));
+                    playSound(guiConfig.getString("guis."+guiId+".sounds.success", "ENTITY_PLAYER_LEVELUP"));
                 } else {
-                    playSound(getConfigString("sounds.error", "ENTITY_VILLAGER_NO"));
+                    playSound(guiConfig.getString("guis."+guiId+".sounds.error", "ENTITY_VILLAGER_NO"));
                 }
                 break;
                 
             case "refresh":
                 // Refresh the GUI
                 refresh();
-                playSound(getConfigString("sounds.click", "UI_BUTTON_CLICK"));
+                playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
                 break;
         }
     }

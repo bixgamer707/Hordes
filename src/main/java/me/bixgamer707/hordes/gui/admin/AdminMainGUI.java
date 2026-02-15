@@ -4,6 +4,7 @@ import me.bixgamer707.hordes.Hordes;
 import me.bixgamer707.hordes.arena.Arena;
 import me.bixgamer707.hordes.arena.ArenaState;
 import me.bixgamer707.hordes.gui.BaseGUI;
+import me.bixgamer707.hordes.text.Text;
 import org.bukkit.entity.Player;
 
 /**
@@ -46,7 +47,7 @@ public class AdminMainGUI extends BaseGUI {
     }
 
     @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         switch (actionType) {
             case "open-arena-manager":
                 new ArenaListGUI(plugin, player).open();
@@ -64,11 +65,11 @@ public class AdminMainGUI extends BaseGUI {
     private void handleReload() {
         try {
             plugin.reload();
-            sendConfigMessage("admin.reload-success");
+            player.sendMessage(Text.createTextWithLang("admin.reload-success").build());
             playSound("success");
             refresh();
         } catch (Exception e) {
-            sendConfigMessage("admin.reload-failed");
+            player.sendMessage(Text.createTextWithLang("admin.reload-failed").build());
             playSound("error");
         }
     }

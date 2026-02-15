@@ -64,8 +64,8 @@ public class ArenaListGUI extends BaseGUI {
      */
     private ItemStack createArenaItem(Arena arena) {
         // Get material based on state from config
-        String materialKey = "arena-item.material-" + (arena.getConfig().isEnabled() ? "enabled" : "disabled");
-        String materialName = getConfigString(materialKey, "GRAY_WOOL");
+        String materialKey = "guis."+guiId+".items.arena-item";
+        String materialName = guiConfig.getString(materialKey+".material-" + (arena.getConfig().isEnabled() ? "enabled" : "disabled"), "GRAY_WOOL");
         Material material = Material.valueOf(materialName);
 
         ItemStack item = new ItemStack(material);
@@ -73,12 +73,12 @@ public class ArenaListGUI extends BaseGUI {
 
         if (meta != null) {
             // Get name template from config
-            String nameTemplate = getConfigString("arena-item.name", "&e{arena_id}");
+            String nameTemplate = guiConfig.getString(materialKey+".name", "&e{arena_id}");
             String name = replacePlaceholders(nameTemplate, arena);
             meta.setDisplayName(Text.createText(name).build(player));
 
             // Get lore from config
-            List<String> loreTemplate = guiConfig.getStringList("guis." + guiId + ".arena-item.lore");
+            List<String> loreTemplate = guiConfig.getStringList(materialKey+".lore");
             List<String> lore = new ArrayList<>();
 
             for (String line : loreTemplate) {
@@ -106,16 +106,16 @@ public class ArenaListGUI extends BaseGUI {
                 .replace("{max_players}", String.valueOf(arena.getConfig().getMaxPlayers()))
                 .replace("{total_waves}", String.valueOf(arena.getConfig().getTotalWaves()))
                 .replace("{enabled}", arena.getConfig().isEnabled() ?
-                        getConfigString("arena-item.enabled-text", "&a✔") :
-                        getConfigString("arena-item.disabled-text", "&c✘"));
+                        guiConfig.getString("guis."+guiId+".items.arena-item.enabled-text", "&a✔") :
+                        guiConfig.getString("guis."+guiId+".items.arena-item.disabled-text", "&c✘"));
     }
 
     /**
      * Gets color for arena state from config
      */
     private String getStateColor(ArenaState state) {
-        String key = "arena-item.state-color-" + state.name().toLowerCase();
-        return getConfigString(key, "&7");
+        String key = "guis."+guiId+".items.arena-item.state-color-" + state.name().toLowerCase();
+        return guiConfig.getString(key, "&7");
     }
 
     /**
@@ -124,7 +124,7 @@ public class ArenaListGUI extends BaseGUI {
     private void handleArenaClick(Player player, String arenaId) {
         Arena arena = plugin.getArenaManager().getArena(arenaId);
         if (arena == null) {
-            sendConfigMessage("admin.arena-not-found");
+            player.sendMessage(Text.createTextWithLang("admin.arena-not-found").build(player));
             return;
         }
 
@@ -157,7 +157,7 @@ public class ArenaListGUI extends BaseGUI {
     }
 
     @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         if (actionType.equals("create-arena")) {
             new ArenaCreateGUI(plugin, player).open();
         }

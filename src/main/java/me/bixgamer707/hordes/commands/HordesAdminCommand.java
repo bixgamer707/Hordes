@@ -5,7 +5,10 @@ import me.bixgamer707.hordes.arena.Arena;
 import me.bixgamer707.hordes.arena.ArenaManager;
 import me.bixgamer707.hordes.arena.ArenaState;
 import me.bixgamer707.hordes.config.SpawnConfigManager;
+import me.bixgamer707.hordes.gui.admin.AdminMainGUI;
+import me.bixgamer707.hordes.gui.admin.ArenaCreateGUI;
 import me.bixgamer707.hordes.gui.admin.ArenaListGUI;
+import me.bixgamer707.hordes.gui.player.LeaderboardGUI;
 import me.bixgamer707.hordes.text.Text;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -32,7 +35,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
     
     private static final List<String> SUBCOMMANDS = Arrays.asList(
         "reload", "create", "delete", "setspawn", 
-        "forcestart", "forcestop", "tp", "debug", "arenas"
+        "forcestart", "forcestop", "tp", "debug", "arenas", "config"
     );
     
     private static final List<String> SPAWN_TYPES = Arrays.asList(
@@ -90,10 +93,44 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
                 return true;
             case "arenas":
                 handleArenas(sender);
+                return true;
+            case "top":
+                handleTop(sender);
+                return true;
+            case "config":
+                handleConfig(sender);
+                return true;
             default:
-                sendMessage(sender, "commands.invalid-usage", "/hordesadmin help");
+                sendHelp(sender);
                 return true;
         }
+    }
+
+    private void handleConfig(CommandSender sender) {
+        if (!sender.hasPermission("hordes.admin.config")) {
+            sendMessage(sender, "commands.no-permission");
+            return;
+        }
+
+        if (sender instanceof Player) {
+            new AdminMainGUI(plugin, (Player) sender).open();
+        } else {
+            sendMessage(sender, "commands.player-only");
+        }
+    }
+
+    private void handleTop(CommandSender sender) {
+        if (!sender.hasPermission("hordes.admin.top")) {
+            sendMessage(sender, "commands.no-permission");
+            return;
+        }
+
+        if (arenaManager.getArenas().isEmpty()) {
+            sendMessage(sender, "commands.admin.arenas-none");
+            return;
+        }
+
+        new LeaderboardGUI(plugin, (Player) sender).open();
     }
 
     private void handleArenas(CommandSender sender) {
@@ -103,7 +140,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (arenaManager.getArenas().isEmpty()) {
-            sendMessage(sender, "commands.admin.arenas-none");
+            sendMessage(sender, "admin.arenas-none");
             return;
         }
 
@@ -123,10 +160,10 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         
         try {
             plugin.reload();
-            sendMessage(sender, "commands.admin-reload");
+            sendMessage(sender, "admin.reload-success");
             return true;
         } catch (Exception e) {
-            sendMessage(sender, "commands.admin-reload-failed");
+            sendMessage(sender, "admin.reload-failed");
             sendMessage(sender, "errors.config-error", e.getMessage());
             if (plugin.getFileManager().getFile("config.yml").getBoolean("debug-mode", false)) {
                 e.printStackTrace();
@@ -141,25 +178,10 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
     private boolean handleCreate(CommandSender sender, String[] args) {
         if (!sender.hasPermission("hordes.admin.create")) {
             sendMessage(sender, "commands.no-permission");
-            return true;
+            return false;
         }
-        
-        if (args.length < 2) {
-            sendMessage(sender, "commands.admin.create-usage");
-            return true;
-        }
-        
-        String arenaId = args[1];
-        
-        // Check if arena already exists
-        if (arenaManager.getArena(arenaId) != null) {
-            sendMessage(sender, "commands.admin.create-already-exists", arenaId);
-            return true;
-        }
-        
-        // Show creation instructions using optimized list
-        sendMessageListWithReplacements(sender, "commands.admin.create", arenaId);
-        
+
+        new ArenaCreateGUI(plugin, sender instanceof Player ? (Player) sender : null).open();
         return true;
     }
 
@@ -169,11 +191,11 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
     private boolean handleDelete(CommandSender sender, String[] args) {
         if (!sender.hasPermission("hordes.admin.delete")) {
             sendMessage(sender, "commands.no-permission");
-            return true;
+            return false;
         }
         
         if (args.length < 2) {
-            sendMessage(sender, "commands.admin.delete-usage");
+            sendMessage(sender, "admin.delete-usage");
             return true;
         }
         
@@ -190,8 +212,8 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
             arena.endArena(false);
         }
         
-        sendMessage(sender, "commands.admin.delete-stopped");
-        sendMessage(sender, "commands.admin.delete-instruction");
+        sendMessage(sender, "admin.delete-stopped");
+        sendMessage(sender, "admin.delete-instruction");
         
         return true;
     }
@@ -211,7 +233,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         }
         
         if (args.length < 3) {
-            sendMessage(sender, "commands.admin.setspawn-usage");
+            sendMessage(sender, "admin.setspawn-usage");
             return true;
         }
         
@@ -222,12 +244,12 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         Arena arena = arenaManager.getArena(arenaId);
         
         if (arena == null) {
-            sendMessage(sender, "commands.admin.setspawn-arena-not-found", arenaId);
+            sendMessage(sender, "admin.setspawn-arena-not-found", arenaId);
             return true;
         }
         
         if (!SPAWN_TYPES.contains(spawnType)) {
-            sendMessage(sender, "commands.admin.setspawn-invalid-type");
+            sendMessage(sender, "admin.setspawn-invalid-type");
             return true;
         }
         
@@ -240,7 +262,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         
         if (success) {
             // Show success message using optimized list
-            sendMessageListWithReplacements(sender, "commands.admin.setspawn",
+            sendMessageListWithReplacements(sender, "admin.setspawn",
                 arenaId,                                    // {0}
                 spawnType,                                  // {1}
                 loc.getWorld().getName(),                   // {2}
@@ -251,8 +273,8 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
                 String.format("%.1f", loc.getPitch())       // {7}
             );
         } else {
-            sendMessage(sender, "commands.admin.setspawn-failed");
-            sendMessage(sender, "commands.admin.setspawn-check-console");
+            sendMessage(sender, "admin.setspawn-failed");
+            sendMessage(sender, "admin.setspawn-check-console");
         }
         
         return true;
@@ -282,19 +304,18 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         
         // Check if can start
         if (arena.getState() != ArenaState.WAITING && arena.getState() != ArenaState.STARTING) {
-            sendMessage(sender, "commands.admin.forcestart-not-waiting");
+            sendMessage(sender, "admin.forcestart-not-waiting");
             return true;
         }
         
         if (arena.getPlayerCount() == 0) {
-            sendMessage(sender, "commands.admin.forcestart-no-players");
+            sendMessage(sender, "admin.forcestart-no-players");
             return true;
         }
         
-        sendMessage(sender, "commands.admin.forcestart-starting");
-        sendMessage(sender, "commands.admin.forcestart-note");
-        sendMessage(sender, "commands.admin.forcestart-players", arena.getPlayerCount());
-        sendMessage(sender, "commands.admin.admin-forcestart", arenaId);
+        sendMessage(sender, "admin.forcestart-starting");
+        sendMessage(sender, "admin.forcestart-note");
+        sendMessage(sender, "admin.forcestart-players", arena.getPlayerCount());
         
         return true;
     }
@@ -309,7 +330,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         }
         
         if (args.length < 2) {
-            sendMessage(sender, "commands.admin.forcestop-usage");
+            sendMessage(sender, "admin.forcestop-usage");
             return true;
         }
         
@@ -317,13 +338,13 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         Arena arena = arenaManager.getArena(arenaId);
         
         if (arena == null) {
-            sendMessage(sender, "commands.admin.arena-not-found", arenaId);
+            sendMessage(sender, "commands.arena-not-found", arenaId);
             return true;
         }
         
         // Force stop
         arena.endArena(false);
-        sendMessage(sender, "commands.admin.forcestop", arenaId);
+        sendMessage(sender, "admin.forcestop", arenaId);
         
         return true;
     }
@@ -343,7 +364,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         }
         
         if (args.length < 2) {
-            sendMessage(sender, "commands.admin.tp-usage");
+            sendMessage(sender, "admin.tp-usage");
             return true;
         }
         
@@ -358,7 +379,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         
         // Teleport to arena spawn
         player.teleport(arena.getConfig().getArenaSpawn());
-        sendMessage(sender, "commands.admin.tp-success", arenaId);
+        sendMessage(sender, "admin.tp-success", arenaId);
         
         return true;
     }
@@ -405,7 +426,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
      * Sends a list of messages
      */
     private void sendMessageList(CommandSender sender, String path) {
-        List<String> messages = Text.getMessages().getStringList("Messages." + path);
+        List<String> messages = plugin.getFileManager().getMessages().getStringList("Messages." + path);
         
         if (messages.isEmpty()) {
             sendMessage(sender, path);
@@ -425,7 +446,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
      * Sends a list of messages with placeholder replacements
      */
     private void sendMessageListWithReplacements(CommandSender sender, String path, Object... replacements) {
-        List<String> messages = Text.getMessages().getStringList("Messages." + path);
+        List<String> messages = plugin.getFileManager().getMessages().getStringList("Messages." + path);
         
         if (messages.isEmpty()) {
             sendMessage(sender, path, replacements);
@@ -450,7 +471,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
      * Sends a formatted message
      */
     private void sendMessage(CommandSender sender, String path, Object... replacements) {
-        String message = Text.getMessages().getString("Messages." + path, path);
+        String message = plugin.getFileManager().getMessages().getString("Messages." + path, path);
         
         // Replace placeholders
         for (int i = 0; i < replacements.length; i++) {

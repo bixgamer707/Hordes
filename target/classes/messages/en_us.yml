@@ -48,17 +48,27 @@ Messages:
     death-rejoin: "&eYou can rejoin in &a{0} &eseconds."
     death-respawned: "&aYou have respawned!"
 
+    # Kill Notifications
+    kill-notification: "&7+1 Kill &e({0}/{1} mobs remaining)"
+    killstreak-5: "&a&l⚡ 5 KILL STREAK!"
+    killstreak-10: "&6&l⚡ 10 KILL STREAK!"
+    killstreak-15: "&c&l⚡ 15 KILL STREAK!"
+    killstreak-20: "&4&l⚡ 20 KILL STREAK!"
+    killstreak-mega: "&d&l⚡ MEGA KILL STREAK! &e({0} kills)"
+
     # Cooldown Messages
     cooldown: "&cYou must wait &e{0} &cbefore joining another arena."
+    arena-cooldown: "&cYou must wait &e{0} &cbefore joining &6{1} &cagain"
+    global-cooldown: "&c&l⏱ Global cooldown active! Wait &e{0}"
+    temp-cooldown: "&eYou can rejoin in &a{0}"
 
     # Restriction Messages
     cannot-drop-items: "&cYou cannot drop items in the arena!"
     cannot-pickup-items: "&cYou cannot pick up items in the arena!"
     cannot-teleport: "&cYou cannot teleport while in an arena!"
     cannot-use-command: "&cYou cannot use that command in the arena!"
-
-    arena-cooldown: "&cYou must wait &e{0} &cbefore joining this arena again."
-    global-cooldown: "&cYou must wait &e{0} &cbefore joining any arena."
+    cannot-leave-area: "&c&l✖ You cannot leave the arena area during combat!"
+    returned-to-arena: "&e⚠ You've been returned to the arena"
 
   # ============================================
   # WAVE MESSAGES
@@ -79,10 +89,8 @@ Messages:
     player-only: "&cThis command can only be used by players."
     invalid-usage: "&cInvalid usage! Use: {0}"
     arena-not-found: "&cArena '&e{0}&c' not found."
-    admin-reload: "&aConfiguration reloaded successfully!"
-    admin-reload-failed: "&cFailed to reload configuration. Check console for errors."
 
-    # Help - Lista optimizada
+    # Help
     help:
       - "&e&l▬▬▬▬▬▬▬▬ &6&lHordes Commands &e&l▬▬▬▬▬▬▬▬"
       - "&a/hordes join <arena> &7- Join an arena"
@@ -108,7 +116,7 @@ Messages:
     list-header: "&e&l--- Available Arenas ---"
     list-format: "&7- &e{0} &7({1}) - &a{2}&7/&a{3} &7players"
 
-    # Info Command - Lista optimizada
+    # Info Command
     info-usage: "&cUsage: /hordes info <arena>"
     info:
       - "&e&l▬▬▬▬▬▬▬▬ &6Arena: {0} &e▬▬▬▬▬▬▬▬"
@@ -120,7 +128,7 @@ Messages:
       - "&7Progression: &e{7}"
       - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
-    # Stats Command - Lista optimizada
+    # Stats Command
     stats-no-data: "&cNo statistics data found."
     stats-disabled:
       - "&c✘ Statistics tracking is disabled"
@@ -144,7 +152,7 @@ Messages:
       - "  &7Total Playtime: &e{8}"
       - "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
-    # Top Command - Lista optimizada
+    # Top Command
     top-invalid-category: "&cInvalid category. Use: completions, kills, speed, winrate"
     top-no-data: "  &7No data available yet"
     top-header:
@@ -153,7 +161,7 @@ Messages:
     top-footer: "&e&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
   # ============================================
-  # ADMIN COMMANDS - Lista optimizada
+  # ADMIN COMMANDS
   # ============================================
   admin:
     # Help
@@ -169,7 +177,7 @@ Messages:
       - "&a/hordesadmin debug &7- Show debug information"
       - "&c&l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
-    # Debug - Lista optimizada
+    # Debug
     debug:
       - "&e&l--- Debug Information ---"
       - "&7Arenas loaded: &e{0}"
@@ -178,20 +186,22 @@ Messages:
       - "&7Economy enabled: &e{3}"
       - "&7MythicMobs enabled: &e{4}"
 
+    # Reload
+    reload-success: "&a✔ Configuration reloaded successfully!"
+    reload-failed: "&c✖ Reload failed. Check console for errors."
 
-    # Create Arena - Lista optimizada
-    create-usage: "&cUsage: /hordesadmin create <arena>"
+    arenas-none: "&cNo arenas found"
+
+    # Create Arena
     create-already-exists: "&cArena '&e{0}&c' already exists!"
+    create-usage: "&cUsage: /hordesadmin create <arena>"
+    create-invalid-id: "&c&l✖ Invalid ID! Use only: &ea-z&c, &e0-9&c, &e_"
     create:
       - "&a&l✔ Arena '&e{0}&a&l' created successfully!"
       - ""
       - "&e&l❖ Next Steps:"
       - "&71. Edit &earenas.yml &7to configure the arena"
-      - "&72. Set spawn points:"
-      - "   &a/hordesadmin setspawn {0} lobby"
-      - "   &a/hordesadmin setspawn {0} arena"
-      - "   &a/hordesadmin setspawn {0} exit"
-      - "&73. Configure waves in &emobs.yml"
+      - "&72. or you can use &a/hordesadmin gui &7to edit settings in-game"
       - "&74. Reload: &a/hordesadmin reload"
       - ""
       - "&e&l❖ Templates Available:"
@@ -202,7 +212,8 @@ Messages:
     delete-stopped: "&eArena stopped before deletion."
     delete-instruction: "&eType &a/hordesadmin delete {0} confirm &eto confirm deletion."
 
-    # SetSpawn - Lista optimizada
+
+    # SetSpawn
     setspawn-usage: "&cUsage: /hordesadmin setspawn <arena> <lobby|arena|exit>"
     setspawn-arena-not-found: "&cArena '&e{0}&c' not found."
     setspawn-invalid-type: "&cInvalid type. Use: lobby, arena, or exit"
@@ -235,11 +246,110 @@ Messages:
 
     # ForceStop
     forcestop-usage: "&cUsage: /hordesadmin forcestop <arena>"
-    forcestop: "&aForce stopping arena..."
+    forcestop: "&aForce stopping arena &e{0}"
+    forcestop-success: "&a✔ Arena forcefully stopped"
 
     # Teleport
     tp-usage: "&cUsage: /hordesadmin tp <arena>"
     tp-success: "&aTeleported to arena &e{0}"
+
+    # Edit Settings
+
+    edit-basic-success: "&a✔ Display name updated to: &e{0}"
+    edit-worldguard-success: "&a✔ Region set to: &e{0}"
+
+    # Spawn Editor
+    spawn-set-success: "&a✔ {0} spawn point set successfully!"
+    spawn-set-failed: "&c✖ Failed to set spawn point"
+
+    # General
+    feature-coming-soon: "&e⚠ This feature is coming soon!"
+    arena-enabled: "&a✔ Arena &e{0} &aenabled"
+    arena-disabled: "&c✖ Arena &e{0} &cdisabled"
+    save-success: "&a✔ Arena saved successfully!"
+    save-failed: "&c✖ Failed to save: {0}"
+    test-failed: "&c✖ Failed to join arena for testing"
+    arena-not-found: "&cArena '&e{0}&c' not found."
+    survival-mode-toggled: "&a✔ Survival mode &e{status}!"
+    death-action-changed: "&a✔ Death handling action set to: &e{action}"
+    item-drop-mode-changed: "&a✔ Item drop mode set to: &e{mode}"
+    pvp-toggled: "&a✔ PvP &e{status} &ain the arena!"
+    keep-inventory-toggled: "&a✔ Keep inventory on death &e{status}!"
+    reward-status-toggled: "&a✔ Rewards &e{status} &afor this arena!"
+    reward-type-changed: "&a✔ Reward type set to: &e{type}"
+    wave-edit-coming-soon: "&e⚠ Wave editor coming soon!"
+    wave-added: "&a✔ Added new wave! Total waves: {count}"
+
+  prompts:
+
+
+    # Arena ID prompt
+    arena-id: "&e&l❖ Enter Arena ID:"
+    arena-id-hint: "&7Use only: &ea-z&7, &e0-9&7, &e_ &7(underscore)"
+    arena-id-invalid: "&c&l✖ Invalid ID! Use only: &ea-z&c, &e0-9&c, &e_ &c(underscore)"
+
+    # Display name prompt
+    display-name: "&e&l❖ Enter new display name:"
+    display-name-hint: "&7Must be &e3-32 characters"
+    display-name-invalid: "&c&l✖ Invalid name! Must be &e3-32 characters"
+
+    money-reward: "&e&l❖ Enter money reward amount:"
+    money-reward-invalid: "&c&l✖ Invalid amount! Enter a positive number"
+
+    multiplier-prompt: "&e&l❖ Enter progressive multiplier (e.g. 0.5 for 50% increase per wave):"
+    invalid-multiplier: "&c&l✖ Invalid multiplier! Enter a number (e.g. 0.5 for 50%)"
+    multiplier-updated: "&a&l✔ Progressive multiplier updated! Current: {value}"
+    invalid-number: "&c&l✖ Invalid number! Please enter a valid number"
+
+    command-rewards-prompt: "&e&l❖ Enter command (or 'done'/'cancel'):"
+    command-rewards-invalid: "&c&l✖ Invalid format! Example: give %player% diamond 1"
+    command-rewards-updated: "&a&l✔ Command rewards updated! Total commands: {count}"
+    command-added: "&a&l✔ Added command reward: {command}"
+
+    item-rewards-info: "&e&l❖ Enter item reward (or 'done'/'cancel'):"
+
+    item-rewards-updated: "&a&l✔ Item rewards updated! Total items: {count}"
+    invalid-item-format: "&c&l✖ Invalid item format! Use: &eMATERIAL AMOUNT"
+    item-added: "&a&l✔ Added item reward: {item} x{count}"
+    invalid-material: "&c&l✖ Invalid material! Use a valid Bukkit Material name"
+
+    items-cleared: "&a&l✔ All item rewards cleared!"
+    commands-cleared: "&a&l✔ All command rewards cleared!"
+
+    # WorldGuard region prompt
+
+    worldguard-region: "&e&l❖ Enter WorldGuard region name:"
+    region-invalid: "&c&l✖ Invalid region name! Max &e64 characters"
+
+    min-players: "&e&l❖ Enter minimum players required to start:"
+    max-players: "&e&l❖ Enter maximum players allowed in arena:"
+    invalid-min-players: "&c&l✖ Invalid number! Enter a number greater than 0 and less than max players ({max})"
+    invalid-max-players: "&c&l✖ Invalid number! Enter a positive integer greater than min players ({min})"
+    max-players-updated: "&a&l✔ Max players updated! Current: {0}"
+    min-players-updated: "&a&l✔ Min players updated! Current: {0}"
+    countdown-time: "&e&l❖ Enter countdown time before arena starts (seconds):"
+    invalid-countdown: "&c&l✖ Invalid number! Enter a positive integer (e.g. 10)"
+    countdown-time-updated: "&a&l✔ Countdown time updated! Current: {0} seconds"
+    auto-start-toggled: "&a&l✔ Auto-start &e{status} &ain the arena!"
+
+  # ============================================
+  # GUI MESSAGES
+  # ============================================
+  gui:
+    # General
+    loading: "&e⟳ Loading..."
+    no-permission: "&c✖ You don't have permission to view this"
+    error: "&c✖ An error occurred"
+
+    # Arena selection
+    no-arenas: "&7No arenas available"
+    arena-full: "&c✖ This arena is full"
+    arena-not-available: "&c✖ Arena not available"
+
+    # Confirmation
+    confirm-delete: "&c&lAre you sure?"
+    confirm-yes: "&a✔ Confirm"
+    confirm-no: "&c✖ Cancel"
 
   # ============================================
   # STATISTICS MESSAGES
@@ -269,6 +379,12 @@ Messages:
     progressive: "&a&l✔ Wave {0} Reward: &e+${1}"
     money: "&a&l+${0}"
     items: "&a&l+{0} items"
+    received: "&a&l✔ Rewards Received!"
+    money-received: "&a+${0} &7added to your balance"
+    items-received: "&a+{0} items &7added to your inventory"
+    items-dropped: "&e⚠ Some items were dropped (inventory full)"
+    commands-executed: "&7Special rewards granted"
+    no-rewards: "&7No rewards for this arena"
 
   # ============================================
   # ERROR MESSAGES

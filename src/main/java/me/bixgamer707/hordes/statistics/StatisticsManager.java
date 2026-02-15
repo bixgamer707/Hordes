@@ -1,6 +1,7 @@
 package me.bixgamer707.hordes.statistics;
 
 import me.bixgamer707.hordes.Hordes;
+import me.bixgamer707.hordes.arena.Arena;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -10,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Manages player statistics
  * Handles loading, saving, and tracking
- *
+
  * Thread-safe implementation with async saving
  */
 public class StatisticsManager {
@@ -97,7 +98,6 @@ public class StatisticsManager {
         PlayerStatistics stats = new PlayerStatistics(uuid, playerName);
 
         // Load global stats
-        stats.getTotalKills();
         ConfigurationSection section = statsConfig.getConfigurationSection(path);
 
         // Using reflection-free approach
@@ -110,8 +110,49 @@ public class StatisticsManager {
         long fastestCompletion = section.getLong("fastest-completion", 0);
         int longestKillstreak = section.getInt("longest-killstreak", 0);
 
-        // Manually set values (since fields are private, we'll track them differently)
-        // For now, create fresh stats and they'll be updated during gameplay
+
+        stats.setTotalKills(kills);
+        stats.setTotalDeaths(deaths);
+        stats.setTotalCompletions(completions);
+        stats.setTotalAttempts(attempts);
+        stats.setTotalPlaytime(playtime);
+        stats.setHighestWave(highestWave);
+        stats.setFastestCompletion(fastestCompletion);
+        stats.setLongestKillstreak(longestKillstreak);
+
+        // Load arena-specific stats
+
+        ConfigurationSection arenasSection = section.getConfigurationSection("arenas");
+
+        if (arenasSection != null) {
+            for (String arenaId : arenasSection.getKeys(false)) {
+                ConfigurationSection arenaSection = arenasSection.getConfigurationSection(arenaId);
+                if (arenaSection == null) {
+                    continue;
+                }
+
+                int arenaKills = arenaSection.getInt("kills", 0);
+                int arenaDeaths = arenaSection.getInt("deaths", 0);
+                int arenaCompletions = arenaSection.getInt("completions", 0);
+                int arenaAttempts = arenaSection.getInt("attempts", 0);
+                long arenaPlaytime = arenaSection.getLong("playtime", 0);
+                int arenaHighestWave = arenaSection.getInt("highest-wave", 0);
+                long arenaFastestCompletion = arenaSection.getLong("fastest-completion", 0);
+                double arenaWinRate = arenaSection.getDouble("win-rate", 0.0);
+
+                PlayerStatistics.ArenaStats arenaStats = new PlayerStatistics.ArenaStats();
+
+                arenaStats.setKills(arenaKills);
+                arenaStats.setDeaths(arenaDeaths);
+                arenaStats.setCompletions(arenaCompletions);
+                arenaStats.setAttempts(arenaAttempts);
+                arenaStats.setPlayTime(arenaPlaytime);
+                arenaStats.setHighestWave(arenaHighestWave);
+                arenaStats.setFastestCompletion(arenaFastestCompletion);
+
+                stats.setArenaStats(arenaStats, arenaId);
+            }
+        }
 
         return stats;
     }
@@ -157,8 +198,21 @@ public class StatisticsManager {
         statsConfig.set(path + ".win-rate", stats.getWinRate());
         statsConfig.set(path + ".kd-ratio", stats.getKDRatio());
 
-        // Save arena-specific stats
-        // This would require exposing the arenaStats map or iterating through it
+        for(Arena arena : plugin.getArenaManager().getArenas().values()){
+
+            PlayerStatistics.ArenaStats arenaStats = stats.getArenaStatistics(arena.getId());
+
+            statsConfig.set(path + ".arenas." + arena.getId() + ".kills", arenaStats.getKills());
+            statsConfig.set(path + ".arenas." + arena.getId() + ".deaths", arenaStats.getDeaths());
+            statsConfig.set(path + ".arenas." + arena.getId() + ".completions", arenaStats.getCompletions());
+            statsConfig.set(path + ".arenas." + arena.getId() + ".attempts", arenaStats.getAttempts());
+            statsConfig.set(path + ".arenas." + arena.getId() + ".playtime", arenaStats.getPlayTime());
+            statsConfig.set(path + ".arenas." + arena.getId() + ".highest-wave", arenaStats.getHighestWave());
+            statsConfig.set(path + ".arenas." + arena.getId() + ".fastest-completion", arenaStats.getFastestCompletion());
+            statsConfig.set(path + ".arenas." + arena.getId() + ".win-rate", arenaStats.getWinRate());
+
+        }
+
     }
 
     /**

@@ -5,8 +5,8 @@ import me.bixgamer707.hordes.arena.Arena;
 import me.bixgamer707.hordes.config.RewardType;
 import me.bixgamer707.hordes.gui.BaseGUI;
 import me.bixgamer707.hordes.text.Text;
+import me.bixgamer707.hordes.utils.InputValidators;
 import org.bukkit.Material;
-import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reward editor GUI - 100% configurable from guis.yml
- * Allows editing all reward aspects: money, items, commands, type
+ * Reward editor GUI - 100% configurable
+ * Edit all reward settings using ChatInputManager
  */
 public class RewardEditorGUI extends BaseGUI {
 
@@ -39,501 +39,436 @@ public class RewardEditorGUI extends BaseGUI {
         updateProgressiveMultiplier();
     }
 
-    /**
-     * Updates reward status (enabled/disabled)
-     */
     private void updateRewardStatus() {
-        int slot = getConfigInt("items.reward-status.slot", 4);
+        int slot = guiConfig.getInt("guis."+guiId+".items.reward-status.slot", 4);
         boolean enabled = arena.getConfig().getRewardConfig().isEnabled();
-        
+
         String materialKey = enabled ? "material-enabled" : "material-disabled";
-        String materialName = getConfigString("items.reward-status." + materialKey, 
-            enabled ? "EMERALD" : "REDSTONE");
-        
-        try {
-            Material material = Material.valueOf(materialName);
-            ItemStack item = new ItemStack(material);
-            ItemMeta meta = item.getItemMeta();
-            
-            if (meta != null) {
-                String name = getConfigString("items.reward-status.name", "&e&lReward System")
-                    .replace("{status}", enabled ? 
-                        getConfigString("text.enabled", "&a✔ Enabled") : 
-                        getConfigString("text.disabled", "&c✖ Disabled"));
-                meta.setDisplayName(Text.createText(name).build(player));
-                
-                List<String> lore = new ArrayList<>();
-                for (String line : getConfigStringList("items.reward-status.lore")) {
-                    lore.add(Text.createText(line
-                        .replace("{status}", enabled ? "&aEnabled" : "&cDisabled"))
-                        .build(player));
-                }
-                meta.setLore(lore);
-                
-                item.setItemMeta(meta);
-            }
-            
-            inventory.setItem(slot, item);
-            clickHandlers.put(slot + "", p -> toggleRewards());
-            
-        } catch (IllegalArgumentException e) {
-            plugin.logWarning("Invalid material: " + materialName);
-        }
-    }
-
-    /**
-     * Updates reward type display
-     */
-    private void updateRewardType() {
-        int slot = getConfigInt("items.reward-type.slot", 10);
-        RewardType type = arena.getConfig().getRewardConfig().getType();
-        
-        String materialKey = "material-" + type.name().toLowerCase();
-        String materialName = getConfigString("items.reward-type." + materialKey, "PAPER");
-        
-        try {
-            Material material = Material.valueOf(materialName);
-            ItemStack item = new ItemStack(material);
-            ItemMeta meta = item.getItemMeta();
-            
-            if (meta != null) {
-                String name = getConfigString("items.reward-type.name", "&6&lReward Type")
-                    .replace("{type}", type.getDisplayName());
-                meta.setDisplayName(Text.createText(name).build(player));
-                
-                List<String> lore = new ArrayList<>();
-                for (String line : getConfigStringList("items.reward-type.lore")) {
-                    lore.add(Text.createText(line
-                        .replace("{type}", type.name())
-                        .replace("{type_display}", type.getDisplayName()))
-                        .build(player));
-                }
-                meta.setLore(lore);
-                
-                item.setItemMeta(meta);
-            }
-            
-            inventory.setItem(slot, item);
-            clickHandlers.put(slot + "", p -> cycleRewardType());
-            
-        } catch (IllegalArgumentException e) {
-            plugin.logWarning("Invalid material: " + materialName);
-        }
-    }
-
-    /**
-     * Updates money reward display
-     */
-    private void updateMoneyReward() {
-        int slot = getConfigInt("items.money-reward.slot", 12);
-        double money = arena.getConfig().getRewardConfig().getMoney();
-        
-        ItemStack item = new ItemStack(Material.GOLD_INGOT);
+        ItemStack item = new ItemStack(Material.valueOf(
+                guiConfig.getString("guis."+guiId+".items.reward-status." + materialKey, enabled ? "EMERALD" : "REDSTONE")));
         ItemMeta meta = item.getItemMeta();
-        
+
         if (meta != null) {
-            String name = getConfigString("items.money-reward.name", "&6&lMoney Reward");
+            String name = guiConfig.getString("guis."+guiId+".items.reward-status.name", "&6&lReward System")
+                    .replace("{status}", enabled ? "&aEnabled" : "&cDisabled");
             meta.setDisplayName(Text.createText(name).build(player));
-            
+
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.money-reward.lore")) {
-                lore.add(Text.createText(line
-                    .replace("{money}", String.format("%.2f", money)))
-                    .build(player));
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.reward-status.lore")) {
+                lore.add(Text.createText(line.replace("{status}", enabled ? "&aEnabled" : "&cDisabled"))
+                        .build(player));
             }
             meta.setLore(lore);
-            
+
+            if (enabled) {
+                meta.addEnchant(org.bukkit.enchantments.Enchantment.DURABILITY, 1, true);
+                meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+            }
+
             item.setItemMeta(meta);
         }
-        
+
+        inventory.setItem(slot, item);
+        clickHandlers.put(slot + "", p -> toggleRewardStatus());
+    }
+
+    private void updateRewardType() {
+        int slot = guiConfig.getInt("guis."+guiId+".items.reward-type.slot", 10);
+        RewardType type = arena.getConfig().getRewardConfig().getType();
+
+        String materialKey = "material-" + type.name().toLowerCase();
+        ItemStack item = new ItemStack(Material.valueOf(
+                guiConfig.getString("guis."+guiId+".items.reward-type." + materialKey, "GOLD_INGOT")));
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta != null) {
+            meta.setDisplayName(Text.createText(
+                    guiConfig.getString("guis."+guiId+".items.reward-type.name", "&e&lReward Type")).build(player));
+
+            List<String> lore = new ArrayList<>();
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.reward-type.lore")) {
+                String processed = line
+                        .replace("{type}", type.getDisplayName())
+                        .replace("{type_desc}", getRewardTypeDescription(type));
+                lore.add(Text.createText(processed).build(player));
+            }
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
+
+        inventory.setItem(slot, item);
+        clickHandlers.put(slot + "", p -> cycleRewardType());
+    }
+
+    private void updateMoneyReward() {
+        int slot = guiConfig.getInt("guis."+guiId+".items.money-reward.slot", 12);
+        double money = arena.getConfig().getRewardConfig().getMoney();
+
+        ItemStack item = new ItemStack(Material.valueOf(
+                guiConfig.getString("guis."+guiId+".items.money-reward.material", "GOLD_INGOT")));
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta != null) {
+            meta.setDisplayName(Text.createText(
+                    guiConfig.getString("guis."+guiId+".items.money-reward.name", "&6&lMoney Reward")).build(player));
+
+            List<String> lore = new ArrayList<>();
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.money-reward.lore")) {
+                lore.add(Text.createText(line.replace("{money}", String.format("%.2f", money)))
+                        .build(player));
+            }
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
+
         inventory.setItem(slot, item);
         clickHandlers.put(slot + "", p -> editMoneyReward());
     }
 
-    /**
-     * Updates item rewards display
-     */
     private void updateItemRewards() {
-        int slot = getConfigInt("items.item-rewards.slot", 14);
+        int slot = guiConfig.getInt("guis."+guiId+".items.item-rewards.slot", 14);
         List<String> items = arena.getConfig().getRewardConfig().getItems();
-        
-        ItemStack item = new ItemStack(Material.DIAMOND);
+
+        ItemStack item = new ItemStack(Material.valueOf(
+                guiConfig.getString("guis."+guiId+".items.item-rewards.material", "DIAMOND")));
         ItemMeta meta = item.getItemMeta();
-        
+
         if (meta != null) {
-            String name = getConfigString("items.item-rewards.name", "&b&lItem Rewards");
-            meta.setDisplayName(Text.createText(name).build(player));
-            
+            meta.setDisplayName(Text.createText(
+                    guiConfig.getString("guis."+guiId+".items.item-rewards.name", "&b&lItem Rewards")).build(player));
+
             List<String> lore = new ArrayList<>();
-            List<String> loreTemplate = getConfigStringList("items.item-rewards.lore");
-            
-            for (String line : loreTemplate) {
-                if (line.contains("{item_list}")) {
-                    if (items.isEmpty()) {
-                        lore.add(Text.createText("  &7No items configured").build(player));
-                    } else {
-                        int shown = Math.min(items.size(), 5);
-                        for (int i = 0; i < shown; i++) {
-                            lore.add(Text.createText("  &7- &e" + items.get(i)).build(player));
-                        }
-                        if (items.size() > 5) {
-                            lore.add(Text.createText("  &7... and " + (items.size() - 5) + " more").build(player));
-                        }
-                    }
-                } else {
-                    lore.add(Text.createText(line
-                        .replace("{item_count}", String.valueOf(items.size())))
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.item-rewards.lore-header")) {
+                lore.add(Text.createText(line.replace("{count}", String.valueOf(items.size())))
                         .build(player));
+            }
+
+            if (!items.isEmpty()) {
+                lore.add("");
+                int shown = Math.min(items.size(), 5);
+                for (int i = 0; i < shown; i++) {
+                    lore.add(Text.createText("&7- &e" + items.get(i)).build(player));
+                }
+                if (items.size() > 5) {
+                    lore.add(Text.createText("&7... and " + (items.size() - 5) + " more").build(player));
                 }
             }
+
+            lore.add("");
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.item-rewards.lore-footer")) {
+                lore.add(Text.createText(line).build(player));
+            }
+
             meta.setLore(lore);
-            
             item.setItemMeta(meta);
         }
-        
+
         inventory.setItem(slot, item);
         clickHandlers.put(slot + "", p -> editItemRewards());
     }
 
-    /**
-     * Updates command rewards display
-     */
     private void updateCommandRewards() {
-        int slot = getConfigInt("items.command-rewards.slot", 16);
+        int slot = guiConfig.getInt("guis."+guiId+".items.command-rewards.slot", 16);
         List<String> commands = arena.getConfig().getRewardConfig().getCommands();
-        
-        ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
+
+        ItemStack item = new ItemStack(Material.valueOf(
+                guiConfig.getString("guis."+guiId+".items.command-rewards.material", "COMMAND_BLOCK")));
         ItemMeta meta = item.getItemMeta();
-        
+
         if (meta != null) {
-            String name = getConfigString("items.command-rewards.name", "&c&lCommand Rewards");
-            meta.setDisplayName(Text.createText(name).build(player));
-            
+            meta.setDisplayName(Text.createText(
+                    guiConfig.getString("guis."+guiId+".items.command-rewards.name", "&c&lCommand Rewards")).build(player));
+
             List<String> lore = new ArrayList<>();
-            List<String> loreTemplate = getConfigStringList("items.command-rewards.lore");
-            
-            for (String line : loreTemplate) {
-                if (line.contains("{command_list}")) {
-                    if (commands.isEmpty()) {
-                        lore.add(Text.createText("  &7No commands configured").build(player));
-                    } else {
-                        int shown = Math.min(commands.size(), 3);
-                        for (int i = 0; i < shown; i++) {
-                            String cmd = commands.get(i);
-                            String shortened = cmd.length() > 40 ? cmd.substring(0, 37) + "..." : cmd;
-                            lore.add(Text.createText("  &7- &e" + shortened).build(player));
-                        }
-                        if (commands.size() > 3) {
-                            lore.add(Text.createText("  &7... and " + (commands.size() - 3) + " more").build(player));
-                        }
-                    }
-                } else {
-                    lore.add(Text.createText(line
-                        .replace("{command_count}", String.valueOf(commands.size())))
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.command-rewards.lore-header")) {
+                lore.add(Text.createText(line.replace("{count}", String.valueOf(commands.size())))
                         .build(player));
+            }
+
+            if (!commands.isEmpty()) {
+                lore.add("");
+                int shown = Math.min(commands.size(), 3);
+                for (int i = 0; i < shown; i++) {
+                    lore.add(Text.createText("&7- &e/" + commands.get(i)).build(player));
+                }
+                if (commands.size() > 3) {
+                    lore.add(Text.createText("&7... and " + (commands.size() - 3) + " more").build(player));
                 }
             }
+
+            lore.add("");
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.command-rewards.lore-footer")) {
+                lore.add(Text.createText(line).build(player));
+            }
+
             meta.setLore(lore);
-            
             item.setItemMeta(meta);
         }
-        
+
         inventory.setItem(slot, item);
         clickHandlers.put(slot + "", p -> editCommandRewards());
     }
 
-    /**
-     * Updates progressive multiplier display
-     */
     private void updateProgressiveMultiplier() {
-        int slot = getConfigInt("items.progressive-multiplier.slot", 22);
+        int slot = guiConfig.getInt("guis."+guiId+".items.progressive-multiplier.slot", 22);
         double multiplier = arena.getConfig().getRewardConfig().getProgressiveMultiplier();
-        
-        ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE);
+
+        ItemStack item = new ItemStack(Material.valueOf(
+                guiConfig.getString("guis."+guiId+".items.progressive-multiplier.material", "EXPERIENCE_BOTTLE")));
         ItemMeta meta = item.getItemMeta();
-        
+
         if (meta != null) {
-            String name = getConfigString("items.progressive-multiplier.name", "&a&lProgressive Multiplier");
-            meta.setDisplayName(Text.createText(name).build(player));
-            
+            meta.setDisplayName(Text.createText(
+                    guiConfig.getString("guis."+guiId+".items.progressive-multiplier.name", "&a&lProgressive Multiplier")).build(player));
+
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.progressive-multiplier.lore")) {
-                lore.add(Text.createText(line
-                    .replace("{multiplier}", String.format("%.2f", multiplier))
-                    .replace("{percentage}", String.format("%.0f", multiplier * 100)))
-                    .build(player));
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.progressive-multiplier.lore")) {
+                String processed = line
+                        .replace("{multiplier}", String.format("%.1f", multiplier * 100))
+                        .replace("{example}", String.format("%.2f", 100 * multiplier));
+                lore.add(Text.createText(processed).build(player));
             }
             meta.setLore(lore);
-            
+
+            meta.addEnchant(org.bukkit.enchantments.Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+
             item.setItemMeta(meta);
         }
-        
+
         inventory.setItem(slot, item);
         clickHandlers.put(slot + "", p -> editProgressiveMultiplier());
     }
 
-    /**
-     * Toggle rewards enabled/disabled
-     */
-    private void toggleRewards() {
-        boolean newState = !arena.getConfig().getRewardConfig().isEnabled();
-        
-        plugin.getFileManager().getArenas()
-            .set("arenas." + arenaId + ".rewards.enabled", newState);
-        plugin.getFileManager().getArenas().save();
-        
-        sendConfigMessage(newState ? "rewards.enabled" : "rewards.disabled");
-        playSound(getConfigString("sounds.click", "UI_BUTTON_CLICK"));
-        
-        reloadAndRefresh();
+    private String getRewardTypeDescription(RewardType type) {
+        String key = "reward-type-desc-" + type.name().toLowerCase();
+        return guiConfig.getString("guis."+guiId+".descriptions." + key, type.getDisplayName());
     }
 
-    /**
-     * Cycle through reward types
-     */
+    private void toggleRewardStatus() {
+        boolean newValue = !arena.getConfig().getRewardConfig().isEnabled();
+
+        plugin.getFileManager().getArenas()
+                .set("arenas." + arenaId + ".rewards.enabled", newValue);
+        plugin.getFileManager().getArenas().save();
+
+        player.sendMessage(Text.createTextWithLang("admin.reward-status-toggled")
+                        .replace("{status}", newValue ? "enabled" : "disabled").build(player));
+
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
+        reopenGUI();
+    }
+
     private void cycleRewardType() {
         RewardType current = arena.getConfig().getRewardConfig().getType();
         RewardType[] types = RewardType.values();
         int nextIndex = (current.ordinal() + 1) % types.length;
         RewardType next = types[nextIndex];
-        
+
         plugin.getFileManager().getArenas()
-            .set("arenas." + arenaId + ".rewards.type", next.name());
+                .set("arenas." + arenaId + ".rewards.type", next.name());
         plugin.getFileManager().getArenas().save();
-        
-        sendConfigMessage("rewards.type-changed", next.getDisplayName());
-        playSound(getConfigString("sounds.click", "UI_BUTTON_CLICK"));
-        
-        reloadAndRefresh();
+
+        player.sendMessage(Text.createTextWithLang("admin.reward-type-changed")
+                        .replace("{type}", next.getDisplayName()).build(player));
+
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
+        reopenGUI();
     }
 
-    /**
-     * Edit money reward via conversation
-     */
     private void editMoneyReward() {
         close();
-        
-        sendConfigMessage("rewards.edit-money-header");
-        sendConfigMessage("rewards.edit-money-current", 
-            String.format("%.2f", arena.getConfig().getRewardConfig().getMoney()));
-        
-        ConversationFactory factory = new ConversationFactory(plugin)
-            .withFirstPrompt(new NumericPrompt() {
-                @Override
-                public String getPromptText(ConversationContext context) {
-                    return Text.createText(getConfigString("prompts.money-amount", 
-                        "Enter money amount (0 to disable):")).build();
-                }
-                
-                @Override
-                protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
-                    double amount = input.doubleValue();
-                    
-                    if (amount < 0) {
-                        sendConfigMessage("rewards.invalid-amount");
-                        return this;
+
+        plugin.getChatInputManager().requestInput(player)
+                .withPrompt(Text.createTextWithLang("prompts.money-reward").build())
+                .withValidator(InputValidators.arenaId())
+                .withInvalidMessage(Text.createTextWithLang("prompts.money-reward-invalid").build())
+                .onComplete(input -> {
+                    try {
+                        double amount = Double.parseDouble(input);
+
+                        if (amount < 0) {
+                            player.sendMessage(Text.createTextWithLang("prompts.money-reward-invalid").build());
+                            reopenGUI();
+                            return;
+                        }
+
+                        plugin.getFileManager().getArenas()
+                                .set("arenas." + arenaId + ".rewards.money", amount);
+                        plugin.getFileManager().getArenas().save();
+                        reopenGUI();
+
+                    } catch (NumberFormatException e) {
+                        player.sendMessage(
+                                Text.createTextWithLang("prompts.money-reward-invalid").build());
+                        reopenGUI();
                     }
-                    
-                    plugin.getFileManager().getArenas()
-                        .set("arenas." + arenaId + ".rewards.money", amount);
-                    plugin.getFileManager().getArenas().save();
-                    
-                    sendConfigMessage("rewards.money-updated", String.format("%.2f", amount));
-                    
-                    return Prompt.END_OF_CONVERSATION;
-                }
-            })
-            .withLocalEcho(false)
-            .withTimeout(getConfigInt("prompts.timeout", 60))
-            .addConversationAbandonedListener(event -> reopenAfterConversation())
-            .buildConversation(player);
-        
-        factory.begin();
+                })
+                .onCancel(() -> reopenGUI())
+                .start();
     }
 
-    /**
-     * Edit item rewards via conversation
-     */
     private void editItemRewards() {
         close();
-        
-        sendConfigMessage("rewards.edit-items-header");
-        sendConfigMessage("rewards.edit-items-help");
-        
-        ConversationFactory factory = new ConversationFactory(plugin)
-            .withFirstPrompt(new StringPrompt() {
-                @Override
-                public String getPromptText(ConversationContext context) {
-                    return Text.createText(getConfigString("prompts.item-format", 
-                        "Enter item (MATERIAL AMOUNT) or 'done':")).build();
-                }
-                
-                @Override
-                public Prompt acceptInput(ConversationContext context, String input) {
-                    if (input.equalsIgnoreCase("done") || input.equalsIgnoreCase("cancel")) {
-                        return Prompt.END_OF_CONVERSATION;
+
+        player.sendMessage(Text.createTextWithLang("prompts.invalid-item-format").build(player));
+        collectItemRewards(new ArrayList<>());
+    }
+
+    private void collectItemRewards(List<String> items) {
+        plugin.getChatInputManager().requestInput(player)
+                .withPrompt(Text.createTextWithLang("prompts.item-rewards-info").build())
+                .withValidator(InputValidators.arenaId())
+                .withCancelMessage(Text.createTextWithLang("prompts.cancelled-message").build())
+                .onComplete(input -> {
+                    if (input.equalsIgnoreCase("done")) {
+                        plugin.getFileManager().getArenas()
+                                .set("arenas." + arenaId + ".rewards.items", items);
+                        plugin.getFileManager().getArenas().save();
+
+                        player.sendMessage(Text.createTextWithLang("prompts.item-rewards-updated")
+                                        .replace("{count}", String.valueOf(items.size())).build(player));
+
+                        reopenGUI();
+                        return;
                     }
-                    
-                    // Validate format
+
+                    if (input.equalsIgnoreCase("cancel")) {
+                        player.sendMessage(Text.createTextWithLang("prompts.cancelled-message").build());
+                        reopenGUI();
+                        return;
+                    }
+
+                    // Validate format: MATERIAL AMOUNT
                     String[] parts = input.split(" ");
-                    if (parts.length < 1) {
-                        sendConfigMessage("rewards.invalid-item-format");
-                        return this;
+                    if (parts.length != 2) {
+                        player.sendMessage(Text.createTextWithLang("prompts.invalid-item-format").build());
+                        collectItemRewards(items);
+                        return;
                     }
-                    
-                    // Validate material
+
                     try {
                         Material.valueOf(parts[0].toUpperCase());
+                        Integer.parseInt(parts[1]);
+
+                        items.add(input.toUpperCase());
+                        player.sendMessage(Text.createTextWithLang("prompts.item-added")
+                                        .replace("{item}", input.toUpperCase())
+                                        .replace("{count}", String.valueOf(items.size())).build(player));
+
+                        collectItemRewards(items);
+
                     } catch (IllegalArgumentException e) {
-                        sendConfigMessage("rewards.invalid-material", parts[0]);
-                        return this;
+                        player.sendMessage(Text.createTextWithLang("prompts.invalid-material").build());
+                        collectItemRewards(items);
                     }
-                    
-                    // Validate amount if provided
-                    if (parts.length >= 2) {
-                        try {
-                            int amount = Integer.parseInt(parts[1]);
-                            if (amount <= 0 || amount > 64) {
-                                sendConfigMessage("rewards.invalid-amount-range");
-                                return this;
-                            }
-                        } catch (NumberFormatException e) {
-                            sendConfigMessage("rewards.invalid-amount");
-                            return this;
-                        }
-                    }
-                    
-                    // Add to list
-                    List<String> items = plugin.getFileManager().getArenas()
-                        .getStringList("arenas." + arenaId + ".rewards.items");
-                    items.add(input);
-                    
-                    plugin.getFileManager().getArenas()
-                        .set("arenas." + arenaId + ".rewards.items", items);
-                    plugin.getFileManager().getArenas().save();
-                    
-                    sendConfigMessage("rewards.item-added", input);
-                    
-                    return this; // Continue conversation
-                }
-            })
-            .withLocalEcho(false)
-            .withTimeout(getConfigInt("prompts.timeout", 120))
-            .addConversationAbandonedListener(event -> reopenAfterConversation())
-            .buildConversation(player);
-        
-        factory.begin();
+                })
+                .onCancel(this::reopenGUI)
+                .start();
     }
 
-    /**
-     * Edit command rewards via conversation
-     */
     private void editCommandRewards() {
         close();
-        
-        sendConfigMessage("rewards.edit-commands-header");
-        sendConfigMessage("rewards.edit-commands-help");
-        
-        ConversationFactory factory = new ConversationFactory(plugin)
-            .withFirstPrompt(new StringPrompt() {
-                @Override
-                public String getPromptText(ConversationContext context) {
-                    return Text.createText(getConfigString("prompts.command-format", 
-                        "Enter command (without /) or 'done':")).build();
-                }
-                
-                @Override
-                public Prompt acceptInput(ConversationContext context, String input) {
-                    if (input.equalsIgnoreCase("done") || input.equalsIgnoreCase("cancel")) {
-                        return Prompt.END_OF_CONVERSATION;
-                    }
-                    
-                    // Remove leading slash if present
-                    if (input.startsWith("/")) {
-                        input = input.substring(1);
-                    }
-                    
-                    // Add to list
-                    List<String> commands = plugin.getFileManager().getArenas()
-                        .getStringList("arenas." + arenaId + ".rewards.commands");
-                    commands.add(input);
-                    
-                    plugin.getFileManager().getArenas()
-                        .set("arenas." + arenaId + ".rewards.commands", commands);
-                    plugin.getFileManager().getArenas().save();
-                    
-                    sendConfigMessage("rewards.command-added", input);
-                    
-                    return this; // Continue conversation
-                }
-            })
-            .withLocalEcho(false)
-            .withTimeout(getConfigInt("prompts.timeout", 120))
-            .addConversationAbandonedListener(event -> reopenAfterConversation())
-            .buildConversation(player);
-        
-        factory.begin();
+
+        collectCommandRewards(new ArrayList<>());
     }
 
-    /**
-     * Edit progressive multiplier via conversation
-     */
+    private void collectCommandRewards(List<String> commands) {
+        plugin.getChatInputManager().requestInput(player)
+                .withValidator(InputValidators.arenaId())
+                .withCancelMessage(Text.createTextWithLang("prompts.cancelled-message").build())
+                .withPrompt(Text.createTextWithLang("prompts.command-rewards-prompt").build())
+                .onComplete(input -> {
+                    if (input.equalsIgnoreCase("done")) {
+                        plugin.getFileManager().getArenas()
+                                .set("arenas." + arenaId + ".rewards.commands", commands);
+                        plugin.getFileManager().getArenas().save();
+
+                        player.sendMessage(Text.createTextWithLang("prompts.command-rewards-updated")
+                                        .replace("{count}", String.valueOf(commands.size())).build(player));
+
+                        reopenGUI();
+                        return;
+                    }
+
+                    if (input.equalsIgnoreCase("cancel")) {
+                        player.sendMessage(Text.createTextWithLang("prompts.cancelled-message").build());
+                        reopenGUI();
+                        return;
+                    }
+
+                    // Remove leading slash if present
+                    String command = input.startsWith("/") ? input.substring(1) : input;
+
+                    commands.add(command);
+                    player.sendMessage(Text.createTextWithLang("prompts.command-added")
+                                    .replace("{command}", command)
+                                    .replace("{count}", String.valueOf(commands.size())).build(player));
+
+                    collectCommandRewards(commands);
+                })
+                .start();
+    }
+
     private void editProgressiveMultiplier() {
         close();
-        
-        sendConfigMessage("rewards.edit-multiplier-header");
-        sendConfigMessage("rewards.edit-multiplier-current", 
-            String.format("%.2f", arena.getConfig().getRewardConfig().getProgressiveMultiplier()));
-        
-        ConversationFactory factory = new ConversationFactory(plugin)
-            .withFirstPrompt(new NumericPrompt() {
-                @Override
-                public String getPromptText(ConversationContext context) {
-                    return Text.createText(getConfigString("prompts.multiplier-amount", 
-                        "Enter multiplier (0.0-1.0):")).build();
-                }
-                
-                @Override
-                protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
-                    double multiplier = input.doubleValue();
-                    
-                    if (multiplier < 0 || multiplier > 1.0) {
-                        sendConfigMessage("rewards.invalid-multiplier-range");
-                        return this;
+
+        plugin.getChatInputManager().requestInput(player)
+                .withValidator(InputValidators.arenaId())
+                .withCancelMessage(Text.createTextWithLang("prompts.cancelled-message").build())
+                .withPrompt(Text.createTextWithLang("prompts.multiplier-prompt").build())
+                .onComplete(input -> {
+                    try {
+                        double value = Double.parseDouble(input);
+
+                        if (value < 0 || value > 1) {
+                            player.sendMessage(Text.createTextWithLang("prompts.invalid-multiplier").build(player));
+                            reopenGUI();
+                            return;
+                        }
+
+                        plugin.getFileManager().getArenas()
+                                .set("arenas." + arenaId + ".rewards.progressive-multiplier", value);
+                        plugin.getFileManager().getArenas().save();
+
+                        player.sendMessage(Text.createTextWithLang("prompts.multiplier-updated")
+                                        .replace("{value}", String.format("%.1f", value * 100)).build(player));
+
+                        reopenGUI();
+
+                    } catch (NumberFormatException e) {
+                        player.sendMessage(Text.createTextWithLang("prompts.invalid-number").build(player));
+                        reopenGUI();
                     }
-                    
-                    plugin.getFileManager().getArenas()
-                        .set("arenas." + arenaId + ".rewards.progressive-multiplier", multiplier);
-                    plugin.getFileManager().getArenas().save();
-                    
-                    sendConfigMessage("rewards.multiplier-updated", String.format("%.2f", multiplier));
-                    
-                    return Prompt.END_OF_CONVERSATION;
-                }
-            })
-            .withLocalEcho(false)
-            .withTimeout(getConfigInt("prompts.timeout", 60))
-            .addConversationAbandonedListener(event -> reopenAfterConversation())
-            .buildConversation(player);
-        
-        factory.begin();
+                })
+                .start();
     }
 
-    /**
-     * Reload arena and refresh GUI
-     */
-    private void reloadAndRefresh() {
-        plugin.getArenaManager().reloadArenas();
-        Arena reloaded = plugin.getArenaManager().getArena(arenaId);
-        if (reloaded != null) {
-            new RewardEditorGUI(plugin, player, reloaded).open();
+    @Override
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
+        if (actionType.equals("clear-items")) {
+            plugin.getFileManager().getArenas()
+                    .set("arenas." + arenaId + ".rewards.items", new ArrayList<>());
+            plugin.getFileManager().getArenas().save();
+
+            player.sendMessage(Text.createTextWithLang("prompts.items-cleared").build(player));
+
+            playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
+            reopenGUI();
+
+        } else if (actionType.equals("clear-commands")) {
+            plugin.getFileManager().getArenas()
+                    .set("arenas." + arenaId + ".rewards.commands", new ArrayList<>());
+            plugin.getFileManager().getArenas().save();
+
+            player.sendMessage(Text.createTextWithLang("prompts.commands-cleared").build(player));
+
+            playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
+            reopenGUI();
         }
     }
 
-    /**
-     * Reopen GUI after conversation
-     */
-    private void reopenAfterConversation() {
+    private void reopenGUI() {
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             plugin.getArenaManager().reloadArenas();
             Arena reloaded = plugin.getArenaManager().getArena(arenaId);
@@ -541,29 +476,6 @@ public class RewardEditorGUI extends BaseGUI {
                 new RewardEditorGUI(plugin, player, reloaded).open();
             }
         }, 1L);
-    }
-
-    @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
-        switch (actionType) {
-            case "clear-items":
-                plugin.getFileManager().getArenas()
-                    .set("arenas." + arenaId + ".rewards.items", new ArrayList<>());
-                plugin.getFileManager().getArenas().save();
-                sendConfigMessage("rewards.items-cleared");
-                playSound("success");
-                reloadAndRefresh();
-                break;
-                
-            case "clear-commands":
-                plugin.getFileManager().getArenas()
-                    .set("arenas." + arenaId + ".rewards.commands", new ArrayList<>());
-                plugin.getFileManager().getArenas().save();
-                sendConfigMessage("rewards.commands-cleared");
-                playSound("success");
-                reloadAndRefresh();
-                break;
-        }
     }
 
     @Override

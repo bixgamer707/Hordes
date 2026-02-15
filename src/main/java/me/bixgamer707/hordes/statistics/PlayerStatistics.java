@@ -26,7 +26,7 @@ public class PlayerStatistics {
     private int longestKillstreak;
     
     // Per-arena statistics: ArenaID -> Statistics
-    private Map<String, ArenaStats> arenaStats;
+    private final Map<String, ArenaStats> arenaStats;
     
     // Session data (temporary)
     private transient long sessionStart;
@@ -43,16 +43,20 @@ public class PlayerStatistics {
     /**
      * Records a kill
      */
-    public void addKill() {
+    public void addKill(String arenaId) {
         totalKills++;
         sessionKills++;
+        getArenaStatistics(arenaId).setKills(getArenaStatistics(arenaId).getKills()+1);
     }
 
     /**
      * Records a death
      */
-    public void addDeath() {
+    public void addDeath(String arenaId) {
         totalDeaths++;
+
+        getArenaStatistics(arenaId).setDeaths(getArenaStatistics(arenaId).getDeaths()+1);
+
         sessionKills = 0; // Reset killstreak
     }
 
@@ -61,7 +65,7 @@ public class PlayerStatistics {
      */
     public void addAttempt(String arenaId) {
         totalAttempts++;
-        getArenaStats(arenaId).attempts++;
+        getArenaStats(arenaId).setAttempts(getArenaStatistics(arenaId).getAttempts()+1);
     }
 
     /**
@@ -69,7 +73,8 @@ public class PlayerStatistics {
      */
     public void addCompletion(String arenaId, int wavesCompleted, long duration) {
         totalCompletions++;
-        
+
+
         // Update highest wave
         if (wavesCompleted > highestWave) {
             highestWave = wavesCompleted;
@@ -79,12 +84,15 @@ public class PlayerStatistics {
         if (fastestCompletion == 0 || duration < fastestCompletion) {
             fastestCompletion = duration;
         }
-        
-        // Update arena stats
         ArenaStats stats = getArenaStats(arenaId);
-        stats.completions++;
+        // Update arena stats
+        stats.setCompletions(stats.completions++);
         if (stats.fastestCompletion == 0 || duration < stats.fastestCompletion) {
-            stats.fastestCompletion = duration;
+            stats.setFastestCompletion(duration);
+        }
+
+        if(stats.getHighestWave() < wavesCompleted) {
+            stats.setHighestWave(wavesCompleted);
         }
     }
 
@@ -106,10 +114,12 @@ public class PlayerStatistics {
     /**
      * Ends a session and records playtime
      */
-    public void endSession() {
+    public void endSession(String arenaId) {
         if (sessionStart > 0) {
             long duration = (System.currentTimeMillis() - sessionStart) / 1000;
             addPlaytime(duration);
+
+            getArenaStatistics(arenaId).setPlayTime(getArenaStatistics(arenaId).getPlayTime()+duration);
             sessionStart = 0;
         }
     }
@@ -196,8 +206,42 @@ public class PlayerStatistics {
         }
     }
 
+
+
     public int getSessionKills() {
         return sessionKills;
+    }
+
+    public void setTotalKills(int kills) {
+        this.totalKills = kills;
+    }
+
+    public void setTotalDeaths(int deaths) {
+        this.totalDeaths = deaths;
+    }
+
+    public void setTotalCompletions(int completions) {
+        this.totalCompletions = completions;
+    }
+
+    public void setTotalAttempts(int attempts) {
+        this.totalAttempts = attempts;
+    }
+
+    public void setTotalPlaytime(long playtime) {
+        this.totalPlaytime = playtime;
+    }
+
+    public void setHighestWave(int highestWave) {
+        this.highestWave = highestWave;
+    }
+
+    public void setFastestCompletion(long fastestCompletion) {
+        this.fastestCompletion = fastestCompletion;
+    }
+
+    public void setArenaStats(ArenaStats stats, String arenaId) {
+        this.arenaStats.put(arenaId, stats);
     }
 
     /**
@@ -207,13 +251,80 @@ public class PlayerStatistics {
         public int attempts = 0;
         public int completions = 0;
         public long fastestCompletion = 0;
+        public long playTime = 0;
         public int totalKills = 0;
+        public int highestWave = 0;
         public int totalDeaths = 0;
 
         public double getWinRate() {
             if (attempts == 0) return 0.0;
             return (double) completions / attempts * 100.0;
         }
+
+        public double getKDRatio() {
+            if (totalDeaths == 0) return totalKills;
+            return (double) totalKills / totalDeaths;
+        }
+
+        public long getFastestCompletion() {
+            return fastestCompletion;
+        }
+
+        public void setFastestCompletion(long duration) {
+            if (fastestCompletion == 0 || duration < fastestCompletion) {
+                fastestCompletion = duration;
+            }
+        }
+
+        public void setAttempts(int attempts) {
+            this.attempts = attempts;
+        }
+
+        public void setCompletions(int completions) {
+            this.completions = completions;
+        }
+
+        public void setKills(int kills) {
+            this.totalKills = kills;
+        }
+
+        public void setDeaths(int deaths) {
+            this.totalDeaths = deaths;
+        }
+
+
+        public int getKills() {
+            return totalKills;
+        }
+
+        public int getDeaths() {
+            return totalDeaths;
+        }
+
+        public int getAttempts() {
+            return attempts;
+        }
+
+        public int getCompletions() {
+            return completions;
+        }
+
+        public long getPlayTime() {
+            return playTime;
+        }
+
+        public int getHighestWave() {
+            return highestWave;
+        }
+
+        public void setHighestWave(int highestWave) {
+            this.highestWave = highestWave;
+        }
+
+        public void setPlayTime(long playTime) {
+            this.playTime = playTime;
+        }
+
     }
 
     @Override

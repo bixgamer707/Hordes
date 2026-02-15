@@ -44,7 +44,9 @@ guis:
         name: "&c&l✖ Close"
         lore:
           - "&7Click to close this menu"
-        action: "close"
+        action:
+          - "close=LEFT_CLICK"
+          - "message:&c&l✖ Menu closed!=RIGHT_CLICK"
         glow: false
 
       # Info/Help item
@@ -65,7 +67,8 @@ guis:
         name: "&e← Previous Page"
         lore:
           - "&7Page &e{current_page}&7/&e{total_pages}"
-        action: "previous-page"
+        action:
+          - "previous-page=LEFT_CLICK"
 
       # Next page
       next-page:
@@ -74,7 +77,8 @@ guis:
         name: "&eNext Page →"
         lore:
           - "&7Page &e{current_page}&7/&e{total_pages}"
-        action: "next-page"
+        action:
+          - "next-page=LEFT_CLICK"
 
       # Arena items (dynamically generated in slots 10-43)
       arena-item:
@@ -521,6 +525,7 @@ guis:
         state-color-active: "&6"
         state-color-ending: "&c"
         state-color-disabled: "&7"
+        actions:
 
       # Previous page
       previous-page:
@@ -942,31 +947,6 @@ guis:
         material: "BARRIER"
         name: "&c← Back"
         action: "back"
-
-# ==========================================
-# PROMPTS CONFIGURATION
-# ==========================================
-prompts:
-  # Timeout settings
-  timeout: 60
-  timeout-message: "&c&l⏱ Input timed out"
-  cancelled-message: "&c&l✖ Input cancelled"
-
-  # Arena ID prompt
-  arena-id: "&e&l❖ Enter Arena ID:"
-  arena-id-hint: "&7Use only: &ea-z&7, &e0-9&7, &e_ &7(underscore)"
-  arena-id-invalid: "&c&l✖ Invalid ID! Use only: &ea-z&c, &e0-9&c, &e_ &c(underscore)"
-
-  # Display name prompt
-  display-name: "&e&l❖ Enter new display name:"
-  display-name-hint: "&7Must be &e3-32 characters"
-  display-name-invalid: "&c&l✖ Invalid name! Must be &e3-32 characters"
-
-  # WorldGuard region prompt
-  worldguard-region: "&e&l❖ Enter WorldGuard region name:"
-  worldguard-region-hint: "&7Max &e64 characters"
-  region-invalid: "&c&l✖ Invalid region name! Max &e64 characters"
-
 # ==========================================
 # NOTES:
 # ==========================================

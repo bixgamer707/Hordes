@@ -150,7 +150,7 @@ public class LeaderboardGUI extends BaseGUI {
     }
 
     @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         if (actionType.equals("category")) {
             currentCategory = actionValue;
             refresh();

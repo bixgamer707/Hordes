@@ -40,7 +40,7 @@ public class GUIListener implements Listener {
         
         // Handle the click
         int slot = event.getRawSlot();
-        if (slot >= 0 && slot < gui.getInventory().getSize()) {
+        if (slot >= 0 && slot <= gui.getInventory().getSize()) {
             gui.handleClick(slot, event.getClick());
         }
     }

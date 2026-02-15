@@ -2,7 +2,9 @@ package me.bixgamer707.hordes.gui.admin;
 
 import me.bixgamer707.hordes.Hordes;
 import me.bixgamer707.hordes.arena.Arena;
+import me.bixgamer707.hordes.file.File;
 import me.bixgamer707.hordes.gui.BaseGUI;
+import me.bixgamer707.hordes.text.Text;
 import me.bixgamer707.hordes.utils.InputValidators;
 import org.bukkit.entity.Player;
 
@@ -35,8 +37,8 @@ public class ArenaEditorGUI extends BaseGUI {
                 arena.getConfig().getDisplayName(),
                 arena.getState().name(),
                 arena.getConfig().isEnabled() ?
-                        getConfigString("text.enabled", "&a✔ Enabled") :
-                        getConfigString("text.disabled", "&c✘ Disabled")
+                        Text.createTextWithLang("guis."+guiId+".text.enabled", guiConfig).build() :
+                        Text.createTextWithLang("guis."+guiId+".text.disabled", guiConfig).build()
         });
 
         // Player settings
@@ -56,8 +58,8 @@ public class ArenaEditorGUI extends BaseGUI {
         // Mode settings
         updateItemLore("mode-settings", new String[]{
                 arena.getConfig().getSurvivalMode().isEnabled() ?
-                        getConfigString("text.survival", "Survival") :
-                        getConfigString("text.arena", "Arena"),
+                        Text.createTextWithLang("guis."+guiId+".text.survival").build() :
+                        Text.createTextWithLang("guis."+guiId+".text.arena").build(),
                 arena.getConfig().getDeathHandling().getAction().name(),
                 arena.getConfig().getItemHandling().getDropMode().name()
         });
@@ -65,14 +67,14 @@ public class ArenaEditorGUI extends BaseGUI {
         // Spawn settings
         updateItemLore("spawn-settings", new String[]{
                 arena.getConfig().getLobbySpawn() != null ?
-                        getConfigString("text.spawn-set", "&a✔ Set") :
-                        getConfigString("text.spawn-not-set", "&c✘ Not set"),
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-set").build() :
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-no-set").build(),
                 arena.getConfig().getArenaSpawn() != null ?
-                        getConfigString("text.spawn-set", "&a✔ Set") :
-                        getConfigString("text.spawn-not-set", "&c✘ Not set"),
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-set").build() :
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-no-set").build(),
                 arena.getConfig().getExitLocation() != null ?
-                        getConfigString("text.spawn-set", "&a✔ Set") :
-                        getConfigString("text.spawn-not-set", "&c✘ Not set")
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-set").build() :
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-no-set").build()
         });
 
         // Reward settings
@@ -84,22 +86,23 @@ public class ArenaEditorGUI extends BaseGUI {
     }
 
     @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         switch (actionType) {
             case "edit-basic":
                 editBasicSettings();
                 break;
 
             case "edit-players":
-                sendConfigMessage("admin.feature-coming-soon");
+                player.sendMessage(Text.createTextWithLang("admin.feature-coming-soon").build(player));
                 break;
 
             case "edit-waves":
-                sendConfigMessage("admin.feature-coming-soon");
+                player.sendMessage(Text.createTextWithLang("admin.feature-coming-soon").build(player));
+
                 break;
 
             case "edit-modes":
-                sendConfigMessage("admin.feature-coming-soon");
+                player.sendMessage(Text.createTextWithLang("admin.feature-coming-soon").build(player));
                 break;
 
             case "edit-spawns":
@@ -107,7 +110,7 @@ public class ArenaEditorGUI extends BaseGUI {
                 break;
 
             case "edit-rewards":
-                sendConfigMessage("admin.feature-coming-soon");
+                new RewardEditorGUI(plugin, player, arena).open();
                 break;
 
             case "edit-worldguard":
@@ -132,17 +135,13 @@ public class ArenaEditorGUI extends BaseGUI {
      * Edit basic settings via chat input
      */
     private void editBasicSettings() {
-        sendConfigMessage("admin.edit-basic-header");
-        sendConfigMessage("admin.edit-basic-current", arena.getConfig().getDisplayName());
-        sendConfigMessage("admin.edit-basic-prompt");
-
+        File messages = plugin.getFileManager().getMessages();
         plugin.getChatInputManager().requestInput(player)
-                .withPrompt(getConfigString("prompts.display-name",
+                .withPrompt(messages.getString("Messages.prompts.display-name",
                         "&e&l❖ Enter new display name:"))
                 .withValidator(InputValidators.displayName())
-                .withInvalidMessage(getConfigString("prompts.display-name-invalid",
+                .withInvalidMessage(messages.getString("Messages.prompts.display-name-invalid",
                         "&c&l✖ Invalid name! Must be 3-32 characters"))
-                .withTimeout(getConfigInt("prompts.timeout", 60))
                 .onComplete(input -> handleDisplayNameInput(input))
                 .onCancel(() -> reopenEditor())
                 .start();
@@ -153,11 +152,12 @@ public class ArenaEditorGUI extends BaseGUI {
      */
     private void handleDisplayNameInput(String displayName) {
         // Update display name
+        File messages = plugin.getFileManager().getMessages();
         plugin.getFileManager().getFile("arenas.yml")
                 .set("arenas." + arenaId + ".display-name", displayName);
         plugin.getFileManager().getArenas().save();
 
-        sendConfigMessage("admin.edit-basic-success", displayName);
+        sendConfigMessage("Messages.admin.edit-basic-success", messages, displayName);
         playSound("success");
 
         // Reload and reopen
@@ -168,19 +168,14 @@ public class ArenaEditorGUI extends BaseGUI {
      * Edit WorldGuard region via chat input
      */
     private void editWorldGuardRegion() {
-        sendConfigMessage("admin.edit-worldguard-header");
 
-        String current = arena.getConfig().getWorldGuardRegion();
-        sendConfigMessage("admin.edit-worldguard-current", current != null ? current : "None");
-        sendConfigMessage("admin.edit-worldguard-prompt");
-
+        File messages = plugin.getFileManager().getMessages();
         plugin.getChatInputManager().requestInput(player)
-                .withPrompt(getConfigString("prompts.worldguard-region",
+                .withPrompt(messages.getString("Messages.prompts.worldguard-region",
                         "&e&l❖ Enter WorldGuard region name:"))
                 .withValidator(InputValidators.regionName())
-                .withInvalidMessage(getConfigString("prompts.region-invalid",
+                .withInvalidMessage(messages.getString("Messages.prompts.region-invalid",
                         "&c&l✖ Invalid region name! Max 64 characters"))
-                .withTimeout(getConfigInt("prompts.timeout", 60))
                 .onComplete(input -> handleWorldGuardRegionInput(input))
                 .onCancel(() -> reopenEditor())
                 .start();
@@ -190,11 +185,11 @@ public class ArenaEditorGUI extends BaseGUI {
      * Handles WorldGuard region input
      */
     private void handleWorldGuardRegionInput(String regionName) {
-        plugin.getFileManager().getFile("arenas.yml")
+        plugin.getFileManager().getArenas()
                 .set("arenas." + arenaId + ".worldguard-region", regionName);
         plugin.getFileManager().getArenas().save();
 
-        sendConfigMessage("admin.edit-worldguard-success", regionName);
+        sendConfigMessage("Messages.admin.edit-worldguard-success", plugin.getFileManager().getMessages(), regionName);
         playSound("success");
 
         // Reload and reopen
@@ -208,11 +203,11 @@ public class ArenaEditorGUI extends BaseGUI {
         boolean newState = !arena.getConfig().isEnabled();
         arena.getConfig().setEnabled(newState);
 
-        plugin.getFileManager().getFile("arenas.yml")
+        plugin.getFileManager().getArenas()
                 .set("arenas." + arenaId + ".enabled", newState);
         plugin.getFileManager().getArenas().save();
 
-        sendConfigMessage(newState ? "admin.arena-enabled" : "admin.arena-disabled", arenaId);
+        sendConfigMessage(newState ? "admin.arena-enabled" : "admin.arena-disabled", plugin.getFileManager().getMessages(), arenaId);
         playSound("click");
 
         reloadAndReopen();
@@ -226,12 +221,12 @@ public class ArenaEditorGUI extends BaseGUI {
             plugin.getFileManager().getArenas().save();
             plugin.getArenaManager().loadArenas();
 
-            sendConfigMessage("admin.save-success");
+            sendConfigMessage("Messages.admin.save-success", plugin.getFileManager().getMessages());
             playSound("success");
             refresh();
 
         } catch (Exception e) {
-            sendConfigMessage("admin.save-failed", e.getMessage());
+            sendConfigMessage("Messages.admin.save-failed", plugin.getFileManager().getMessages(), e.getMessage());
             playSound("error");
         }
     }
@@ -245,7 +240,7 @@ public class ArenaEditorGUI extends BaseGUI {
         boolean success = plugin.getArenaManager().joinArena(player, arenaId);
 
         if (!success) {
-            sendConfigMessage("admin.test-failed");
+            sendConfigMessage("Messages.admin.test-failed", plugin.getFileManager().getMessages());
         }
     }
 

@@ -39,21 +39,21 @@ public class ModeSettingsGUI extends BaseGUI {
     }
 
     private void updateSurvivalMode() {
-        int slot = getConfigInt("items.survival-mode.slot", 10);
+        int slot = guiConfig.getInt("guis."+guiId+".items.survival-mode.slot", 10);
         boolean enabled = arena.getConfig().getSurvivalMode().isEnabled();
         
         String materialKey = enabled ? "material-enabled" : "material-disabled";
         ItemStack item = new ItemStack(Material.valueOf(
-            getConfigString("items.survival-mode." + materialKey, enabled ? "GRASS_BLOCK" : "BEDROCK")));
+                guiConfig.getString("guis."+guiId+".items.survival-mode." + materialKey, enabled ? "GRASS_BLOCK" : "BEDROCK")));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            String name = getConfigString("items.survival-mode.name", "&a&lSurvival Mode")
+            String name = guiConfig.getString("guis."+guiId+".items.survival-mode.name", "&a&lSurvival Mode")
                 .replace("{status}", enabled ? "&aEnabled" : "&cDisabled");
             meta.setDisplayName(Text.createText(name).build(player));
             
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.survival-mode.lore")) {
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.survival-mode.lore")) {
                 String processed = line
                     .replace("{status}", enabled ? "&aEnabled" : "&cDisabled")
                     .replace("{mode}", enabled ? "Dungeon" : "Arena");
@@ -68,20 +68,20 @@ public class ModeSettingsGUI extends BaseGUI {
     }
 
     private void updateDeathAction() {
-        int slot = getConfigInt("items.death-action.slot", 12);
+        int slot = guiConfig.getInt("guis."+guiId+".items.death-action.slot", 12);
         DeathAction action = arena.getConfig().getDeathHandling().getAction();
         
         String materialKey = "material-" + action.name().toLowerCase();
         ItemStack item = new ItemStack(Material.valueOf(
-            getConfigString("items.death-action." + materialKey, "SKELETON_SKULL")));
+                guiConfig.getString("guis."+guiId+".items.death-action." + materialKey, "SKELETON_SKULL")));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
             meta.setDisplayName(Text.createText(
-                getConfigString("items.death-action.name", "&c&lDeath Action")).build(player));
+                    guiConfig.getString("guis."+guiId+".items.death-action.name", "&c&lDeath Action")).build(player));
             
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.death-action.lore")) {
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.death-action.lore")) {
                 String processed = line
                     .replace("{action}", action.getDisplayName())
                     .replace("{action_desc}", getDeathActionDescription(action));
@@ -96,20 +96,20 @@ public class ModeSettingsGUI extends BaseGUI {
     }
 
     private void updateItemDropMode() {
-        int slot = getConfigInt("items.item-drop-mode.slot", 14);
+        int slot = guiConfig.getInt("guis."+guiId+".items.item-drop-mode.slot", 14);
         ItemDropMode mode = arena.getConfig().getItemHandling().getDropMode();
         
         String materialKey = "material-" + mode.name().toLowerCase();
         ItemStack item = new ItemStack(Material.valueOf(
-            getConfigString("items.item-drop-mode." + materialKey, "CHEST")));
+                guiConfig.getString("guis."+guiId+".items.item-drop-mode." + materialKey, "CHEST")));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
             meta.setDisplayName(Text.createText(
-                getConfigString("items.item-drop-mode.name", "&6&lItem Drop Mode")).build(player));
+                    guiConfig.getString("guis."+guiId+".items.item-drop-mode.name", "&6&lItem Drop Mode")).build(player));
             
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.item-drop-mode.lore")) {
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.item-drop-mode.lore")) {
                 String processed = line
                     .replace("{mode}", mode.getDisplayName())
                     .replace("{mode_desc}", getDropModeDescription(mode));
@@ -124,22 +124,22 @@ public class ModeSettingsGUI extends BaseGUI {
     }
 
     private void updatePvPSetting() {
-        int slot = getConfigInt("items.pvp-setting.slot", 16);
+        int slot = guiConfig.getInt("guis."+guiId+".items.pvp-setting.slot", 16);
         boolean allowed = arena.getConfig().getSurvivalMode().isPvPAllowed();
         
         String materialKey = allowed ? "material-enabled" : "material-disabled";
         ItemStack item = new ItemStack(Material.valueOf(
-            getConfigString("items.pvp-setting." + materialKey, 
+                guiConfig.getString("guis."+guiId+".items.pvp-setting." + materialKey,
                 allowed ? "DIAMOND_SWORD" : "WOODEN_SWORD")));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            String name = getConfigString("items.pvp-setting.name", "&e&lPvP")
+            String name = guiConfig.getString("guis."+guiId+".items.pvp-setting.name", "&e&lPvP")
                 .replace("{status}", allowed ? "&aAllowed" : "&cDisabled");
             meta.setDisplayName(Text.createText(name).build(player));
             
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.pvp-setting.lore")) {
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.pvp-setting.lore")) {
                 lore.add(Text.createText(line.replace("{status}", allowed ? "&aAllowed" : "&cDisabled"))
                     .build(player));
             }
@@ -152,22 +152,22 @@ public class ModeSettingsGUI extends BaseGUI {
     }
 
     private void updateKeepInventory() {
-        int slot = getConfigInt("items.keep-inventory.slot", 22);
+        int slot = guiConfig.getInt("guis."+guiId+".items.keep-inventory.slot", 22);
         boolean keep = arena.getConfig().getItemHandling().shouldKeepInventory();
         
         String materialKey = keep ? "material-enabled" : "material-disabled";
         ItemStack item = new ItemStack(Material.valueOf(
-            getConfigString("items.keep-inventory." + materialKey, 
+                guiConfig.getString("guis."+guiId+".items.keep-inventory." + materialKey,
                 keep ? "ENDER_CHEST" : "CHEST")));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            String name = getConfigString("items.keep-inventory.name", "&b&lKeep Inventory")
+            String name = guiConfig.getString("guis."+guiId+".items.keep-inventory.name", "&b&lKeep Inventory")
                 .replace("{status}", keep ? "&aEnabled" : "&cDisabled");
             meta.setDisplayName(Text.createText(name).build(player));
             
             List<String> lore = new ArrayList<>();
-            for (String line : getConfigStringList("items.keep-inventory.lore")) {
+            for (String line : guiConfig.getStringList("guis."+guiId+".items.keep-inventory.lore")) {
                 lore.add(Text.createText(line.replace("{status}", keep ? "&aEnabled" : "&cDisabled"))
                     .build(player));
             }
@@ -181,12 +181,12 @@ public class ModeSettingsGUI extends BaseGUI {
 
     private String getDeathActionDescription(DeathAction action) {
         String key = "death-action-desc-" + action.name().toLowerCase();
-        return getConfigString("descriptions." + key, action.getDisplayName());
+        return guiConfig.getString("guis."+guiId+".descriptions." + key, action.getDisplayName());
     }
 
     private String getDropModeDescription(ItemDropMode mode) {
         String key = "drop-mode-desc-" + mode.name().toLowerCase();
-        return getConfigString("descriptions." + key, mode.getDisplayName());
+        return guiConfig.getString("guis."+guiId+".descriptions." + key, mode.getDisplayName());
     }
 
     private void toggleSurvivalMode() {
@@ -196,12 +196,11 @@ public class ModeSettingsGUI extends BaseGUI {
             .set("arenas." + arenaId + ".survival-mode.enabled", newValue);
         plugin.getFileManager().getArenas().save();
         
-        player.sendMessage(Text.createText(
-            getConfigString("messages.survival-mode-toggled", 
-                "&aSurvival mode {status}")
-                .replace("{status}", newValue ? "enabled" : "disabled")).build(player));
+        player.sendMessage(Text.createTextWithLang(
+            "admin.survival-mode-toggled")
+                .replace("{status}", newValue ? "enabled" : "disabled").build(player));
         
-        playSound(getConfigString("sounds.click", "UI_BUTTON_CLICK"));
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
         reopenGUI();
     }
 
@@ -214,13 +213,12 @@ public class ModeSettingsGUI extends BaseGUI {
         plugin.getFileManager().getArenas()
             .set("arenas." + arenaId + ".death-handling.action", next.name());
         plugin.getFileManager().getArenas().save();
+
+        player.sendMessage(Text.createTextWithLang(
+                        "admin.death-action-changed")
+                .replace("{action}", next.getDisplayName()).build(player));
         
-        player.sendMessage(Text.createText(
-            getConfigString("messages.death-action-changed", 
-                "&aDeath action set to {action}")
-                .replace("{action}", next.getDisplayName())).build(player));
-        
-        playSound(getConfigString("sounds.click", "UI_BUTTON_CLICK"));
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
         reopenGUI();
     }
 
@@ -233,13 +231,12 @@ public class ModeSettingsGUI extends BaseGUI {
         plugin.getFileManager().getArenas()
             .set("arenas." + arenaId + ".item-handling.drop-mode", next.name());
         plugin.getFileManager().getArenas().save();
+
+        player.sendMessage(Text.createTextWithLang(
+                        "admin.item-drop-mode-changed")
+                .replace("{action}", next.getDisplayName()).build(player));
         
-        player.sendMessage(Text.createText(
-            getConfigString("messages.item-drop-mode-changed", 
-                "&aItem drop mode set to {mode}")
-                .replace("{mode}", next.getDisplayName())).build(player));
-        
-        playSound(getConfigString("sounds.click", "UI_BUTTON_CLICK"));
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
         reopenGUI();
     }
 
@@ -249,13 +246,12 @@ public class ModeSettingsGUI extends BaseGUI {
         plugin.getFileManager().getArenas()
             .set("arenas." + arenaId + ".survival-mode.allow-pvp", newValue);
         plugin.getFileManager().getArenas().save();
+
+        player.sendMessage(Text.createTextWithLang(
+                        "admin.pvp-toggled")
+                .replace("{status}", newValue ? "enabled" : "disabled").build(player));
         
-        player.sendMessage(Text.createText(
-            getConfigString("messages.pvp-toggled", 
-                "&aPvP {status}")
-                .replace("{status}", newValue ? "enabled" : "disabled")).build(player));
-        
-        playSound(getConfigString("sounds.click", "UI_BUTTON_CLICK"));
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
         reopenGUI();
     }
 
@@ -265,13 +261,12 @@ public class ModeSettingsGUI extends BaseGUI {
         plugin.getFileManager().getArenas()
             .set("arenas." + arenaId + ".item-handling.keep-inventory-on-death", newValue);
         plugin.getFileManager().getArenas().save();
+
+        player.sendMessage(Text.createTextWithLang(
+                        "admin.keep-inventory-toggled")
+                .replace("{status}", newValue ? "enabled" : "disabled").build(player));
         
-        player.sendMessage(Text.createText(
-            getConfigString("messages.keep-inventory-toggled", 
-                "&aKeep inventory {status}")
-                .replace("{status}", newValue ? "enabled" : "disabled")).build(player));
-        
-        playSound(getConfigString("sounds.click", "UI_BUTTON_CLICK"));
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
         reopenGUI();
     }
 

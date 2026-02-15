@@ -96,7 +96,7 @@ public class ArenaSelectionGUI extends BaseGUI {
         }
         
         // Get name from config and replace placeholders
-        String nameTemplate = getConfigString("items.arena-item.name", "&e{arena_name}");
+        String nameTemplate = guiConfig.getString("guis."+guiId+".items.arena-item.name", "&e{arena_name}");
         String name = nameTemplate.replace("{arena_name}", arena.getConfig().getDisplayName());
         meta.setDisplayName(Text.createText(name).build(player));
         
@@ -128,7 +128,7 @@ public class ArenaSelectionGUI extends BaseGUI {
      */
     private Material getMaterialForState(ArenaState state) {
         String materialKey = "material-" + state.name().toLowerCase();
-        String materialName = getConfigString("items.arena-item." + materialKey, "GRAY_WOOL");
+        String materialName = guiConfig.getString("guis."+guiId+".items.arena-item." + materialKey, "GRAY_WOOL");
         
         try {
             return Material.valueOf(materialName.toUpperCase());
@@ -174,10 +174,10 @@ public class ArenaSelectionGUI extends BaseGUI {
         if (success) {
             // Successfully joined - close GUI
             close();
-            playSound(getConfigString("sounds.open", "ENTITY_PLAYER_LEVELUP"));
+            playSound(guiConfig.getString("guis."+guiId+".sounds.open", "ENTITY_PLAYER_LEVELUP"));
         } else {
             // Failed to join - play error sound but keep GUI open
-            playSound(getConfigString("sounds.error", "ENTITY_VILLAGER_NO"));
+            playSound(guiConfig.getString("guis."+guiId+".sounds.error", "ENTITY_VILLAGER_NO"));
             // Refresh GUI in case arena state changed
             refresh();
         }
@@ -259,7 +259,7 @@ public class ArenaSelectionGUI extends BaseGUI {
     }
 
     @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         // Handle custom actions
         switch (actionType) {
             case "join-arena":

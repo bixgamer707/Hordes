@@ -318,27 +318,33 @@ public class PlayerListener implements Listener {
      * Handles command preprocessing
      * Blocks commands in arena if configured
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         Arena arena = arenaManager.getPlayerArena(player);
-        
+
         if (arena == null) {
             return;
         }
-        
+
         String command = event.getMessage().toLowerCase();
-        
+
         // Allow /hordes leave always
         if (command.startsWith("/hordes leave") || command.startsWith("/hd leave")) {
+            event.setCancelled(false);
             return;
         }
-        
-        // Block other commands in arena (configurable)
-        // For now, allow all commands
-        // Can add blocked-commands list to config later
-    }
 
+        List<String> commands = plugin.getFileManager().getConfig().getStringList("commands.blocked-commands");
+
+        for (String blocked : commands) {
+            if (command.startsWith(blocked.toLowerCase())) {
+                event.setCancelled(true);
+                Text.createTextWithLang("arena.cannot-use-command", player);
+                break;
+            }
+        }
+    }
     /**
      * Handles player teleport
      * Prevents teleporting out of arena
@@ -373,5 +379,11 @@ public class PlayerListener implements Listener {
             // Item no longer exists
             return Bukkit.getEntity(itemUuid) == null;
         });
+    }
+
+    public void onAsyncJoin(AsyncPlayerPreLoginEvent event){
+        UUID uuid = event.getUniqueId();
+
+
     }
 }

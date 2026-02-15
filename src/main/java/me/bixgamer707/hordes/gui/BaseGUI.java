@@ -41,6 +41,7 @@ public abstract class BaseGUI {
 
     // Click handlers registered by GUI ID and slot
     protected final Map<String, Consumer<Player>> clickHandlers = new HashMap<>();
+    protected final Map<Integer, ClickType> clickTypes = new ConcurrentHashMap<>();
 
     /**
      * Constructor - loads everything from guis.yml
@@ -52,8 +53,8 @@ public abstract class BaseGUI {
         this.guiConfig = plugin.getFileManager().getFile("guis.yml");
 
         // Load title and size from config
-        String title = getConfigString("title", "&6Menu");
-        int rows = getConfigInt("rows", 6);
+        String title = guiConfig.getString("guis."+guiId+".title", "&6Menu");
+        int rows = guiConfig.getInt("guis."+guiId+".rows", 6);
         int size = rows * 9;
 
         this.inventory = Bukkit.createInventory(null, size,
@@ -78,7 +79,7 @@ public abstract class BaseGUI {
         openGUIs.put(player.getUniqueId(), this);
 
         // Play sound
-        playSound(getConfigString("sounds.open", "UI_BUTTON_CLICK"));
+        playSound(guiConfig.getString("guis."+guiId+".sounds.open", "UI_BUTTON_CLICK"));
     }
 
     /**
@@ -87,6 +88,7 @@ public abstract class BaseGUI {
     protected void buildFromConfig() {
         inventory.clear();
         clickHandlers.clear();
+        clickTypes.clear();
 
         // Get items section
         ConfigurationSection itemsSection = guiConfig.getConfigurationSection("guis." + guiId + ".items");
@@ -145,9 +147,11 @@ public abstract class BaseGUI {
                 inventory.setItem(slot, item);
 
                 // Register click handler if defined
-                String action = guiConfig.getString(itemPath + ".action");
-                if (action != null) {
-                    clickHandlers.put(slot + "", p -> handleAction(action, itemId, p));
+                List<String> action = guiConfig.getStringList(itemPath + ".action");
+                if (!action.isEmpty()) {
+                    clickHandlers.put(slot + "", p -> handleAction(slot, action, itemId, p));
+                } else {
+                    clickHandlers.put(slot + "", p -> handleAction(slot, guiConfig.getString(itemPath + ".action"), itemId, p));
                 }
             }
         }
@@ -338,6 +342,8 @@ public abstract class BaseGUI {
         // Check for registered handler
         Consumer<Player> handler = clickHandlers.get(slot + "");
 
+        clickTypes.put(slot, clickType);
+
         if (handler != null) {
             handler.accept(player);
         }
@@ -346,7 +352,76 @@ public abstract class BaseGUI {
     /**
      * Handles action strings from config
      */
-    protected void handleAction(String action, String itemId, Player player) {
+    protected void handleAction(int slot, List<String> actions, String itemId, Player player) {
+        for(String action : actions){
+            String[] split = action.split("=");
+
+            String click = (split[1] == null || split[1].equalsIgnoreCase("ANY"))
+                    ? null : split[1].toUpperCase();
+
+            if(click != null) {
+                if(!click.equalsIgnoreCase(clickTypes.get(slot).name())) {
+                    continue;
+                }
+            }
+
+            String[] parts = split[0].split(":", 2);
+            String actionType = parts[0].toLowerCase();
+            String actionValue = parts.length > 1 ? parts[1] : "";
+
+            clickTypes.remove(slot);
+            switch (actionType) {
+                case "close":
+                    close();
+                    break;
+
+                case "command":
+                    player.performCommand(actionValue.replace("{player}", player.getName()));
+                    break;
+
+                case "console":
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                            actionValue.replace("{player}", player.getName()));
+                    break;
+
+                case "message":
+                    player.sendMessage(Text.createText(actionValue).build(player));
+                    break;
+
+                case "sound":
+                    playSound(actionValue);
+                    break;
+
+                case "gui":
+                    // Open another GUI
+                    openGUI(actionValue);
+                    break;
+
+                case "back":
+                    onBack();
+                    break;
+
+                case "refresh":
+                    refresh();
+                    break;
+
+                case "next-page":
+                    nextPage();
+                    break;
+
+                case "previous-page":
+                    previousPage();
+                    break;
+
+                default:
+                    // Custom action - handle in subclass
+                    handleCustomAction(slot, actionType, actionValue, itemId);
+                    break;
+            }
+        }
+    }
+
+    protected void handleAction(int slot, String action, String itemId, Player player) {
         if (action == null || action.isEmpty()) {
             return;
         }
@@ -355,6 +430,7 @@ public abstract class BaseGUI {
         String actionType = parts[0].toLowerCase();
         String actionValue = parts.length > 1 ? parts[1] : "";
 
+        clickTypes.remove(slot);
         switch (actionType) {
             case "close":
                 close();
@@ -400,7 +476,7 @@ public abstract class BaseGUI {
 
             default:
                 // Custom action - handle in subclass
-                handleCustomAction(actionType, actionValue, itemId);
+                handleCustomAction(slot, actionType, actionValue, itemId);
                 break;
         }
     }
@@ -408,7 +484,7 @@ public abstract class BaseGUI {
     /**
      * Override for custom actions
      */
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         // Override in subclasses
     }
 
@@ -453,7 +529,7 @@ public abstract class BaseGUI {
     protected void nextPage() {
         if (currentPage < maxPages - 1) {
             currentPage++;
-            playSound(getConfigString("sounds.page", "ITEM_BOOK_PAGE_TURN"));
+            playSound(guiConfig.getString("guis."+ guiId +".sounds.page", "ITEM_BOOK_PAGE_TURN"));
             refresh();
         }
     }
@@ -464,7 +540,7 @@ public abstract class BaseGUI {
     protected void previousPage() {
         if (currentPage > 0) {
             currentPage--;
-            playSound(getConfigString("sounds.page", "ITEM_BOOK_PAGE_TURN"));
+            playSound(guiConfig.getString("guis."+ guiId +".sounds.page", "ITEM_BOOK_PAGE_TURN"));
             refresh();
         }
     }
@@ -480,43 +556,8 @@ public abstract class BaseGUI {
             // Invalid sound
         }
     }
-
-    /**
-     * Gets a config string
-     */
-    protected String getConfigString(String path, String def) {
-        return guiConfig.getString("guis." + guiId + "." + path, def);
-    }
-
-    protected List<String> getConfigStringList(String path) {
-        return guiConfig.getStringList("guis." + guiId + "." + path);
-    }
-
-    /**
-     * Gets a config int
-     */
-    protected int getConfigInt(String path, int def) {
-        return guiConfig.getInt("guis." + guiId + "." + path, def);
-    }
-
-    /**
-     * Gets a config boolean
-     */
-    protected boolean getConfigBoolean(String path, boolean def) {
-        return guiConfig.getBoolean("guis." + guiId + "." + path, def);
-    }
-
-    /**
-     * Sends a message from GUI config or global messages
-     */
-    protected void sendConfigMessage(String path, Object... replacements) {
-        String message = guiConfig.getString("guis." + guiId + ".messages." + path);
-
-        if (message == null) {
-            // Fallback to global messages in en_us.yml
-            message = plugin.getFileManager().getFile("messages/en_us.yml")
-                    .getString("Messages." + path, path);
-        }
+    protected void sendConfigMessage(String path, File file, Object... replacements) {
+        String message = file.getString(path, path);
 
         // Replace placeholders
         for (int i = 0; i < replacements.length; i++) {
@@ -526,11 +567,11 @@ public abstract class BaseGUI {
         player.sendMessage(Text.createText(message).build(player));
     }
 
-    protected void sendMessageListWithReplacements(String path, Object... replacements) {
-        List<String> messages = getConfigStringList("messages." + path);
+    protected void sendMessageListWithReplacements(String path, File file, Object... replacements) {
+        List<String> messages = file.getStringList(path);
 
         if (messages.isEmpty()) {
-            sendConfigMessage(path, replacements);
+            sendConfigMessage(path, file, replacements);
             return;
         }
 
@@ -547,7 +588,7 @@ public abstract class BaseGUI {
      * Updates item lore by item ID from config
      */
     protected void updateItemLore(String itemId, String[] replacements) {
-        String slotStr = getConfigString("items." + itemId + ".slot", null);
+        String slotStr = guiConfig.getString("guis." + guiId + ".items." + itemId + ".slot", null);
         if (slotStr != null) {
             try {
                 int slot = Integer.parseInt(slotStr);

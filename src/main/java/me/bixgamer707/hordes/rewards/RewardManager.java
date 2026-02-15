@@ -130,7 +130,7 @@ public class RewardManager {
             
             String formatted = economy.format(amount);
             player.sendMessage(Text.createTextWithLang("rewards.money")
-                .replace("%amount%", formatted)
+                .replace("%0%", formatted)
                 .build(player));
             
         } catch (Exception e) {
@@ -165,7 +165,7 @@ public class RewardManager {
         
         if (!items.isEmpty()) {
             player.sendMessage(Text.createTextWithLang("rewards.items").replace(
-                "%count%", String.valueOf(items.size()
+                "%0%", String.valueOf(items.size()
             )).build(player));
         }
     }

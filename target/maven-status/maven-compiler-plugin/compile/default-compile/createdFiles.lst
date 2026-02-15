@@ -15,6 +15,7 @@ me\bixgamer707\hordes\commands\HordesAdminCommand.class
 me\bixgamer707\hordes\listeners\PlayerListener.class
 me\bixgamer707\hordes\config\ArenaConfig$SurvivalModeConfig.class
 me\bixgamer707\hordes\listeners\PlayerListener$3.class
+me\bixgamer707\hordes\gui\admin\ModeSettingsGUI.class
 me\bixgamer707\hordes\gui\player\ArenaSelectionGUI$1.class
 me\bixgamer707\hordes\listeners\PlayerListener$2.class
 me\bixgamer707\hordes\config\DeathAction.class
@@ -38,12 +39,12 @@ me\bixgamer707\hordes\file\File.class
 me\bixgamer707\hordes\listeners\WorldGuardListener.class
 me\bixgamer707\hordes\arena\Arena$5.class
 me\bixgamer707\hordes\utils\ChatInputManager$ChatInputSession.class
-me\bixgamer707\hordes\utils\MessageUtils.class
 me\bixgamer707\hordes\config\RewardType.class
 me\bixgamer707\hordes\Hordes$2.class
 me\bixgamer707\hordes\gui\GUIListener.class
 me\bixgamer707\hordes\listeners\PlayerListener$1.class
 me\bixgamer707\hordes\rewards\RewardManager.class
+me\bixgamer707\hordes\gui\admin\RewardEditorGUI.class
 me\bixgamer707\hordes\gui\player\ArenaSelectionGUI.class
 me\bixgamer707\hordes\file\FileManager.class
 me\bixgamer707\hordes\commands\HordesCommand.class
@@ -62,6 +63,7 @@ me\bixgamer707\hordes\Hordes$1.class
 me\bixgamer707\hordes\arena\Arena.class
 me\bixgamer707\hordes\mob\MythicMobsIntegration.class
 me\bixgamer707\hordes\arena\Arena$4.class
+me\bixgamer707\hordes\gui\admin\PlayerSettingsGUI.class
 me\bixgamer707\hordes\utils\ChatInputManager$InputBuilder.class
 me\bixgamer707\hordes\statistics\PlayerStatistics$ArenaStats.class
 me\bixgamer707\hordes\config\ArenaConfig.class

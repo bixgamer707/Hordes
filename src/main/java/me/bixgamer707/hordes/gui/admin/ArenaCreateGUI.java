@@ -1,7 +1,10 @@
 package me.bixgamer707.hordes.gui.admin;
 
 import me.bixgamer707.hordes.Hordes;
+import me.bixgamer707.hordes.arena.Arena;
+import me.bixgamer707.hordes.file.File;
 import me.bixgamer707.hordes.gui.BaseGUI;
+import me.bixgamer707.hordes.text.Text;
 import me.bixgamer707.hordes.utils.InputValidators;
 import org.bukkit.entity.Player;
 
@@ -20,11 +23,11 @@ public class ArenaCreateGUI extends BaseGUI {
     }
 
     @Override
-    protected void handleCustomAction(String actionType, String actionValue, String itemId) {
+    protected void handleCustomAction(int slot, String actionType, String actionValue, String itemId) {
         if (actionType.equals("create-from-scratch")) {
             createFromScratch();
         } else if (actionType.equals("create-from-template")) {
-            sendConfigMessage("admin.feature-coming-soon");
+            player.sendMessage(Text.createTextWithLang("admin.feature-coming-soon").build());
         }
     }
 
@@ -32,17 +35,13 @@ public class ArenaCreateGUI extends BaseGUI {
      * Create arena from scratch via chat input
      */
     private void createFromScratch() {
-        sendConfigMessage("admin.create-header");
-        sendConfigMessage("admin.create-prompt");
+        File messages = plugin.getFileManager().getMessages();
 
         plugin.getChatInputManager().requestInput(player)
-                .withPrompt(getConfigString("prompts.arena-id", "&e&l❖ Enter Arena ID:"))
+                .withPrompt(messages.getString("Messages.prompts.arena-id", "&e&l❖ Enter Arena ID:"))
                 .withValidator(InputValidators.arenaId())
-                .withInvalidMessage(getConfigString("prompts.arena-id-invalid",
+                .withInvalidMessage(messages.getString("Messages.prompts.arena-id-invalid",
                         "&c&l✖ Invalid ID! Use only: a-z, 0-9, _ (underscore)"))
-                .withTimeout(getConfigInt("prompts.timeout", 60))
-                .withTimeoutMessage(getConfigString("prompts.timeout-message",
-                        "&c&l⏱ Input timed out"))
                 .onComplete(input -> handleArenaIdInput(input))
                 .onCancel(() -> new ArenaListGUI(plugin, player).open())
                 .start();
@@ -52,9 +51,11 @@ public class ArenaCreateGUI extends BaseGUI {
      * Handles arena ID input
      */
     private void handleArenaIdInput(String arenaId) {
+
+        File messages = plugin.getFileManager().getMessages();
         // Check if already exists
         if (plugin.getArenaManager().getArena(arenaId) != null) {
-            sendConfigMessage("admin.create-already-exists", arenaId);
+            sendConfigMessage("Messages.admin.create-already-exists", messages, arenaId);
             new ArenaListGUI(plugin, player).open();
             return;
         }
@@ -63,11 +64,11 @@ public class ArenaCreateGUI extends BaseGUI {
         createArenaConfig(arenaId);
 
         // Send success message
-        sendMessageListWithReplacements("admin.create", arenaId);
+        sendMessageListWithReplacements("Messages.admin.create", messages, arenaId);
 
         // Open editor
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            var arena = plugin.getArenaManager().getArena(arenaId);
+            Arena arena = plugin.getArenaManager().getArena(arenaId);
             if (arena != null) {
                 new ArenaEditorGUI(plugin, player, arena).open();
             } else {
@@ -80,20 +81,32 @@ public class ArenaCreateGUI extends BaseGUI {
      * Creates default arena configuration
      */
     private void createArenaConfig(String arenaId) {
+        File config = plugin.getFileManager().getConfig();
         // Get defaults from config
-        int defaultMinPlayers = getConfigInt("defaults.min-players", 1);
-        int defaultMaxPlayers = getConfigInt("defaults.max-players", 10);
-        int defaultCountdown = getConfigInt("defaults.countdown", 10);
-        int defaultWaves = getConfigInt("defaults.total-waves", 5);
+        int defaultMinPlayers = config.getInt("defaults.min-players", 1);
+        int defaultMaxPlayers = config.getInt("defaults.max-players", 10);
+        int defaultCountdown = config.getInt("defaults.countdown", 10);
+        int defaultCooldown = config.getInt("defaults.cooldown", 300);
+        int defaultWaves = config.getInt("defaults.total-waves", 5);
+        int defaultWaveDelay = config.getInt("defaults.wave-delay", 10);
+        boolean defaultAutoStart = config.getBoolean("defaults.auto-start", true);
+        String defaultWaveProgression = config.getString("defaults.wave-progression", "AUTOMATIC");
+        int defaultGlobalCooldown = config.getInt("defaults.global-cooldown", 300);
 
         // Create basic arena config
-        var arenasFile = plugin.getFileManager().getFile("arenas.yml");
+        File arenasFile = plugin.getFileManager().getArenas();
         arenasFile.set("arenas." + arenaId + ".enabled", false);
         arenasFile.set("arenas." + arenaId + ".display-name", arenaId);
         arenasFile.set("arenas." + arenaId + ".min-players", defaultMinPlayers);
         arenasFile.set("arenas." + arenaId + ".max-players", defaultMaxPlayers);
         arenasFile.set("arenas." + arenaId + ".countdown-time", defaultCountdown);
+        arenasFile.set("arenas." + arenaId + ".cooldown", defaultCooldown);
         arenasFile.set("arenas." + arenaId + ".waves", defaultWaves);
+        arenasFile.set("arenas." + arenaId + ".wave-delay", defaultWaveDelay);
+        arenasFile.set("arenas." + arenaId + ".auto-start", defaultAutoStart);
+        arenasFile.set("arenas." + arenaId + ".wave-progression", defaultWaveProgression);
+        arenasFile.set("arenas." + arenaId + ".global-cooldown", defaultGlobalCooldown);
+
         plugin.getFileManager().getArenas().save();
 
         // Reload arenas
