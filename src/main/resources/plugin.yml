@@ -1,8 +1,8 @@
 name: Hordes
-version: 2.0.0
+version: 1.0
 main: me.bixgamer707.hordes.Hordes
 author: bixgamer707
-api-version: 1.16
+api-version: 1.13
 description: Advanced dungeon and arena system with configurable waves, rewards, and progression
 website: https://github.com/bixgamer707/hordes
 
@@ -24,6 +24,8 @@ commands:
       /<command> list - List all arenas
       /<command> info <arena> - Get arena information
       /<command> stats - View your statistics
+      /<command> top [category] - View leaderboards
+      /<command> gui - Open arena selection GUI
     permission: hordes.use
 
   hordesadmin:
@@ -38,6 +40,9 @@ commands:
       /<command> forcestop <arena> - Force stop an arena
       /<command> tp <arena> - Teleport to arena
       /<command> debug - Show debug information
+      /<command> config - Open the admin configuration GUI
+      /<command> top - View top players
+      /<command> arenas - List all arenas
     permission: hordes.admin
 
 # Permissions
@@ -53,6 +58,7 @@ permissions:
       hordes.list: true
       hordes.info: true
       hordes.stats: true
+      hordes.top: true
 
   hordes.join:
     description: Allows joining arenas
@@ -78,6 +84,10 @@ permissions:
 
   hordes.stats:
     description: Allows viewing statistics
+    default: true
+
+  hordes.top:
+    description: Allows viewing leaderboards
     default: true
 
   # VIP permissions
@@ -106,6 +116,9 @@ permissions:
       hordes.admin.forcestop: true
       hordes.admin.tp: true
       hordes.admin.debug: true
+      hordes.admin.config: true
+      hordes.admin.top: true
+      hordes.admin.arenas: true
       hordes.cooldown.bypass: true
       hordes.join.*: true
 
@@ -139,4 +152,16 @@ permissions:
 
   hordes.admin.debug:
     description: View debug information
+    default: op
+
+  hordes.admin.config:
+    description: Open the admin configuration GUI
+    default: op
+
+  hordes.admin.top:
+    description: View top players/leaderboard from console or admin command
+    default: op
+
+  hordes.admin.arenas:
+    description: List all arenas via admin command
     default: op
