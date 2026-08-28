@@ -69,9 +69,6 @@ public class Wave {
         startSpawning();
     }
 
-    /**
-     * Starts gradual mob spawning
-     */
     private void startSpawning() {
         final int spawnDelay = config.getSpawnDelay(); // ticks between spawns
         final int mobsPerSpawn = config.getMobsPerSpawn(); // mobs per cycle
@@ -81,31 +78,27 @@ public class Wave {
 
             @Override
             public void run() {
-                // Check if all mobs spawned
+                int toSpawn = Math.min(mobsPerSpawn, mobsToSpawn.size() - spawnedCount);
+
+                for (int i = 0; i < toSpawn; i++) {
+                    HordeMob mobConfig = mobsToSpawn.get(spawnedCount);
+                    spawnMob(mobConfig);
+                    spawnedCount++;
+                }
+
                 if (spawnedCount >= mobsToSpawn.size()) {
                     cancel();
                     state = WaveState.ACTIVE;
                     arena.broadcastMessage("arena.all-spawned", waveNumber);
-                    return;
-                }
 
-                // Spawn next batch
-                int toSpawn = Math.min(mobsPerSpawn, mobsToSpawn.size() - spawnedCount);
-
-                for (int i = 0; i < toSpawn; i++) {
-                    if (spawnedCount >= mobsToSpawn.size()) break;
-
-                    HordeMob mobConfig = mobsToSpawn.get(spawnedCount);
-                    spawnMob(mobConfig);
-                    spawnedCount++;
+                    if (mobsAlive <= 0) {
+                        complete();
+                    }
                 }
             }
         }.runTaskTimer(arena.getPlugin(), 0L, spawnDelay);
     }
 
-    /**
-     * Spawns a single mob
-     */
     private void spawnMob(HordeMob mobConfig) {
         Location spawnLocation = getRandomSpawnLocation();
 

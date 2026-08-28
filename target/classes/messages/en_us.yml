@@ -375,8 +375,8 @@ Messages:
   # REWARD MESSAGES
   # ============================================
   rewards:
-    completion: "&a&l✔ Completion Reward: &e+${0}"
-    progressive: "&a&l✔ Wave {0} Reward: &e+${1}"
+    completion: "&a&l✔ Completion Reward"
+    progressive: "&a&l✔ Wave %hordes_wave% Reward"
     money: "&a&l+${0}"
     items: "&a&l+{0} items"
     received: "&a&l✔ Rewards Received!"

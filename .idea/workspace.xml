@@ -5,59 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Add chat input system and arena management features&#10;&#10;- Implemented chat input system for arena creation and editing.&#10;- Added input validation for arena IDs and display names.&#10;- Introduced cooldown messages for arena joining.&#10;- Enhanced GUI with leaderboard and mode settings.&#10;- Updated configuration files for new features and prompts.">
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/commands/HordesAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/commands/HordesAdminCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/commands/HordesCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/commands/HordesCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/file/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/file/FileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/BaseGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/BaseGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/GUIListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/GUIListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/AdminMainGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/AdminMainGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaCreateGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaCreateGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaEditorGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaListGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/MobEditorGUI.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ModeSettingsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ModeSettingsGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/PlayerSettingsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/PlayerSettingsGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/RewardEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/RewardEditorGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/SpawnEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/SpawnEditorGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveEditorGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaInfoGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaInfoGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaSelectionGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaSelectionGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/LeaderboardGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/LeaderboardGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/listeners/EntityListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/listeners/EntityListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/listeners/PlayerListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/listeners/PlayerListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/rewards/RewardManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/rewards/RewardManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/statistics/PlayerStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/statistics/PlayerStatistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/statistics/StatisticsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/statistics/StatisticsManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/text/Text.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/text/Text.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/utils/MessageUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/guis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/guis.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/messages/en_us.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages/en_us.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/file/File.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/file/File.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/wave/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/wave/Wave.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/Hordes-v1.0-shaded.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/Hordes-v1.0-shaded.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/Hordes-v1.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/Hordes-v1.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/guis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/guis.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/Hordes$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/Hordes$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/Hordes$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/Hordes$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/arena/Arena.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/arena/Arena.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/commands/HordesAdminCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/commands/HordesAdminCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/commands/HordesCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/commands/HordesCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/file/FileManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/file/FileManager.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/gui/BaseGUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/gui/BaseGUI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/gui/GUIListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/gui/GUIListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/gui/player/ArenaInfoGUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/gui/player/ArenaInfoGUI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/gui/player/ArenaSelectionGUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/gui/player/ArenaSelectionGUI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/listeners/EntityListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/listeners/EntityListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/listeners/PlayerListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/listeners/PlayerListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/statistics/PlayerStatistics$ArenaStats.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/statistics/PlayerStatistics$ArenaStats.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/statistics/PlayerStatistics.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/statistics/PlayerStatistics.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/statistics/StatisticsManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/statistics/StatisticsManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/text/Text.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/text/Text.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/utils/MessageUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/rewards/RewardManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/bixgamer707/hordes/rewards/RewardManager.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/messages/en_us.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/messages/en_us.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
@@ -120,10 +77,11 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/bixga/IdeaProjects/Hordes/src/main/java/me/bixgamer707/hordes/command&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/veloc/Desktop/Hordes&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -145,8 +103,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+        <option value="bundled-jdk-30f59d01ecdd-34e2839f716b-intellij.indexing.shared.core-IU-262.9437.185" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.9437.185" />
       </set>
     </attachedChunks>
   </component>
@@ -199,6 +157,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add chat input system and arena management features&#10;&#10;- Implemented chat input system for arena creation and editing.&#10;- Added input validation for arena IDs and display names.&#10;- Introduced cooldown messages for arena joining.&#10;- Enhanced GUI with leaderboard and mode settings.&#10;- Updated configuration files for new features and prompts." />
