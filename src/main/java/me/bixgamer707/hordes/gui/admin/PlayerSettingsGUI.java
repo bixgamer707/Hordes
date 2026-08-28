@@ -40,24 +40,24 @@ public class PlayerSettingsGUI extends BaseGUI {
     private void updateMinPlayers() {
         int slot = guiConfig.getInt("guis."+guiId+".items.min-players.slot", 11);
         int minPlayers = arena.getConfig().getMinPlayers();
-        
+
         ItemStack item = new ItemStack(Material.valueOf(
                 guiConfig.getString("guis."+guiId+".items.min-players.material", "PLAYER_HEAD")));
         ItemMeta meta = item.getItemMeta();
-        
+
         if (meta != null) {
             meta.setDisplayName(Text.createText(
                     guiConfig.getString("guis."+guiId+".items.min-players.name", "&a&lMinimum Players")).build(player));
-            
+
             List<String> lore = new ArrayList<>();
             for (String line : guiConfig.getStringList("guis."+guiId+".items.min-players.lore")) {
                 lore.add(Text.createText(line.replace("{min_players}", String.valueOf(minPlayers)))
-                    .build(player));
+                        .build(player));
             }
             meta.setLore(lore);
             item.setItemMeta(meta);
         }
-        
+
         inventory.setItem(slot, item);
         clickHandlers.put(slot + "", p -> editMinPlayers());
     }
@@ -65,24 +65,24 @@ public class PlayerSettingsGUI extends BaseGUI {
     private void updateMaxPlayers() {
         int slot = guiConfig.getInt("guis."+guiId+".items.max-players.slot", 13);
         int maxPlayers = arena.getConfig().getMaxPlayers();
-        
+
         ItemStack item = new ItemStack(Material.valueOf(
                 guiConfig.getString("guis."+guiId+".items.max-players.material", "PLAYER_HEAD")));
         ItemMeta meta = item.getItemMeta();
-        
+
         if (meta != null) {
             meta.setDisplayName(Text.createText(
                     guiConfig.getString("guis."+guiId+".items.max-players.name", "&c&lMaximum Players")).build(player));
-            
+
             List<String> lore = new ArrayList<>();
             for (String line : guiConfig.getStringList("guis."+guiId+".items.max-players.lore")) {
                 lore.add(Text.createText(line.replace("{max_players}", String.valueOf(maxPlayers)))
-                    .build(player));
+                        .build(player));
             }
             meta.setLore(lore);
             item.setItemMeta(meta);
         }
-        
+
         inventory.setItem(slot, item);
         clickHandlers.put(slot + "", p -> editMaxPlayers());
     }
@@ -90,24 +90,24 @@ public class PlayerSettingsGUI extends BaseGUI {
     private void updateCountdown() {
         int slot = guiConfig.getInt("guis."+guiId+".items.countdown.slot", 15);
         int countdown = arena.getConfig().getCountdownTime();
-        
+
         ItemStack item = new ItemStack(Material.valueOf(
                 guiConfig.getString("guis."+guiId+".items.countdown.material", "CLOCK")));
         ItemMeta meta = item.getItemMeta();
-        
+
         if (meta != null) {
             meta.setDisplayName(Text.createText(
                     guiConfig.getString("guis."+guiId+".items.countdown.name", "&e&lCountdown Time")).build(player));
-            
+
             List<String> lore = new ArrayList<>();
             for (String line : guiConfig.getStringList("guis."+guiId+".items.countdown.lore")) {
                 lore.add(Text.createText(line.replace("{countdown}", String.valueOf(countdown)))
-                    .build(player));
+                        .build(player));
             }
             meta.setLore(lore);
             item.setItemMeta(meta);
         }
-        
+
         inventory.setItem(slot, item);
         clickHandlers.put(slot + "", p -> editCountdown());
     }
@@ -115,39 +115,45 @@ public class PlayerSettingsGUI extends BaseGUI {
     private void updateAutoStart() {
         int slot = guiConfig.getInt("guis."+guiId+".items.auto-start.slot", 22);
         boolean autoStart = arena.getConfig().isAutoStart();
-        
+
         String materialKey = autoStart ? "material-enabled" : "material-disabled";
         ItemStack item = new ItemStack(Material.valueOf(
                 guiConfig.getString("guis."+guiId+".items.auto-start." + materialKey, autoStart ? "EMERALD" : "REDSTONE")));
         ItemMeta meta = item.getItemMeta();
-        
+
         if (meta != null) {
             String name = guiConfig.getString("guis."+guiId+".items.auto-start.name", "&6&lAuto-Start")
-                .replace("{status}", autoStart ? "&aEnabled" : "&cDisabled");
+                    .replace("{status}", autoStart ? "&aEnabled" : "&cDisabled");
             meta.setDisplayName(Text.createText(name).build(player));
-            
+
             List<String> lore = new ArrayList<>();
             for (String line : guiConfig.getStringList("guis."+guiId+".items.auto-start.lore")) {
                 lore.add(Text.createText(line.replace("{status}", autoStart ? "&aEnabled" : "&cDisabled"))
-                    .build(player));
+                        .build(player));
             }
             meta.setLore(lore);
             item.setItemMeta(meta);
         }
-        
+
         inventory.setItem(slot, item);
         clickHandlers.put(slot + "", p -> toggleAutoStart());
     }
 
+    /**
+     * FIX (punto 1): antes usaba InputValidators.arenaId() (regex ^[a-z0-9_]+$),
+     * que rechaza cualquier número escrito normalmente si el jugador se equivoca
+     * de formato, pero sobre todo no tiene sentido semántico para un entero
+     * positivo. Se sustituye por positiveInteger(), que exige solo dígitos y > 0.
+     */
     private void editMinPlayers() {
         close();
         int maxPlayers = arena.getConfig().getMaxPlayers();
 
         plugin.getChatInputManager().requestInput(player)
                 .withPrompt(Text.createTextWithLang(
-                                "prompts.min-players").build(player))
+                        "prompts.min-players").build(player))
                 .withInvalidMessage(Text.createTextWithLang("prompts.invalid-min-players").build())
-                .withValidator(InputValidators.arenaId())
+                .withValidator(InputValidators.positiveInteger())
                 .onComplete(input -> {
                     int value;
                     try {
@@ -179,6 +185,10 @@ public class PlayerSettingsGUI extends BaseGUI {
 
     }
 
+    /**
+     * FIX (punto 1): igual que editMinPlayers(), se sustituye arenaId() por
+     * positiveInteger() para validar correctamente un número entero positivo.
+     */
     private void editMaxPlayers() {
         close();
 
@@ -186,8 +196,8 @@ public class PlayerSettingsGUI extends BaseGUI {
 
         plugin.getChatInputManager().requestInput(player)
                 .withPrompt(Text.createTextWithLang(
-                                "prompts.max-players").build(player))
-                .withValidator(InputValidators.arenaId())
+                        "prompts.max-players").build(player))
+                .withValidator(InputValidators.positiveInteger())
                 .onComplete(input -> {
                     int value;
                     try {
@@ -220,11 +230,11 @@ public class PlayerSettingsGUI extends BaseGUI {
 
     private void editCountdown() {
         close();
-        
+
         plugin.getChatInputManager().requestInput(player)
                 .withPrompt(Text.createTextWithLang(
-                                "prompts.countdown-time").build(player))
-                .withValidator(InputValidators.arenaId())
+                        "prompts.countdown-time").build(player))
+                .withValidator(InputValidators.integerRange(0, 1000))
                 .onComplete(input -> {
                     int value;
                     try {
@@ -257,14 +267,14 @@ public class PlayerSettingsGUI extends BaseGUI {
 
     private void toggleAutoStart() {
         boolean newValue = !arena.getConfig().isAutoStart();
-        
+
         plugin.getFileManager().getArenas()
-            .set("arenas." + arenaId + ".auto-start", newValue);
+                .set("arenas." + arenaId + ".auto-start", newValue);
         plugin.getFileManager().getArenas().save();
-        
+
         player.sendMessage(Text.createTextWithLang("prompts.auto-start-toggled")
                 .replace("{status}", newValue ? "enabled" : "disabled").build(player));
-        
+
         playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
         reopenGUI();
     }

@@ -253,7 +253,7 @@ public class RewardEditorGUI extends BaseGUI {
         plugin.getFileManager().getArenas().save();
 
         player.sendMessage(Text.createTextWithLang("admin.reward-status-toggled")
-                        .replace("{status}", newValue ? "enabled" : "disabled").build(player));
+                .replace("{status}", newValue ? "enabled" : "disabled").build(player));
 
         playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
         reopenGUI();
@@ -270,18 +270,23 @@ public class RewardEditorGUI extends BaseGUI {
         plugin.getFileManager().getArenas().save();
 
         player.sendMessage(Text.createTextWithLang("admin.reward-type-changed")
-                        .replace("{type}", next.getDisplayName()).build(player));
+                .replace("{type}", next.getDisplayName()).build(player));
 
         playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
         reopenGUI();
     }
 
+    /**
+     * FIX (punto 1): antes usaba InputValidators.arenaId() (regex ^[a-z0-9_]+$),
+     * que rechaza cualquier número con punto decimal (ej. "150.5").
+     * Ahora acepta enteros o decimales >= 0.
+     */
     private void editMoneyReward() {
         close();
 
         plugin.getChatInputManager().requestInput(player)
                 .withPrompt(Text.createTextWithLang("prompts.money-reward").build())
-                .withValidator(InputValidators.arenaId())
+                .withValidator(InputValidators.decimalRange(0, Double.MAX_VALUE))
                 .withInvalidMessage(Text.createTextWithLang("prompts.money-reward-invalid").build())
                 .onComplete(input -> {
                     try {
@@ -315,10 +320,17 @@ public class RewardEditorGUI extends BaseGUI {
         collectItemRewards(new ArrayList<>());
     }
 
+    /**
+     * FIX (punto 1): antes usaba InputValidators.arenaId(), que rechaza mayúsculas
+     * y espacios, por lo que "DIAMOND 64" nunca pasaba la validación y era
+     * imposible añadir recompensas de ítems. Ahora solo exige que no esté vacío;
+     * el formato real (MATERIAL AMOUNT) se sigue validando más abajo con
+     * Material.valueOf(...) / Integer.parseInt(...).
+     */
     private void collectItemRewards(List<String> items) {
         plugin.getChatInputManager().requestInput(player)
                 .withPrompt(Text.createTextWithLang("prompts.item-rewards-info").build())
-                .withValidator(InputValidators.arenaId())
+                .withValidator(InputValidators.notEmpty())
                 .withCancelMessage(Text.createTextWithLang("prompts.cancelled-message").build())
                 .onComplete(input -> {
                     if (input.equalsIgnoreCase("done")) {
@@ -327,7 +339,7 @@ public class RewardEditorGUI extends BaseGUI {
                         plugin.getFileManager().getArenas().save();
 
                         player.sendMessage(Text.createTextWithLang("prompts.item-rewards-updated")
-                                        .replace("{count}", String.valueOf(items.size())).build(player));
+                                .replace("{count}", String.valueOf(items.size())).build(player));
 
                         reopenGUI();
                         return;
@@ -353,8 +365,8 @@ public class RewardEditorGUI extends BaseGUI {
 
                         items.add(input.toUpperCase());
                         player.sendMessage(Text.createTextWithLang("prompts.item-added")
-                                        .replace("{item}", input.toUpperCase())
-                                        .replace("{count}", String.valueOf(items.size())).build(player));
+                                .replace("{item}", input.toUpperCase())
+                                .replace("{count}", String.valueOf(items.size())).build(player));
 
                         collectItemRewards(items);
 
@@ -373,9 +385,15 @@ public class RewardEditorGUI extends BaseGUI {
         collectCommandRewards(new ArrayList<>());
     }
 
+    /**
+     * FIX (punto 1): antes usaba InputValidators.arenaId(), que rechaza mayúsculas,
+     * espacios y el carácter '%', por lo que un comando como
+     * "give %player% diamond 1" nunca pasaba la validación. Ahora solo exige
+     * que la entrada no esté vacía.
+     */
     private void collectCommandRewards(List<String> commands) {
         plugin.getChatInputManager().requestInput(player)
-                .withValidator(InputValidators.arenaId())
+                .withValidator(InputValidators.notEmpty())
                 .withCancelMessage(Text.createTextWithLang("prompts.cancelled-message").build())
                 .withPrompt(Text.createTextWithLang("prompts.command-rewards-prompt").build())
                 .onComplete(input -> {
@@ -385,7 +403,7 @@ public class RewardEditorGUI extends BaseGUI {
                         plugin.getFileManager().getArenas().save();
 
                         player.sendMessage(Text.createTextWithLang("prompts.command-rewards-updated")
-                                        .replace("{count}", String.valueOf(commands.size())).build(player));
+                                .replace("{count}", String.valueOf(commands.size())).build(player));
 
                         reopenGUI();
                         return;
@@ -402,19 +420,24 @@ public class RewardEditorGUI extends BaseGUI {
 
                     commands.add(command);
                     player.sendMessage(Text.createTextWithLang("prompts.command-added")
-                                    .replace("{command}", command)
-                                    .replace("{count}", String.valueOf(commands.size())).build(player));
+                            .replace("{command}", command)
+                            .replace("{count}", String.valueOf(commands.size())).build(player));
 
                     collectCommandRewards(commands);
                 })
                 .start();
     }
 
+    /**
+     * FIX (punto 1): antes usaba InputValidators.arenaId(), que rechaza el punto
+     * decimal, por lo que un valor como "0.5" nunca pasaba la validación. Ahora
+     * acepta decimales entre 0 y 1 (0% - 100%).
+     */
     private void editProgressiveMultiplier() {
         close();
 
         plugin.getChatInputManager().requestInput(player)
-                .withValidator(InputValidators.arenaId())
+                .withValidator(InputValidators.decimalRange(0, 1))
                 .withCancelMessage(Text.createTextWithLang("prompts.cancelled-message").build())
                 .withPrompt(Text.createTextWithLang("prompts.multiplier-prompt").build())
                 .onComplete(input -> {
@@ -432,7 +455,7 @@ public class RewardEditorGUI extends BaseGUI {
                         plugin.getFileManager().getArenas().save();
 
                         player.sendMessage(Text.createTextWithLang("prompts.multiplier-updated")
-                                        .replace("{value}", String.format("%.1f", value * 100)).build(player));
+                                .replace("{value}", String.format("%.1f", value * 100)).build(player));
 
                         reopenGUI();
 
