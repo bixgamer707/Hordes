@@ -247,6 +247,46 @@ public class StatisticsManager {
     }
 
     /**
+     * Gets a player's 1-based rank position in a leaderboard category.
+     * Reuses the same sorting/filtering as the getTopBy* methods so the
+     * result always matches what's actually displayed on the leaderboard.
+     *
+     * @param uuid Player UUID
+     * @param category "completions", "kills" or "speed"
+     * @return the player's rank (1 = first place), or -1 if the player
+     *         isn't ranked in that category (no stats, no completions yet
+     *         for "speed", or an unsupported category)
+     */
+    public int getRank(UUID uuid, String category) {
+        if (!enabled) {
+            return -1;
+        }
+
+        List<PlayerStatistics> ranked;
+        switch (category) {
+            case "completions":
+                ranked = getTopByCompletions(Integer.MAX_VALUE);
+                break;
+            case "kills":
+                ranked = getTopByKills(Integer.MAX_VALUE);
+                break;
+            case "speed":
+                ranked = getTopBySpeed(Integer.MAX_VALUE);
+                break;
+            default:
+                return -1;
+        }
+
+        for (int i = 0; i < ranked.size(); i++) {
+            if (ranked.get(i).getPlayerUuid().equals(uuid)) {
+                return i + 1;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * Gets top players by completions
      */
     public List<PlayerStatistics> getTopByCompletions(int limit) {

@@ -22,10 +22,10 @@ public class LeaderboardGUI extends BaseGUI {
     private String currentCategory;
     private static final int ENTRIES_PER_PAGE = 28;
     private static final int[] ENTRY_SLOTS = {
-        10, 11, 12, 13, 14, 15, 16,
-        19, 20, 21, 22, 23, 24, 25,
-        28, 29, 30, 31, 32, 33, 34,
-        37, 38, 39, 40, 41, 42, 43
+            10, 11, 12, 13, 14, 15, 16,
+            19, 20, 21, 22, 23, 24, 25,
+            28, 29, 30, 31, 32, 33, 34,
+            37, 38, 39, 40, 41, 42, 43
     };
 
     public LeaderboardGUI(Hordes plugin, Player player) {
@@ -146,7 +146,60 @@ public class LeaderboardGUI extends BaseGUI {
     }
 
     private void updateYourPosition() {
-        // TODO: Calculate player's position in leaderboard
+        String path = "guis." + guiId + ".items.your-position";
+
+        // If this item isn't configured for this GUI, there's nothing to update
+        if (!guiConfig.contains(path)) {
+            return;
+        }
+
+        int slot = guiConfig.getInt(path + ".slot", 49);
+
+        String rankDisplay = "N/A";
+        String valueDisplay = "N/A";
+
+        if (plugin.getStatisticsManager() != null && plugin.getStatisticsManager().isEnabled()) {
+            int rank = plugin.getStatisticsManager().getRank(player.getUniqueId(), currentCategory);
+            PlayerStatistics myStats = plugin.getStatisticsManager()
+                    .getStatistics(player.getUniqueId(), player.getName());
+
+            if (rank > 0) {
+                rankDisplay = String.valueOf(rank);
+            }
+            if (myStats != null) {
+                valueDisplay = getStatValue(myStats, currentCategory);
+            }
+        }
+
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta instanceof SkullMeta) {
+            ((SkullMeta) meta).setOwner(player.getName());
+        }
+
+        if (meta != null) {
+            String name = guiConfig.getString(path + ".name", "&e&lYour Position");
+            meta.setDisplayName(Text.createText(name).build(player));
+
+            List<String> lore = new ArrayList<>();
+            for (String line : guiConfig.getStringList(path + ".lore")) {
+                line = line.replace("{your_rank}", rankDisplay)
+                        .replace("{stat_name}", getCategoryName())
+                        .replace("{your_value}", valueDisplay);
+                lore.add(Text.createText(line).build(player));
+            }
+            meta.setLore(lore);
+
+            if (guiConfig.getBoolean(path + ".glow", false)) {
+                meta.addEnchant(org.bukkit.enchantments.Enchantment.DURABILITY, 1, true);
+                meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+            }
+
+            item.setItemMeta(meta);
+        }
+
+        inventory.setItem(slot, item);
     }
 
     @Override
