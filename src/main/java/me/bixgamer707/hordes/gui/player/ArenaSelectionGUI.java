@@ -21,18 +21,18 @@ public class ArenaSelectionGUI extends BaseGUI {
 
     private final List<Arena> arenas;
     private static final int ARENAS_PER_PAGE = 28; // 4 rows of 7 items
-    
+
     // Arena display slots: rows 2-5, columns 2-8
     private static final int[] ARENA_SLOTS = {
-        10, 11, 12, 13, 14, 15, 16,  // Row 2
-        19, 20, 21, 22, 23, 24, 25,  // Row 3
-        28, 29, 30, 31, 32, 33, 34,  // Row 4
-        37, 38, 39, 40, 41, 42, 43   // Row 5
+            10, 11, 12, 13, 14, 15, 16,  // Row 2
+            19, 20, 21, 22, 23, 24, 25,  // Row 3
+            28, 29, 30, 31, 32, 33, 34,  // Row 4
+            37, 38, 39, 40, 41, 42, 43   // Row 5
     };
 
     public ArenaSelectionGUI(Hordes plugin, Player player) {
         super(plugin, player, "arena-selection");
-        
+
         // Get all enabled arenas
         this.arenas = new ArrayList<>();
         for (Arena arena : plugin.getArenaManager().getArenas().values()) {
@@ -40,7 +40,7 @@ public class ArenaSelectionGUI extends BaseGUI {
                 arenas.add(arena);
             }
         }
-        
+
         // Calculate max pages
         this.maxPages = (int) Math.ceil((double) arenas.size() / ARENAS_PER_PAGE);
         if (maxPages == 0) maxPages = 1;
@@ -50,33 +50,33 @@ public class ArenaSelectionGUI extends BaseGUI {
     protected void buildDynamic() {
         // Static items (border, buttons, etc.) are already loaded by BaseGUI
         // We only add dynamic arena items here
-        
+
         if (arenas.isEmpty()) {
             // Show "no arenas" message
             return;
         }
-        
+
         // Calculate which arenas to show on this page
         int startIndex = currentPage * ARENAS_PER_PAGE;
         int endIndex = Math.min(startIndex + ARENAS_PER_PAGE, arenas.size());
-        
+
         // Add arena items
         int slotIndex = 0;
         for (int i = startIndex; i < endIndex; i++) {
             Arena arena = arenas.get(i);
             int slot = ARENA_SLOTS[slotIndex];
-            
+
             // Create and place arena item
             ItemStack arenaItem = createArenaItem(arena);
             inventory.setItem(slot, arenaItem);
-            
+
             // Register click handler
             final String arenaId = arena.getId();
             clickHandlers.put(slot + "", p -> handleArenaClick(p, arenaId));
-            
+
             slotIndex++;
         }
-        
+
         // Update dynamic placeholders in static items
         updateInfoItem();
         updatePaginationButtons();
@@ -90,35 +90,35 @@ public class ArenaSelectionGUI extends BaseGUI {
         Material material = getMaterialForState(arena.getState());
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        
+
         if (meta == null) {
             return item;
         }
-        
+
         // Get name from config and replace placeholders
         String nameTemplate = guiConfig.getString("guis."+guiId+".items.arena-item.name", "&e{arena_name}");
         String name = nameTemplate.replace("{arena_name}", arena.getConfig().getDisplayName());
         meta.setDisplayName(Text.createText(name).build(player));
-        
+
         // Get lore from config and replace placeholders
         List<String> loreTemplate = guiConfig.getStringList("guis." + guiId + ".items.arena-item.lore");
         List<String> lore = new ArrayList<>();
-        
+
         for (String line : loreTemplate) {
             String processed = line
-                .replace("{arena_status}", getStatusText(arena))
-                .replace("{current_players}", String.valueOf(arena.getPlayerCount()))
-                .replace("{max_players}", String.valueOf(arena.getConfig().getMaxPlayers()))
-                .replace("{total_waves}", String.valueOf(arena.getConfig().getTotalWaves()))
-                .replace("{current_wave}", arena.getState() == ArenaState.ACTIVE ? 
-                    String.valueOf(arena.getCurrentWave()) : "N/A");
-            
+                    .replace("{arena_status}", getStatusText(arena))
+                    .replace("{current_players}", String.valueOf(arena.getPlayerCount()))
+                    .replace("{max_players}", String.valueOf(arena.getConfig().getMaxPlayers()))
+                    .replace("{total_waves}", String.valueOf(arena.getConfig().getTotalWaves()))
+                    .replace("{current_wave}", arena.getState() == ArenaState.ACTIVE ?
+                            String.valueOf(arena.getCurrentWave()) : "N/A");
+
             lore.add(Text.createText(processed).build(player));
         }
-        
+
         meta.setLore(lore);
         item.setItemMeta(meta);
-        
+
         return item;
     }
 
@@ -129,7 +129,7 @@ public class ArenaSelectionGUI extends BaseGUI {
     private Material getMaterialForState(ArenaState state) {
         String materialKey = "material-" + state.name().toLowerCase();
         String materialName = guiConfig.getString("guis."+guiId+".items.arena-item." + materialKey, "GRAY_WOOL");
-        
+
         try {
             return Material.valueOf(materialName.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -161,16 +161,16 @@ public class ArenaSelectionGUI extends BaseGUI {
      */
     private void handleArenaClick(Player player, String arenaId) {
         Arena arena = plugin.getArenaManager().getArena(arenaId);
-        
+
         if (arena == null) {
-            player.sendMessage(Text.createText("&cArena not found!").build());
+            Text.sendMessage(player, "commands.arena-not-found", arenaId);
             close();
             return;
         }
-        
+
         // Try to join the arena
         boolean success = plugin.getArenaManager().joinArena(player, arenaId);
-        
+
         if (success) {
             // Successfully joined - close GUI
             close();
@@ -191,20 +191,20 @@ public class ArenaSelectionGUI extends BaseGUI {
         if (infoItem == null || !infoItem.hasItemMeta()) {
             return;
         }
-        
+
         ItemMeta meta = infoItem.getItemMeta();
         if (meta == null || !meta.hasLore()) {
             return;
         }
-        
+
         // Update lore with arena count
         List<String> lore = meta.getLore();
         List<String> newLore = new ArrayList<>();
-        
+
         for (String line : lore) {
             newLore.add(line.replace("{arena_count}", String.valueOf(arenas.size())));
         }
-        
+
         meta.setLore(newLore);
         infoItem.setItemMeta(meta);
         inventory.setItem(4, infoItem);
@@ -220,7 +220,7 @@ public class ArenaSelectionGUI extends BaseGUI {
         } else {
             inventory.setItem(45, null); // Hide on first page
         }
-        
+
         // Update or hide next page button (slot 53)
         if (currentPage < maxPages - 1) {
             updatePaginationButton(53, currentPage + 1, maxPages);
@@ -237,22 +237,22 @@ public class ArenaSelectionGUI extends BaseGUI {
         if (button == null || !button.hasItemMeta()) {
             return;
         }
-        
+
         ItemMeta meta = button.getItemMeta();
         if (meta == null || !meta.hasLore()) {
             return;
         }
-        
+
         // Update lore with page numbers
         List<String> lore = meta.getLore();
         List<String> newLore = new ArrayList<>();
-        
+
         for (String line : lore) {
             newLore.add(line
-                .replace("{current_page}", String.valueOf(currentPageDisplay))
-                .replace("{total_pages}", String.valueOf(totalPages)));
+                    .replace("{current_page}", String.valueOf(currentPageDisplay))
+                    .replace("{total_pages}", String.valueOf(totalPages)));
         }
-        
+
         meta.setLore(newLore);
         button.setItemMeta(meta);
         inventory.setItem(slot, button);
@@ -265,7 +265,7 @@ public class ArenaSelectionGUI extends BaseGUI {
             case "join-arena":
                 handleArenaClick(player, actionValue);
                 break;
-                
+
             case "arena-info":
                 // Open arena info GUI
                 Arena arena = plugin.getArenaManager().getArena(actionValue);

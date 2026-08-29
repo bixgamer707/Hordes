@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Refactor command handling to ensure player-only actions are validated; prevent ClassCastException and NullPointerException by checking sender type before GUI interactions">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Update .gitignore to exclude .idea directory; modify GUIListener to fix slot boundary check; update plugin.yml API version to 1.20">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaSelectionGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaSelectionGUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +179,8 @@
     <MESSAGE value="Update plugin.yml: change version to 1.0, adjust API version to 1.13, and add new commands and permissions for leaderboard and GUI access" />
     <MESSAGE value="Refactor input validation for player settings; replace arenaId() with positiveInteger() and notEmpty() for improved number handling" />
     <MESSAGE value="Refactor command handling to ensure player-only actions are validated; prevent ClassCastException and NullPointerException by checking sender type before GUI interactions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor command handling to ensure player-only actions are validated; prevent ClassCastException and NullPointerException by checking sender type before GUI interactions" />
+    <MESSAGE value="Update .gitignore to exclude .idea directory; modify GUIListener to fix slot boundary check; update plugin.yml API version to 1.20" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update .gitignore to exclude .idea directory; modify GUIListener to fix slot boundary check; update plugin.yml API version to 1.20" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
