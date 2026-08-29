@@ -2,7 +2,7 @@ name: Hordes
 version: 1.0
 main: me.bixgamer707.hordes.Hordes
 author: bixgamer707
-api-version: 1.13
+api-version: 1.20
 description: Advanced dungeon and arena system with configurable waves, rewards, and progression
 website: https://github.com/bixgamer707/hordes
 
