@@ -138,7 +138,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (arenaManager.getArenas().isEmpty()) {
-            sendMessage(sender, "commands.admin.arenas-none");
+            sendMessage(sender, "admin.arenas-none");
             return;
         }
 
@@ -323,7 +323,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 2) {
-            sendMessage(sender, "commands.admin.forcestart-usage");
+            sendMessage(sender, "admin.forcestart-usage");
             return true;
         }
 

@@ -56,6 +56,21 @@ Messages:
     cannot-pickup-items: "&c¡No puedes recoger objetos en la arena!"
     cannot-teleport: "&c¡No puedes teletransportarte mientras estás en una arena!"
     cannot-use-command: "&c¡No puedes usar ese comando en la arena!"
+    cannot-leave-area: "&c&l✖ ¡No puedes salir del área de la arena durante el combate!"
+
+    # Enfriamientos específicos
+    arena-cooldown: "&cDebes esperar &e{0} &cantes de volver a unirte a &6{1}"
+    global-cooldown: "&c&l⏱ ¡Enfriamiento global activo! Espera &e{0}"
+    temp-cooldown: "&ePuedes volver a unirte en &a{0}"
+    returned-to-arena: "&e⚠ Has sido devuelto a la arena"
+
+    # Notificaciones de combate
+    kill-notification: "&7+1 Asesinato &e({0}/{1} enemigos restantes)"
+    killstreak-5: "&a&l⚡ ¡RACHA DE 5 ASESINATOS!"
+    killstreak-10: "&6&l⚡ ¡RACHA DE 10 ASESINATOS!"
+    killstreak-15: "&c&l⚡ ¡RACHA DE 15 ASESINATOS!"
+    killstreak-20: "&4&l⚡ ¡RACHA DE 20 ASESINATOS!"
+    killstreak-mega: "&d&l⚡ ¡MEGA RACHA DE ASESINATOS! &e({0} asesinatos)"
 
   # ============================================
   # MENSAJES DE OLEADA
@@ -174,8 +189,38 @@ Messages:
       - "&7MythicMobs habilitado: &e{4}"
 
     # Recargar
-    admin-reload: "&a¡Configuración recargada exitosamente!"
-    admin-reload-failed: "&cError al recargar la configuración. Revisa la consola para más detalles."
+    reload-success: "&a✔ ¡Configuración recargada exitosamente!"
+    reload-failed: "&c✖ Error al recargar. Revisa la consola para más detalles."
+
+    # Estado de arena
+    arena-enabled: "&a✔ Arena &e{0} &aactivada"
+    arena-disabled: "&c✖ Arena &e{0} &cdesactivada"
+    arena-not-found: "&cArena '&e{0}&c' no encontrada."
+    arenas-none: "&cNo se encontraron arenas"
+    create-invalid-id: "&c&l✖ ¡ID inválido! Usa solo: &ea-z&c, &e0-9&c, &e_"
+    save-success: "&a✔ ¡Arena guardada exitosamente!"
+    save-failed: "&c✖ Error al guardar: {0}"
+    edit-basic-success: "&a✔ Nombre mostrado actualizado a: &e{0}"
+    edit-worldguard-success: "&a✔ Región establecida en: &e{0}"
+    spawn-set-success: "&a✔ ¡Punto de aparición {0} establecido exitosamente!"
+    spawn-set-failed: "&c✖ Error al establecer el punto de aparición"
+    test-failed: "&c✖ Error al unirse a la arena para probar"
+    feature-coming-soon: "&e⚠ ¡Esta función estará disponible próximamente!"
+
+    # Configuración de modo (ModeSettingsGUI)
+    survival-mode-toggled: "&a✔ Modo supervivencia &e{status}!"
+    death-action-changed: "&a✔ Acción de manejo de muerte establecida en: &e{action}"
+    item-drop-mode-changed: "&a✔ Modo de caída de objetos establecido en: &e{mode}"
+    pvp-toggled: "&a✔ PvP &e{status} &aen la arena!"
+    keep-inventory-toggled: "&a✔ Conservar inventario al morir &e{status}!"
+
+    # Recompensas (RewardEditorGUI)
+    reward-status-toggled: "&a✔ Recompensas &e{status} &apara esta arena!"
+    reward-type-changed: "&a✔ Tipo de recompensa establecido en: &e{type}"
+
+    # Oleadas (WaveEditorGUI)
+    wave-added: "&a✔ ¡Nueva oleada añadida! Total de oleadas: {count}"
+    wave-edit-coming-soon: "&e⚠ ¡El editor de oleadas estará disponible próximamente!"
 
     # Crear Arena - Lista optimizada
     create-usage: "&cUso: /hordesadmin create <arena>"
@@ -233,10 +278,87 @@ Messages:
 
     # ForceStop
     forcestop-usage: "&cUso: /hordesadmin forcestop <arena>"
+    forcestop: "&aForzando parada de la arena &e{0}"
+    forcestop-success: "&a✔ Arena detenida forzosamente"
 
     # Teleport
     tp-usage: "&cUso: /hordesadmin tp <arena>"
     tp-success: "&aTeletransportado a la arena &e{0}"
+
+  # ============================================
+  # MENSAJES DE ENTRADA POR CHAT (GUI de administrador)
+  # ============================================
+  prompts:
+
+    # Cancelación (se muestra cuando se cancela una entrada por chat)
+    cancelled-message: "&cEntrada cancelada."
+
+    # Prompt de ID de arena
+    arena-id: "&e&l❖ Ingresa el ID de la arena:"
+    arena-id-hint: "&7Usa solo: &ea-z&7, &e0-9&7, &e_ &7(guion bajo)"
+    arena-id-invalid: "&c&l✖ ¡ID inválido! Usa solo: &ea-z&c, &e0-9&c, &e_ &c(guion bajo)"
+
+    # Prompt de nombre mostrado
+    display-name: "&e&l❖ Ingresa el nuevo nombre mostrado:"
+    display-name-hint: "&7Debe tener &e3-32 caracteres"
+    display-name-invalid: "&c&l✖ ¡Nombre inválido! Debe tener &e3-32 caracteres"
+
+    money-reward: "&e&l❖ Ingresa la cantidad de recompensa en dinero:"
+    money-reward-invalid: "&c&l✖ ¡Cantidad inválida! Ingresa un número positivo"
+
+    multiplier-prompt: "&e&l❖ Ingresa el multiplicador progresivo (ej. 0.5 para 50% de incremento por oleada):"
+    invalid-multiplier: "&c&l✖ ¡Multiplicador inválido! Ingresa un número (ej. 0.5 para 50%)"
+    multiplier-updated: "&a&l✔ ¡Multiplicador progresivo actualizado! Actual: {value}"
+
+    # Región de WorldGuard
+    worldguard-region: "&e&l❖ Ingresa el nombre de la región de WorldGuard:"
+    region-invalid: "&c&l✖ ¡Nombre de región inválido! Máximo &e64 caracteres"
+
+    # Recompensas de objetos
+    item-rewards-info: "&e&l❖ Ingresa la recompensa de objeto (o 'done'/'cancel'):"
+    item-added: "&a&l✔ Recompensa de objeto añadida: {item} x{count}"
+    item-rewards-updated: "&a&l✔ ¡Recompensas de objetos actualizadas! Total de objetos: {count}"
+    items-cleared: "&a&l✔ ¡Todas las recompensas de objetos eliminadas!"
+    invalid-item-format: "&c&l✖ ¡Formato de objeto inválido! Usa: &eMATERIAL CANTIDAD"
+    invalid-material: "&c&l✖ ¡Material inválido! Usa un nombre de Material de Bukkit válido"
+
+    # Recompensas de comandos
+    command-rewards-prompt: "&e&l❖ Ingresa un comando (o 'done'/'cancel'):"
+    command-added: "&a&l✔ Recompensa de comando añadida: {command}"
+    command-rewards-updated: "&a&l✔ ¡Recompensas de comando actualizadas! Total de comandos: {count}"
+    command-rewards-invalid: "&c&l✖ ¡Formato inválido! Ejemplo: give %player% diamond 1"
+    commands-cleared: "&a&l✔ ¡Todas las recompensas de comando eliminadas!"
+
+    # Configuración de jugadores (PlayerSettingsGUI)
+    min-players: "&e&l❖ Ingresa el mínimo de jugadores requeridos para iniciar:"
+    min-players-updated: "&a&l✔ ¡Mínimo de jugadores actualizado! Actual: {0}"
+    invalid-min-players: "&c&l✖ ¡Número inválido! Ingresa un número mayor que 0 y menor que el máximo de jugadores ({max})"
+
+    max-players: "&e&l❖ Ingresa el máximo de jugadores permitidos en la arena:"
+    max-players-updated: "&a&l✔ ¡Máximo de jugadores actualizado! Actual: {0}"
+    invalid-max-players: "&c&l✖ ¡Número inválido! Ingresa un entero positivo mayor que el mínimo de jugadores ({min})"
+
+    countdown-time: "&e&l❖ Ingresa el tiempo de cuenta atrás antes de que inicie la arena (segundos):"
+    countdown-time-updated: "&a&l✔ ¡Tiempo de cuenta atrás actualizado! Actual: {0} segundos"
+    invalid-countdown: "&c&l✖ ¡Número inválido! Ingresa un entero positivo (ej. 10)"
+
+    auto-start-toggled: "&a&l✔ Inicio automático &e{status} &aen la arena!"
+
+    invalid-number: "&c&l✖ ¡Número inválido! Por favor ingresa un número válido"
+
+  # ============================================
+  # MENSAJES DE GUI (confirmaciones, estados genéricos)
+  # ============================================
+  gui:
+    arena-full: "&c✖ Esta arena está llena"
+    arena-not-available: "&c✖ Arena no disponible"
+    no-arenas: "&7No hay arenas disponibles"
+    no-permission: "&c✖ No tienes permiso para ver esto"
+    error: "&c✖ Ocurrió un error"
+    loading: "&e⟳ Cargando..."
+    confirm-delete: "&c&l¿Estás seguro?"
+    confirm-yes: "&a✔ Confirmar"
+    confirm-no: "&c✖ Cancelar"
 
   # ============================================
   # MENSAJES DE ESTADÍSTICAS
@@ -262,10 +384,16 @@ Messages:
   # MENSAJES DE RECOMPENSAS
   # ============================================
   rewards:
-    completion: "&a&l✔ Recompensa de Completación: &e+${0}"
-    progressive: "&a&l✔ Recompensa Oleada {0}: &e+${1}"
+    completion: "&a&l✔ Recompensa de Completación"
+    progressive: "&a&l✔ Recompensa de Oleada %hordes_wave%"
     money: "&a&l+${0}"
     items: "&a&l+{0} objetos"
+    received: "&a&l✔ ¡Recompensas Recibidas!"
+    no-rewards: "&7No hay recompensas para esta arena"
+    money-received: "&a+${0} &7añadido a tu saldo"
+    items-received: "&a+{0} objetos &7añadidos a tu inventario"
+    items-dropped: "&e⚠ Algunos objetos se soltaron (inventario lleno)"
+    commands-executed: "&7Recompensas especiales otorgadas"
 
   # ============================================
   # MENSAJES DE ERROR

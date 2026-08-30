@@ -282,6 +282,8 @@ Messages:
 
   prompts:
 
+    # Cancellation (shown when a chat-input prompt is cancelled)
+    cancelled-message: "&cInput cancelled."
 
     # Arena ID prompt
     arena-id: "&e&l❖ Enter Arena ID:"
