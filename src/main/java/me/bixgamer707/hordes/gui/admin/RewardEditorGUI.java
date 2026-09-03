@@ -316,7 +316,6 @@ public class RewardEditorGUI extends BaseGUI {
     private void editItemRewards() {
         close();
 
-        player.sendMessage(Text.createTextWithLang("prompts.invalid-item-format").build(player));
         collectItemRewards(new ArrayList<>());
     }
 

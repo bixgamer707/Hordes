@@ -124,7 +124,8 @@ public class ArenaListGUI extends BaseGUI {
     private void handleArenaClick(Player player, String arenaId) {
         Arena arena = plugin.getArenaManager().getArena(arenaId);
         if (arena == null) {
-            player.sendMessage(Text.createTextWithLang("admin.arena-not-found").build(player));
+            player.sendMessage(Text.createTextWithLang("admin.arena-not-found")
+                    .replace("{0}", arenaId).build(player));
             return;
         }
 

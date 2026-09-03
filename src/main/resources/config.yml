@@ -55,12 +55,20 @@ defaults:
   
   # Maximum players allowed
   max-players: 4
-  
-  # Auto-start when minimum players reached
+
+  # Total waves for newly created arenas
+  total-waves: 5
+
+  # Whether newly created arenas auto-start when min-players is reached
   auto-start: true
 
+  # Default wave progression for newly created arenas (AUTOMATIC or MANUAL)
   wave-progression: AUTOMATIC
 
+  # Whether newly created arenas apply their cooldown globally
+  # (i.e. finishing this arena also puts the player on cooldown for ALL
+  # other arenas) instead of only for this specific arena.
+  # This must be true/false - the actual cooldown duration is "cooldown" above.
   global-cooldown: false
 
 # Arena defaults
@@ -73,7 +81,7 @@ arena-defaults:
     force-gamemode: true
     gamemode: SURVIVAL
     allow-pvp: false
-  
+
   # Death handling
   death-handling:
     action: KICK
@@ -81,13 +89,13 @@ arena-defaults:
     spectate-on-death: true
     teleport-on-death: true
     rejoin-cooldown: 60
-  
+
   # Item handling
   item-handling:
     keep-inventory-on-death: true
     drop-items-on-death: false
     drop-mode: ALL_PLAYERS
-  
+
   # Wave progression
   wave-progression: AUTOMATIC
 
@@ -96,13 +104,13 @@ mob-defaults:
   # Default spawn delay (ticks)
   # 20 ticks = 1 second
   spawn-delay: 20
-  
+
   # Default mobs per spawn cycle
   mobs-per-spawn: 1
-  
+
   # Default health multiplier
   health-multiplier: 1.0
-  
+
   # Default damage multiplier
   damage-multiplier: 1.0
 
@@ -110,11 +118,11 @@ mob-defaults:
 reward-defaults:
   # Enable rewards
   enabled: true
-  
+
   # Reward type
   # Options: COMPLETION_ONLY, PROGRESSIVE, BOTH
   type: COMPLETION_ONLY
-  
+
   # Progressive multiplier (% of full reward per wave)
   progressive-multiplier: 0.1
 
@@ -123,11 +131,11 @@ performance:
   # Maximum concurrent arenas
   # 0 = unlimited
   max-concurrent-arenas: 0
-  
+
   # Cleanup interval (minutes)
   # How often to cleanup expired cooldowns, etc.
   cleanup-interval: 5
-  
+
   # Enable async operations where possible
   async-operations: true
 
@@ -141,7 +149,7 @@ commands:
     - "/tp"
     - "/tpa"
     - "/warp"
-  
+
   # Allow /hordes leave always
   allow-leave-command: true
 
@@ -149,10 +157,10 @@ commands:
 statistics:
   # Enable statistics tracking
   enabled: true
-  
+
   # Storage type: YAML, SQLITE, MYSQL
   storage-type: YAML
-  
+
   # Track player stats
   track-kills: true
   track-deaths: true
@@ -163,19 +171,19 @@ statistics:
 sounds:
   # Enable sound effects
   enabled: true
-  
+
   # Sound for wave start
   wave-start: "ENTITY_ENDER_DRAGON_GROWL"
-  
+
   # Sound for wave complete
   wave-complete: "ENTITY_PLAYER_LEVELUP"
-  
+
   # Sound for arena victory
   arena-victory: "UI_TOAST_CHALLENGE_COMPLETE"
-  
+
   # Sound for arena defeat
   arena-defeat: "ENTITY_WITHER_DEATH"
-  
+
   # Sound for player death
   player-death: "ENTITY_PLAYER_DEATH"
 

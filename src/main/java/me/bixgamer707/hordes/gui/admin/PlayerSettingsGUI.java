@@ -152,7 +152,8 @@ public class PlayerSettingsGUI extends BaseGUI {
         plugin.getChatInputManager().requestInput(player)
                 .withPrompt(Text.createTextWithLang(
                         "prompts.min-players").build(player))
-                .withInvalidMessage(Text.createTextWithLang("prompts.invalid-min-players").build())
+                .withInvalidMessage(Text.createTextWithLang("prompts.invalid-min-players")
+                        .replace("{max}", String.valueOf(maxPlayers)).build())
                 .withValidator(InputValidators.positiveInteger())
                 .onComplete(input -> {
                     int value;
@@ -176,7 +177,7 @@ public class PlayerSettingsGUI extends BaseGUI {
                     plugin.getFileManager().getArenas().save();
 
                     player.sendMessage(Text.createTextWithLang("prompts.min-players-updated")
-                            .replace("{value}", String.valueOf(value)).build());
+                            .replace("{0}", String.valueOf(value)).build());
 
                     reopenGUI();
                 })
@@ -220,7 +221,7 @@ public class PlayerSettingsGUI extends BaseGUI {
                     plugin.getFileManager().getArenas().save();
 
                     player.sendMessage(Text.createTextWithLang("prompts.max-players-updated")
-                            .replace("{value}", String.valueOf(value)).build(player));
+                            .replace("{0}", String.valueOf(value)).build(player));
 
                     reopenGUI();
                 })
@@ -253,11 +254,11 @@ public class PlayerSettingsGUI extends BaseGUI {
                     }
 
                     plugin.getFileManager().getArenas()
-                            .set("arenas." + arenaId + ".countdown", value);
+                            .set("arenas." + arenaId + ".countdown-time", value);
                     plugin.getFileManager().getArenas().save();
 
                     player.sendMessage(Text.createTextWithLang("prompts.countdown-time-updated")
-                            .replace("{value}", String.valueOf(value)).build(player));
+                            .replace("{0}", String.valueOf(value)).build(player));
 
                     reopenGUI();
                 })

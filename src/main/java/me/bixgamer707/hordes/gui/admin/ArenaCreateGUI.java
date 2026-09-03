@@ -85,13 +85,13 @@ public class ArenaCreateGUI extends BaseGUI {
         // Get defaults from config
         int defaultMinPlayers = config.getInt("defaults.min-players", 1);
         int defaultMaxPlayers = config.getInt("defaults.max-players", 10);
-        int defaultCountdown = config.getInt("defaults.countdown", 10);
+        int defaultCountdown = config.getInt("defaults.countdown-time", 10);
         int defaultCooldown = config.getInt("defaults.cooldown", 300);
         int defaultWaves = config.getInt("defaults.total-waves", 5);
         int defaultWaveDelay = config.getInt("defaults.wave-delay", 10);
         boolean defaultAutoStart = config.getBoolean("defaults.auto-start", true);
         String defaultWaveProgression = config.getString("defaults.wave-progression", "AUTOMATIC");
-        int defaultGlobalCooldown = config.getInt("defaults.global-cooldown", 300);
+        boolean defaultGlobalCooldown = config.getBoolean("defaults.global-cooldown", false);
 
         // Create basic arena config
         File arenasFile = plugin.getFileManager().getArenas();

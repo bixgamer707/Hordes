@@ -207,7 +207,7 @@ public class ArenaEditorGUI extends BaseGUI {
                 .set("arenas." + arenaId + ".enabled", newState);
         plugin.getFileManager().getArenas().save();
 
-        sendConfigMessage(newState ? "admin.arena-enabled" : "admin.arena-disabled", plugin.getFileManager().getMessages(), arenaId);
+        sendConfigMessage(newState ? "Messages.admin.arena-enabled" : "Messages.admin.arena-disabled", plugin.getFileManager().getMessages(), arenaId);
         playSound("click");
 
         reloadAndReopen();

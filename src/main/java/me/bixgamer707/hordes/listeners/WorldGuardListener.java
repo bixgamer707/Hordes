@@ -25,7 +25,7 @@ import java.util.UUID;
 /**
  * Handles WorldGuard region events
  * Enables auto-join when entering arena regions
- * 
+ *
  * Note: This uses PlayerMoveEvent for region detection
  * WorldGuard 7.0+ doesn't have RegionEnterEvent anymore
  */
@@ -33,10 +33,10 @@ public class WorldGuardListener implements Listener {
 
     private final Hordes plugin;
     private final ArenaManager arenaManager;
-    
+
     // Track which region each player is in
     private final Map<UUID, String> playerRegions;
-    
+
     // WorldGuard integration status
     private boolean worldGuardEnabled;
 
@@ -44,7 +44,7 @@ public class WorldGuardListener implements Listener {
         this.plugin = plugin;
         this.arenaManager = plugin.getArenaManager();
         this.playerRegions = new HashMap<>();
-        
+
         checkWorldGuard();
     }
 
@@ -53,7 +53,7 @@ public class WorldGuardListener implements Listener {
      */
     private void checkWorldGuard() {
         worldGuardEnabled = Bukkit.getPluginManager().getPlugin("WorldGuard") != null;
-        
+
         if (worldGuardEnabled) {
             plugin.logInfo("WorldGuard integration enabled");
         } else {
@@ -71,29 +71,29 @@ public class WorldGuardListener implements Listener {
         if (!worldGuardEnabled) {
             return;
         }
-        
+
         // Only check if player moved to a different block
         Location from = event.getFrom();
         Location to = event.getTo();
-        
+
         if (to == null) {
             return;
         }
-        
+
         // Optimization: only check if changed block
-        if (from.getBlockX() == to.getBlockX() && 
-            from.getBlockY() == to.getBlockY() && 
-            from.getBlockZ() == to.getBlockZ()) {
+        if (from.getBlockX() == to.getBlockX() &&
+                from.getBlockY() == to.getBlockY() &&
+                from.getBlockZ() == to.getBlockZ()) {
             return;
         }
-        
+
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        
+
         // Get regions at new location
         Set<String> newRegions = getRegionsAtLocation(to);
         String currentRegion = playerRegions.get(uuid);
-        
+
         // Check for region enter
         for (String regionName : newRegions) {
             if (currentRegion == null || !currentRegion.equals(regionName)) {
@@ -102,7 +102,7 @@ public class WorldGuardListener implements Listener {
                 return;
             }
         }
-        
+
         // Check for region leave
         if (currentRegion != null && !newRegions.contains(currentRegion)) {
             handleRegionLeave(player, currentRegion);
@@ -117,29 +117,29 @@ public class WorldGuardListener implements Listener {
         try {
             // WorldGuard 7.0+ API
             com.sk89q.worldedit.util.Location wgLoc = BukkitAdapter.adapt(location);
-            
+
             WorldGuard wg = WorldGuard.getInstance();
             RegionManager regionManager =
-                wg.getPlatform().getRegionContainer().get(
-                   BukkitAdapter.adapt(location.getWorld())
-                );
-            
+                    wg.getPlatform().getRegionContainer().get(
+                            BukkitAdapter.adapt(location.getWorld())
+                    );
+
             if (regionManager == null) {
                 return Set.of();
             }
-            
+
             ApplicableRegionSet regions = regionManager.getApplicableRegions(
-                com.sk89q.worldedit.math.BlockVector3.at(
-                    location.getBlockX(), 
-                    location.getBlockY(), 
-                    location.getBlockZ()
-                )
+                    com.sk89q.worldedit.math.BlockVector3.at(
+                            location.getBlockX(),
+                            location.getBlockY(),
+                            location.getBlockZ()
+                    )
             );
-            
+
             return regions.getRegions().stream()
-                .map(ProtectedRegion::getId)
-                .collect(java.util.stream.Collectors.toSet());
-                
+                    .map(ProtectedRegion::getId)
+                    .collect(java.util.stream.Collectors.toSet());
+
         } catch (Exception e) {
             plugin.logWarning("Error getting regions at location: " + e.getMessage());
             return Set.of();
@@ -152,19 +152,19 @@ public class WorldGuardListener implements Listener {
     private void handleRegionEnter(Player player, String regionName) {
         // Check if this region is an arena
         Arena arena = arenaManager.getArenaByRegion(regionName);
-        
+
         if (arena == null) {
             return;
         }
-        
+
         // Check if player is already in an arena
         if (arenaManager.isInArena(player)) {
             return;
         }
-        
+
         // Attempt to join
         boolean success = arenaManager.joinArena(player, arena.getId());
-        
+
         if (!success) {
             // Join failed - send message why (already sent by Arena.canJoin)
         }
@@ -176,25 +176,25 @@ public class WorldGuardListener implements Listener {
     private void handleRegionLeave(Player player, String regionName) {
         // Check if this region is an arena
         Arena arena = arenaManager.getArenaByRegion(regionName);
-        
+
         if (arena == null) {
             return;
         }
-        
+
         // Check if player is in this arena
         Arena playerArena = arenaManager.getPlayerArena(player);
-        
+
         if (playerArena != arena) {
             return;
         }
-        
+
         // Only auto-leave if in lobby state
         if (playerArena.getState().isJoinable()) {
             arenaManager.leaveArena(player, true);
         } else {
             // In active arena - prevent leaving
-            Text.createTextWithLang("arena.cannot-leave-area", player);
-            
+            player.sendMessage(Text.createTextWithLang("arena.cannot-leave-area").build(player));
+
             // Teleport back to arena
             player.teleport(arena.getConfig().getExitLocation());
         }

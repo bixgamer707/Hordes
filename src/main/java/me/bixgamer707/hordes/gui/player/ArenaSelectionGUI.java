@@ -111,7 +111,7 @@ public class ArenaSelectionGUI extends BaseGUI {
                     .replace("{max_players}", String.valueOf(arena.getConfig().getMaxPlayers()))
                     .replace("{total_waves}", String.valueOf(arena.getConfig().getTotalWaves()))
                     .replace("{current_wave}", arena.getState() == ArenaState.ACTIVE ?
-                            String.valueOf(arena.getCurrentWave()) : "N/A");
+                            String.valueOf(arena.getCurrentWaveNumber()) : "N/A");
 
             lore.add(Text.createText(processed).build(player));
         }
@@ -163,7 +163,7 @@ public class ArenaSelectionGUI extends BaseGUI {
         Arena arena = plugin.getArenaManager().getArena(arenaId);
 
         if (arena == null) {
-            Text.sendMessage(player, "commands.arena-not-found", arenaId);
+            player.sendMessage(Text.createText("&cArena not found!").build());
             close();
             return;
         }
