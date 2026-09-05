@@ -19,13 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ArenaManager {
 
     private final Hordes plugin;
-    
+
     // All registered arenas: ArenaID -> Arena
     private final Map<String, Arena> arenas;
-    
+
     // Player to arena mapping for fast lookup: PlayerUUID -> ArenaID
     private final Map<UUID, String> playerArenas;
-    
+
     // WorldGuard region to arena mapping: RegionName -> ArenaID
     private final Map<String, String> regionArenas;
 
@@ -42,36 +42,36 @@ public class ArenaManager {
     public void loadArenas() {
         File configFile = plugin.getFileManager().getArenas();
         ConfigurationSection arenasSection = configFile.getConfigurationSection("arenas");
-        
+
         if (arenasSection == null) {
             Bukkit.getLogger().warning("[Hordes] No arenas configured in arenas.yml");
             return;
         }
-        
+
         int loaded = 0;
         int failed = 0;
-        
+
         for (String arenaId : arenasSection.getKeys(false)) {
             try {
                 ConfigurationSection arenaSection = arenasSection.getConfigurationSection(arenaId);
                 ArenaConfig config = ArenaConfig.load(arenaId, arenaSection);
-                
+
                 if (!config.isValid()) {
                     Bukkit.getLogger().warning("[Hordes] Arena " + arenaId + " has invalid configuration");
                     failed++;
                     continue;
                 }
-                
+
                 Arena arena = new Arena(arenaId, config, plugin);
                 arenas.put(arenaId, arena);
-                
+
                 // Register WorldGuard region if configured
                 if (config.hasWorldGuardRegion()) {
                     regionArenas.put(config.getWorldGuardRegion(), arenaId);
                 }
-                
+
                 loaded++;
-                
+
             } catch (Exception e) {
                 plugin.logError("Failed to load arena " + arenaId + ": " + e.getMessage());
                 if (plugin.getFileManager().getFile("config.yml").getBoolean("debug-mode", false)) {
@@ -80,7 +80,7 @@ public class ArenaManager {
                 failed++;
             }
         }
-        
+
         Bukkit.getLogger().info("[Hordes] Loaded " + loaded + " arenas (" + failed + " failed)");
     }
 
@@ -90,26 +90,26 @@ public class ArenaManager {
      */
     public void reloadArenas() {
         Bukkit.getLogger().info("[Hordes] Reloading arenas...");
-        
+
         // End all active arenas
         for (Arena arena : arenas.values()) {
             if (arena.getState().isActive()) {
                 arena.endArena(false);
             }
         }
-        
+
         // Clear all mappings
         arenas.clear();
         playerArenas.clear();
         regionArenas.clear();
-        
+
         // Reload from config
         loadArenas();
     }
 
     /**
      * Gets an arena by ID
-     * 
+     *
      * @param arenaId Arena identifier
      * @return Arena or null if not found
      */
@@ -119,7 +119,7 @@ public class ArenaManager {
 
     /**
      * Gets arena by WorldGuard region
-     * 
+     *
      * @param regionName Region name
      * @return Arena or null if not found
      */
@@ -129,8 +129,19 @@ public class ArenaManager {
     }
 
     /**
+     * Removes an arena from the loaded arenas map (does not touch arenas.yml).
+     * Used when actually deleting an arena via /hordesadmin delete confirm.
+     *
+     * @param arenaId Arena identifier
+     */
+    public void unregisterArena(String arenaId) {
+        arenas.remove(arenaId);
+        regionArenas.entrySet().removeIf(entry -> entry.getValue().equals(arenaId));
+    }
+
+    /**
      * Gets the arena a player is currently in
-     * 
+     *
      * @param player Player UUID
      * @return Arena or null if not in any arena
      */
@@ -141,7 +152,7 @@ public class ArenaManager {
 
     /**
      * Gets the arena a player is currently in
-     * 
+     *
      * @param player Player
      * @return Arena or null if not in any arena
      */
@@ -152,7 +163,7 @@ public class ArenaManager {
     /**
      * Registers a player to an arena
      * Called by Arena when player joins
-     * 
+     *
      * @param player Player UUID
      * @param arenaId Arena ID
      */
@@ -163,7 +174,7 @@ public class ArenaManager {
     /**
      * Unregisters a player from their arena
      * Called by Arena when player leaves
-     * 
+     *
      * @param player Player UUID
      */
     public void unregisterPlayer(UUID player) {
@@ -172,7 +183,7 @@ public class ArenaManager {
 
     /**
      * Checks if player is in any arena
-     * 
+     *
      * @param player Player UUID
      * @return true if player is in an arena
      */
@@ -182,7 +193,7 @@ public class ArenaManager {
 
     /**
      * Checks if player is in any arena
-     * 
+     *
      * @param player Player
      * @return true if player is in an arena
      */
@@ -192,7 +203,7 @@ public class ArenaManager {
 
     /**
      * Gets all registered arenas
-     * 
+     *
      * @return Unmodifiable map of arenas
      */
     public Map<String, Arena> getArenas() {
@@ -201,42 +212,42 @@ public class ArenaManager {
 
     /**
      * Gets all enabled arenas
-     * 
+     *
      * @return List of enabled arenas
      */
     public List<Arena> getEnabledArenas() {
         List<Arena> enabled = new ArrayList<>();
-        
+
         for (Arena arena : arenas.values()) {
             if (arena.getConfig().isEnabled()) {
                 enabled.add(arena);
             }
         }
-        
+
         return enabled;
     }
 
     /**
      * Gets arenas by state
-     * 
+     *
      * @param state Arena state to filter
      * @return List of arenas in that state
      */
     public List<Arena> getArenasByState(ArenaState state) {
         List<Arena> result = new ArrayList<>();
-        
+
         for (Arena arena : arenas.values()) {
             if (arena.getState() == state) {
                 result.add(arena);
             }
         }
-        
+
         return result;
     }
 
     /**
      * Gets all arena IDs
-     * 
+     *
      * @return Set of arena IDs
      */
     public Set<String> getArenaIds() {
@@ -245,7 +256,7 @@ public class ArenaManager {
 
     /**
      * Gets count of total arenas
-     * 
+     *
      * @return Number of arenas
      */
     public int getArenaCount() {
@@ -254,29 +265,29 @@ public class ArenaManager {
 
     /**
      * Gets count of active arenas
-     * 
+     *
      * @return Number of active arenas
      */
     public int getActiveArenaCount() {
         return (int) arenas.values().stream()
-            .filter(arena -> arena.getState().isActive())
-            .count();
+                .filter(arena -> arena.getState().isActive())
+                .count();
     }
 
     /**
      * Gets total player count across all arenas
-     * 
+     *
      * @return Total players in arenas
      */
     public int getTotalPlayerCount() {
         return arenas.values().stream()
-            .mapToInt(Arena::getPlayerCount)
-            .sum();
+                .mapToInt(Arena::getPlayerCount)
+                .sum();
     }
 
     /**
      * Attempts to join player to arena
-     * 
+     *
      * @param player Player to join
      * @param arenaId Arena ID
      * @return true if successfully joined
@@ -286,36 +297,36 @@ public class ArenaManager {
         if (isInArena(player)) {
             return false;
         }
-        
+
         Arena arena = getArena(arenaId);
-        
+
         if (arena == null) {
             return false;
         }
-        
+
         // Attempt to join
         boolean success = arena.joinPlayer(player);
-        
+
         if (success) {
             registerPlayer(player.getUniqueId(), arenaId);
         }
-        
+
         return success;
     }
 
     /**
      * Removes player from their current arena
-     * 
+     *
      * @param player Player to remove
      * @param restore Whether to restore original state
      */
     public void leaveArena(Player player, boolean restore) {
         Arena arena = getPlayerArena(player);
-        
+
         if (arena == null) {
             return;
         }
-        
+
         arena.removePlayer(player, restore);
         unregisterPlayer(player.getUniqueId());
     }
@@ -325,13 +336,13 @@ public class ArenaManager {
      */
     public void shutdown() {
         Bukkit.getLogger().info("[Hordes] Shutting down all arenas...");
-        
+
         for (Arena arena : arenas.values()) {
             if (arena.getState() != ArenaState.WAITING) {
                 arena.endArena(false);
             }
         }
-        
+
         arenas.clear();
         playerArenas.clear();
         regionArenas.clear();
@@ -339,7 +350,7 @@ public class ArenaManager {
 
     /**
      * Creates debug information about all arenas
-     * 
+     *
      * @return Debug string
      */
     public String getDebugInfo() {
@@ -349,14 +360,14 @@ public class ArenaManager {
         sb.append("Active Arenas: ").append(getActiveArenaCount()).append("\n");
         sb.append("Total Players: ").append(getTotalPlayerCount()).append("\n");
         sb.append("\nArena Details:\n");
-        
+
         for (Arena arena : arenas.values()) {
             sb.append("  ").append(arena.getId()).append(": ");
             sb.append(arena.getState().getDisplayName()).append(" | ");
             sb.append("Players: ").append(arena.getPlayerCount()).append(" | ");
             sb.append("Wave: ").append(arena.getCurrentWaveNumber()).append("\n");
         }
-        
+
         return sb.toString();
     }
 }

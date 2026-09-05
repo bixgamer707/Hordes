@@ -4,22 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Add localized messages for arena management and player rewards; improve chat prompts and error messages">
+    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Add localized messages for arena management; improve error handling and message formatting">
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveDetailGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/config/ArenaConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/config/ArenaConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaCreateGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaCreateGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/Arena.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/ArenaManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/ArenaManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/commands/HordesAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/commands/HordesAdminCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/BaseGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/BaseGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaEditorGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaListGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ModeSettingsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ModeSettingsGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/PlayerSettingsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/PlayerSettingsGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/RewardEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/RewardEditorGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveEditorGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaInfoGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaInfoGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaSelectionGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaSelectionGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/listeners/PlayerListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/listeners/PlayerListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/listeners/WorldGuardListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/listeners/WorldGuardListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/rewards/RewardManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/rewards/RewardManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/wave/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/wave/Wave.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/guis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/guis.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages/en_us.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages/en_us.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages/es_es.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages/es_es.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,7 +195,8 @@
     <MESSAGE value="Update .gitignore to exclude .idea directory; modify GUIListener to fix slot boundary check; update plugin.yml API version to 1.20" />
     <MESSAGE value="Refactor ArenaSelectionGUI for improved readability; adjust formatting and remove unnecessary whitespace" />
     <MESSAGE value="Add localized messages for arena management and player rewards; improve chat prompts and error messages" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add localized messages for arena management and player rewards; improve chat prompts and error messages" />
+    <MESSAGE value="Add localized messages for arena management; improve error handling and message formatting" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add localized messages for arena management; improve error handling and message formatting" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

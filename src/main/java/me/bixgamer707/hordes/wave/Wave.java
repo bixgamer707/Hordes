@@ -273,6 +273,10 @@ public class Wave {
         return waveNumber;
     }
 
+    public WaveConfig getConfig() {
+        return config;
+    }
+
     public WaveState getState() {
         return state;
     }

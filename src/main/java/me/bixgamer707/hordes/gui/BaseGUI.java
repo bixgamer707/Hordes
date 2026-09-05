@@ -47,6 +47,16 @@ public abstract class BaseGUI {
      * Constructor - loads everything from guis.yml
      */
     public BaseGUI(Hordes plugin, Player player, String guiId) {
+        this(plugin, player, guiId, null);
+    }
+
+    /**
+     * Constructor with title placeholder replacements (e.g. {arena_id} -> "beginner_arena").
+     * Needed because the title is built here, in the base constructor, before any
+     * subclass field (like an arena reference) is assigned - so subclasses must pass
+     * their known values in directly instead of relying on instance fields.
+     */
+    public BaseGUI(Hordes plugin, Player player, String guiId, Map<String, String> titleReplacements) {
         this.plugin = plugin;
         this.player = player;
         this.guiId = guiId;
@@ -54,6 +64,11 @@ public abstract class BaseGUI {
 
         // Load title and size from config
         String title = guiConfig.getString("guis."+guiId+".title", "&6Menu");
+        if (titleReplacements != null) {
+            for (Map.Entry<String, String> entry : titleReplacements.entrySet()) {
+                title = title.replace("{" + entry.getKey() + "}", entry.getValue());
+            }
+        }
         int rows = guiConfig.getInt("guis."+guiId+".rows", 6);
         int size = rows * 9;
 

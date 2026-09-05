@@ -577,8 +577,13 @@ public class Arena {
                 break;
 
             case MIXED:
-                // Check wave-specific config (future implementation)
-                scheduleNextWave();
+                // Per-wave override: each wave's own "progression: MANUAL/AUTO"
+                // (set from the Wave Editor GUI) decides how THIS wave behaves.
+                if (currentWave != null && currentWave.getConfig().isManualProgression()) {
+                    waitForManualProgression();
+                } else {
+                    scheduleNextWave();
+                }
                 break;
         }
     }

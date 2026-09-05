@@ -233,20 +233,40 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         String arenaId = args[1];
-        Arena arena = arenaManager.getArena(arenaId);
 
-        if (arena == null) {
+        // Check against the raw config file, not the loaded/valid arenas map -
+        // an invalid arena (e.g. missing spawns) never loads into that map, so
+        // checking there would make it impossible to ever delete a broken arena.
+        if (!plugin.getFileManager().getArenas().contains("arenas." + arenaId)) {
             sendMessage(sender, "commands.arena-not-found", arenaId);
             return true;
         }
 
-        // Stop arena if active
-        if (arena.getState() != ArenaState.WAITING) {
-            arena.endArena(false);
+        boolean confirmed = args.length >= 3 && args[2].equalsIgnoreCase("confirm");
+
+        if (!confirmed) {
+            Arena arena = arenaManager.getArena(arenaId);
+            if (arena != null && arena.getState() != ArenaState.WAITING) {
+                arena.endArena(false);
+                sendMessage(sender, "admin.delete-stopped");
+            }
+            sendMessage(sender, "admin.delete-instruction", arenaId);
+            return true;
         }
 
-        sendMessage(sender, "admin.delete-stopped");
-        sendMessage(sender, "admin.delete-instruction");
+        // Confirmed: actually stop (if still active) and delete
+        Arena arena = arenaManager.getArena(arenaId);
+        if (arena != null) {
+            if (arena.getState() != ArenaState.WAITING) {
+                arena.endArena(false);
+            }
+            arenaManager.unregisterArena(arenaId);
+        }
+
+        plugin.getFileManager().getArenas().set("arenas." + arenaId, null);
+        plugin.getFileManager().getArenas().save();
+
+        sendMessage(sender, "admin.delete-success", arenaId);
 
         return true;
     }

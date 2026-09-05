@@ -23,7 +23,7 @@ public class WaveEditorGUI extends BaseGUI {
     private final int[] waveSlots;
 
     public WaveEditorGUI(Hordes plugin, Player player, Arena arena) {
-        super(plugin, player, "admin-wave-editor");
+        super(plugin, player, "admin-wave-editor", java.util.Collections.singletonMap("arena_id", arena.getId()));
         this.arena = arena;
         this.arenaId = arena.getId();
 
@@ -132,29 +132,30 @@ public class WaveEditorGUI extends BaseGUI {
      * Gets mobs info for wave
      */
     private String getMobsInfo(int waveNumber) {
-        // Get from mobs.yml
-        var mobsConfig = plugin.getFileManager().getMobs()
-                .getConfigurationSection(arenaId + ".wave-" + waveNumber + ".mobs");
+        // "mobs" is stored as a YAML list of maps, not a keyed section -
+        // getConfigurationSection() on a list always returns null. Must use
+        // getMapList() to actually read the entries.
+        List<java.util.Map<?, ?>> mobList = plugin.getFileManager().getMobs()
+                .getMapList(arenaId + ".wave-" + waveNumber + ".mobs");
 
-        if (mobsConfig == null) {
+        if (mobList.isEmpty()) {
             return "No mobs";
         }
 
         int totalMobs = 0;
-        for (String key : mobsConfig.getKeys(false)) {
-            totalMobs += mobsConfig.getInt(key + ".amount", 0);
+        for (java.util.Map<?, ?> mobMap : mobList) {
+            Object amountObj = mobMap.get("amount");
+            totalMobs += (amountObj instanceof Number) ? ((Number) amountObj).intValue() : 1;
         }
 
-        return totalMobs + " mobs";
+        return totalMobs + " mobs (" + mobList.size() + " types)";
     }
 
     /**
-     * Handles wave click
+     * Handles wave click - opens the wave detail editor
      */
     private void handleWaveClick(Player player, int waveNumber) {
-        player.sendMessage(Text.createTextWithLang("admin.wave-edit-coming-soon")
-                .replace("{0}", String.valueOf(waveNumber))
-                .build());
+        new WaveDetailGUI(plugin, player, arena, waveNumber).open();
     }
 
     /**
@@ -196,7 +197,30 @@ public class WaveEditorGUI extends BaseGUI {
                     .replace("{count}", String.valueOf(newWave))
                     .build());
 
-            plugin.getArenaManager().loadArenas();
+            plugin.getArenaManager().reloadArenas();
+            refresh();
+        } else if (actionType.equals("remove-wave")) {
+            int totalWaves = arena.getConfig().getTotalWaves();
+
+            if (totalWaves <= 1) {
+                player.sendMessage(Text.createTextWithLang("admin.wave-remove-min")
+                        .build(player));
+                return;
+            }
+
+            // Remove that wave's mob configuration too, if any
+            plugin.getFileManager().getMobs().set(arenaId + ".wave-" + totalWaves, null);
+            plugin.getFileManager().getMobs().save();
+
+            plugin.getFileManager().getFile("arenas.yml")
+                    .set("arenas." + arenaId + ".waves", totalWaves - 1);
+            plugin.getFileManager().getArenas().save();
+
+            player.sendMessage(Text.createTextWithLang("admin.wave-removed")
+                    .replace("{0}", String.valueOf(totalWaves))
+                    .build(player));
+
+            plugin.getArenaManager().reloadArenas();
             refresh();
         }
     }

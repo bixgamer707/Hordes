@@ -211,6 +211,7 @@ Messages:
     delete-usage: "&cUsage: /hordesadmin delete <arena>"
     delete-stopped: "&eArena stopped before deletion."
     delete-instruction: "&eType &a/hordesadmin delete {0} confirm &eto confirm deletion."
+    delete-success: "&a✔ Arena '&e{0}&a' deleted successfully."
 
 
     # SetSpawn
@@ -275,10 +276,16 @@ Messages:
     item-drop-mode-changed: "&a✔ Item drop mode set to: &e{mode}"
     pvp-toggled: "&a✔ PvP &e{status} &ain the arena!"
     keep-inventory-toggled: "&a✔ Keep inventory on death &e{status}!"
+    clear-inventory-toggled: "&a✔ Clear inventory on join &e{status}!"
+    gamemode-force-changed: "&a✔ Forced gamemode set to: &e{mode}"
+    drop-items-on-death-toggled: "&a✔ Drop items on death &e{status}!"
+    teleport-on-death-toggled: "&a✔ Teleport on death &e{status}!"
     reward-status-toggled: "&a✔ Rewards &e{status} &afor this arena!"
     reward-type-changed: "&a✔ Reward type set to: &e{type}"
     wave-edit-coming-soon: "&e⚠ Wave editor coming soon!"
     wave-added: "&a✔ Added new wave! Total waves: {count}"
+    wave-removed: "&a✔ Removed wave {0}."
+    wave-remove-min: "&c✖ An arena must have at least 1 wave."
 
   prompts:
 
@@ -333,6 +340,37 @@ Messages:
     invalid-countdown: "&c&l✖ Invalid number! Enter a positive integer (e.g. 10)"
     countdown-time-updated: "&a&l✔ Countdown time updated! Current: {0} seconds"
     auto-start-toggled: "&a&l✔ Auto-start &e{status} &ain the arena!"
+
+    # Wave detail editor (spawn-delay / mobs-per-spawn)
+    spawn-delay: "&e&l❖ Enter spawn delay in ticks (20 ticks = 1 second):"
+    spawn-delay-updated: "&a&l✔ Spawn delay updated! Current: {0} ticks"
+    mobs-per-spawn: "&e&l❖ Enter how many mobs spawn per batch:"
+    mobs-per-spawn-updated: "&a&l✔ Mobs per batch updated! Current: {0}"
+    mobs-cleared: "&a&l✔ All mobs removed from this wave!"
+
+    # Mob management (add/edit/remove within a wave)
+    vanilla-mob-id: "&e&l❖ Enter the vanilla mob type (e.g. ZOMBIE, SKELETON, CREEPER):"
+    mythic-mob-id: "&e&l❖ Enter the MythicMobs internal mob name:"
+    invalid-mob-id: "&c&l✖ That's not a valid vanilla mob type! Check the spelling (e.g. ZOMBIE, not Zombie)."
+    mob-added: "&a&l✔ Added mob: {0}"
+    mob-removed: "&a&l✔ Mob removed."
+    mob-amount: "&e&l❖ Enter how many of this mob should spawn:"
+    mob-amount-updated: "&a&l✔ Amount updated! Current: {0}"
+    mob-health-multiplier: "&e&l❖ Enter the health multiplier (e.g. 1.0 = normal, 2.0 = double health):"
+    mob-damage-multiplier: "&e&l❖ Enter the damage multiplier (e.g. 1.0 = normal, 2.0 = double damage):"
+    mob-multipliers-updated: "&a&l✔ Multipliers updated!"
+
+    # Mode settings (ModeSettingsGUI)
+    rejoin-cooldown: "&e&l❖ Enter the rejoin cooldown in seconds (0 = none):"
+    rejoin-cooldown-updated: "&a&l✔ Rejoin cooldown updated! Current: {0}s"
+
+    # Arena-level timing (PlayerSettingsGUI)
+    wave-delay: "&e&l❖ Enter the delay between waves in seconds:"
+    wave-delay-updated: "&a&l✔ Wave delay updated! Current: {0}s"
+    cooldown: "&e&l❖ Enter the arena cooldown in seconds:"
+    cooldown-updated: "&a&l✔ Arena cooldown updated! Current: {0}s"
+    wave-progression-changed: "&a&l✔ Wave progression set to: {0}"
+    global-cooldown-toggled: "&a&l✔ Global cooldown &e{status}!"
 
   # ============================================
   # GUI MESSAGES

@@ -213,6 +213,10 @@ Messages:
     item-drop-mode-changed: "&a✔ Modo de caída de objetos establecido en: &e{mode}"
     pvp-toggled: "&a✔ PvP &e{status} &aen la arena!"
     keep-inventory-toggled: "&a✔ Conservar inventario al morir &e{status}!"
+    clear-inventory-toggled: "&a✔ Limpiar inventario al unirse &e{status}!"
+    gamemode-force-changed: "&a✔ Modo de juego forzado establecido en: &e{mode}"
+    drop-items-on-death-toggled: "&a✔ Soltar items al morir &e{status}!"
+    teleport-on-death-toggled: "&a✔ Teletransportar al morir &e{status}!"
 
     # Recompensas (RewardEditorGUI)
     reward-status-toggled: "&a✔ Recompensas &e{status} &apara esta arena!"
@@ -220,6 +224,8 @@ Messages:
 
     # Oleadas (WaveEditorGUI)
     wave-added: "&a✔ ¡Nueva oleada añadida! Total de oleadas: {count}"
+    wave-removed: "&a✔ Oleada {0} eliminada."
+    wave-remove-min: "&c✖ Una arena debe tener al menos 1 oleada."
     wave-edit-coming-soon: "&e⚠ ¡El editor de oleadas estará disponible próximamente!"
 
     # Crear Arena - Lista optimizada
@@ -244,6 +250,7 @@ Messages:
     delete-usage: "&cUso: /hordesadmin delete <arena>"
     delete-stopped: "&eArena detenida antes de la eliminación."
     delete-instruction: "&eEscribe &a/hordesadmin delete {0} confirm &epara confirmar la eliminación."
+    delete-success: "&a✔ Arena '&e{0}&a' eliminada exitosamente."
 
     # SetSpawn - Lista optimizada
     setspawn-usage: "&cUso: /hordesadmin setspawn <arena> <lobby|arena|exit>"
@@ -345,6 +352,37 @@ Messages:
     auto-start-toggled: "&a&l✔ Inicio automático &e{status} &aen la arena!"
 
     invalid-number: "&c&l✖ ¡Número inválido! Por favor ingresa un número válido"
+
+    # Editor de detalle de wave (spawn-delay / mobs-per-spawn)
+    spawn-delay: "&e&l❖ Ingresa el retraso de spawn en ticks (20 ticks = 1 segundo):"
+    spawn-delay-updated: "&a&l✔ ¡Retraso de spawn actualizado! Actual: {0} ticks"
+    mobs-per-spawn: "&e&l❖ Ingresa cuántos mobs aparecen por tanda:"
+    mobs-per-spawn-updated: "&a&l✔ ¡Mobs por tanda actualizado! Actual: {0}"
+    mobs-cleared: "&a&l✔ ¡Todos los mobs de esta wave fueron eliminados!"
+
+    # Gestión de mobs (agregar/editar/quitar dentro de una wave)
+    vanilla-mob-id: "&e&l❖ Ingresa el tipo de mob vanilla (ej. ZOMBIE, SKELETON, CREEPER):"
+    mythic-mob-id: "&e&l❖ Ingresa el nombre interno del mob de MythicMobs:"
+    invalid-mob-id: "&c&l✖ ¡Ese no es un tipo de mob vanilla válido! Revisa la ortografía (ej. ZOMBIE, no Zombie)."
+    mob-added: "&a&l✔ Mob añadido: {0}"
+    mob-removed: "&a&l✔ Mob eliminado."
+    mob-amount: "&e&l❖ Ingresa cuántos de este mob deben aparecer:"
+    mob-amount-updated: "&a&l✔ ¡Cantidad actualizada! Actual: {0}"
+    mob-health-multiplier: "&e&l❖ Ingresa el multiplicador de vida (ej. 1.0 = normal, 2.0 = doble vida):"
+    mob-damage-multiplier: "&e&l❖ Ingresa el multiplicador de daño (ej. 1.0 = normal, 2.0 = doble daño):"
+    mob-multipliers-updated: "&a&l✔ ¡Multiplicadores actualizados!"
+
+    # Ajustes de modo (ModeSettingsGUI)
+    rejoin-cooldown: "&e&l❖ Ingresa el cooldown de reingreso en segundos (0 = ninguno):"
+    rejoin-cooldown-updated: "&a&l✔ ¡Cooldown de reingreso actualizado! Actual: {0}s"
+
+    # Ajustes de tiempo a nivel arena (PlayerSettingsGUI)
+    wave-delay: "&e&l❖ Ingresa el retraso entre oleadas en segundos:"
+    wave-delay-updated: "&a&l✔ ¡Retraso entre oleadas actualizado! Actual: {0}s"
+    cooldown: "&e&l❖ Ingresa el cooldown de la arena en segundos:"
+    cooldown-updated: "&a&l✔ ¡Cooldown de la arena actualizado! Actual: {0}s"
+    wave-progression-changed: "&a&l✔ Progresión de oleadas establecida en: {0}"
+    global-cooldown-toggled: "&a&l✔ Cooldown global &e{status}!"
 
   # ============================================
   # MENSAJES DE GUI (confirmaciones, estados genéricos)

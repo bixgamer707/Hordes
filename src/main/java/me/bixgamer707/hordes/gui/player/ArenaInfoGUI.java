@@ -23,7 +23,7 @@ public class ArenaInfoGUI extends BaseGUI {
     private final Arena arena;
 
     public ArenaInfoGUI(Hordes plugin, Player player, Arena arena) {
-        super(plugin, player, "arena-info");
+        super(plugin, player, "arena-info", java.util.Collections.singletonMap("arena_name", arena.getConfig().getDisplayName()));
         this.arena = arena;
     }
 

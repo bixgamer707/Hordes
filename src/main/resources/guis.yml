@@ -613,6 +613,308 @@ guis:
         action: "back"
 
   # ==========================================
+  # ADMIN MODE SETTINGS GUI
+  # ==========================================
+  admin-mode-settings:
+    title: "&6&lMode Settings"
+    rows: 5
+
+    sounds:
+      open: "UI_BUTTON_CLICK"
+      close: "UI_BUTTON_CLICK"
+      click: "UI_BUTTON_CLICK"
+      success: "ENTITY_PLAYER_LEVELUP"
+      error: "ENTITY_VILLAGER_NO"
+
+    items:
+      border:
+        slot: "border"
+        material: "ORANGE_STAINED_GLASS_PANE"
+        name: " "
+
+      survival-mode:
+        slot: 10
+        material-enabled: "GRASS_BLOCK"
+        material-disabled: "BEDROCK"
+        name: "&a&lSurvival Mode: {status}"
+        lore:
+          - "&7Style: &e{mode}"
+          - "&7When enabled, players keep their"
+          - "&7own gear (dungeon-style) instead of"
+          - "&7a clean kit (arena-style)."
+          - ""
+          - "&eClick to toggle"
+
+      pvp-setting:
+        slot: 12
+        material-enabled: "DIAMOND_SWORD"
+        material-disabled: "WOODEN_SWORD"
+        name: "&e&lPvP: {status}"
+        lore:
+          - "&7Whether players can damage"
+          - "&7each other inside this arena."
+          - ""
+          - "&eClick to toggle"
+
+      clear-inventory:
+        slot: 14
+        material-enabled: "LAVA_BUCKET"
+        material-disabled: "WATER_BUCKET"
+        name: "&6&lClear Inventory On Join: {status}"
+        lore:
+          - "&7Whether the player's inventory is"
+          - "&7wiped when they join this arena"
+          - "&7(only applies in Survival Mode)."
+          - ""
+          - "&eClick to toggle"
+
+      gamemode-force:
+        slot: 16
+        material-off: "BARRIER"
+        material-survival: "IRON_SWORD"
+        material-adventure: "MAP"
+        material-creative: "GRASS_BLOCK"
+        name: "&d&lForced Gamemode: {mode}"
+        lore:
+          - "&7Forces this gamemode on players"
+          - "&7while they're inside the arena."
+          - "&7OFF = don't change their gamemode."
+          - ""
+          - "&eClick to cycle"
+
+      death-action:
+        slot: 19
+        material-kick: "BARRIER"
+        material-spectate: "ENDER_EYE"
+        material-rejoin: "EXPERIENCE_BOTTLE"
+        material-respawn: "TOTEM_OF_UNDYING"
+        name: "&c&lDeath Action: {action}"
+        lore:
+          - "&7{action_desc}"
+          - ""
+          - "&eClick to cycle"
+
+      keep-inventory:
+        slot: 21
+        material-enabled: "ENDER_CHEST"
+        material-disabled: "CHEST"
+        name: "&b&lKeep Inventory On Death: {status}"
+        lore:
+          - "&7Whether items stay in the player's"
+          - "&7inventory when they die."
+          - ""
+          - "&eClick to toggle"
+
+      item-drop-mode:
+        slot: 23
+        material-all_players: "CHEST"
+        material-arena_players: "TRAPPED_CHEST"
+        material-owner_only: "ENDER_CHEST"
+        material-teleport_with_player: "SHULKER_BOX"
+        name: "&6&lItem Drop Mode: {mode}"
+        lore:
+          - "&7{mode_desc}"
+          - ""
+          - "&eClick to cycle"
+
+      drop-items-on-death:
+        slot: 25
+        material-enabled: "ITEM_FRAME"
+        material-disabled: "GLASS_PANE"
+        name: "&e&lDrop Items On Death: {status}"
+        lore:
+          - "&7Whether the player's items actually"
+          - "&7drop on the ground on death, subject"
+          - "&7to the Item Drop Mode above."
+          - ""
+          - "&eClick to toggle"
+
+      teleport-on-death:
+        slot: 28
+        material-enabled: "ENDER_PEARL"
+        material-disabled: "COBWEB"
+        name: "&d&lTeleport On Death: {status}"
+        lore:
+          - "&7Whether players get teleported"
+          - "&7out (Spectate/Rejoin actions) or"
+          - "&7stay in place when they die."
+          - ""
+          - "&eClick to toggle"
+
+      rejoin-cooldown:
+        slot: 30
+        material: "CLOCK"
+        name: "&e&lRejoin Cooldown"
+        lore:
+          - "&7Only used by the &eREJOIN &7death action."
+          - "&7Seconds before a player can rejoin"
+          - "&7the fight after dying."
+          - ""
+          - "&7Current: &e{seconds}s"
+          - ""
+          - "&eClick to change"
+
+      back:
+        slot: 40
+        material: "BARRIER"
+        name: "&c← Back"
+        action: "back"
+
+  # ==========================================
+  # ADMIN PLAYER SETTINGS GUI
+  # ==========================================
+  admin-player-settings:
+    title: "&6&lPlayer Settings"
+    rows: 5
+
+    sounds:
+      open: "UI_BUTTON_CLICK"
+      close: "UI_BUTTON_CLICK"
+      click: "UI_BUTTON_CLICK"
+      success: "ENTITY_PLAYER_LEVELUP"
+      error: "ENTITY_VILLAGER_NO"
+
+    items:
+      border:
+        slot: "border"
+        material: "LIME_STAINED_GLASS_PANE"
+        name: " "
+
+      min-players:
+        slot: 10
+        material: "PLAYER_HEAD"
+        name: "&a&lMinimum Players"
+        lore:
+          - "&7Least amount of players needed"
+          - "&7for the arena to be able to start."
+          - ""
+          - "&7Current: &e{min_players}"
+          - ""
+          - "&eClick to change"
+
+      max-players:
+        slot: 12
+        material: "PLAYER_HEAD"
+        name: "&c&lMaximum Players"
+        lore:
+          - "&7Most players that can be in"
+          - "&7this arena at the same time."
+          - ""
+          - "&7Current: &e{max_players}"
+          - ""
+          - "&eClick to change"
+
+      countdown:
+        slot: 14
+        material: "CLOCK"
+        name: "&e&lCountdown Time"
+        lore:
+          - "&7Seconds to wait, once min-players"
+          - "&7is reached, before the arena starts."
+          - ""
+          - "&7Current: &e{countdown}s"
+          - ""
+          - "&eClick to change"
+
+      auto-start:
+        slot: 16
+        material-enabled: "EMERALD"
+        material-disabled: "REDSTONE"
+        name: "&6&lAuto-Start: {status}"
+        lore:
+          - "&7Whether the countdown starts"
+          - "&7automatically once min-players"
+          - "&7is reached."
+          - ""
+          - "&eClick to toggle"
+
+      wave-delay:
+        slot: 19
+        material: "REPEATER"
+        name: "&e&lWave Delay"
+        lore:
+          - "&7Seconds to wait between waves"
+          - "&7when progression is AUTOMATIC."
+          - ""
+          - "&7Current: &e{seconds}s"
+          - ""
+          - "&eClick to change"
+
+      cooldown:
+        slot: 21
+        material: "CLOCK"
+        name: "&e&lArena Cooldown"
+        lore:
+          - "&7Seconds a player must wait before"
+          - "&7joining this arena again."
+          - ""
+          - "&7Current: &e{seconds}s"
+          - ""
+          - "&eClick to change"
+
+      wave-progression:
+        slot: 23
+        material-automatic: "SUNFLOWER"
+        material-manual: "LEVER"
+        material-mixed: "COMPARATOR"
+        name: "&d&lWave Progression: {type}"
+        lore:
+          - "&7AUTOMATIC: waves advance on their own."
+          - "&7MANUAL: requires a button/sign to advance."
+          - "&7MIXED: each wave decides via the Wave"
+          - "&7Editor's per-wave progression toggle."
+          - ""
+          - "&eClick to cycle"
+
+      global-cooldown:
+        slot: 25
+        material-enabled: "NETHERITE_INGOT"
+        material-disabled: "IRON_INGOT"
+        name: "&b&lGlobal Cooldown: {status}"
+        lore:
+          - "&7When enabled, finishing this arena"
+          - "&7also puts the player on cooldown"
+          - "&7for ALL other arenas, not just this one."
+          - ""
+          - "&eClick to toggle"
+
+      back:
+        slot: 40
+        material: "BARRIER"
+        name: "&c← Back"
+        action: "back"
+
+  # ==========================================
+  # ADMIN REWARD EDITOR GUI
+  # ==========================================
+  admin-reward-editor:
+    title: "&6&lReward Settings"
+    rows: 4
+
+    sounds:
+      open: "UI_BUTTON_CLICK"
+      close: "UI_BUTTON_CLICK"
+      click: "UI_BUTTON_CLICK"
+      success: "ENTITY_PLAYER_LEVELUP"
+      error: "ENTITY_VILLAGER_NO"
+
+    # Most items in this GUI (reward-status, reward-type, money-reward,
+    # item-rewards, command-rewards, progressive-multiplier) are built directly
+    # by RewardEditorGUI.java with their own fallback defaults - only the
+    # decorative border and navigation button need to be defined here.
+    items:
+      border:
+        slot: "border"
+        material: "YELLOW_STAINED_GLASS_PANE"
+        name: " "
+
+      back:
+        slot: 31
+        material: "BARRIER"
+        name: "&c← Back"
+        action: "back"
+
+  # ==========================================
   # ADMIN ARENA EDITOR GUI
   # ==========================================
   admin-arena-editor:
@@ -923,6 +1225,18 @@ guis:
           - "&eClick to add"
         action: "add-wave"
 
+      # Remove last wave button
+      remove-wave:
+        slot: 51
+        material: "REDSTONE"
+        name: "&c&l- Remove Last Wave"
+        lore:
+          - "&7Removes the highest-numbered wave"
+          - "&7and its mob configuration"
+          - ""
+          - "&eClick to remove"
+        action: "remove-wave"
+
       # Previous page
       previous-page:
         slot: 45
@@ -947,6 +1261,35 @@ guis:
         material: "BARRIER"
         name: "&c← Back"
         action: "back"
+  # ==========================================
+  # ADMIN WAVE DETAIL GUI (single wave editor)
+  # ==========================================
+  admin-wave-detail:
+    title: "&c&lWave {wave_number}: {arena_id}"
+    rows: 6
+
+    sounds:
+      open: "UI_BUTTON_CLICK"
+      close: "UI_BUTTON_CLICK"
+      click: "UI_BUTTON_CLICK"
+      success: "ENTITY_PLAYER_LEVELUP"
+      error: "ENTITY_VILLAGER_NO"
+
+    # spawn-delay, mobs-per-spawn, progression, mob grid, add-mob and
+    # remove-mob buttons are all built directly by WaveDetailGUI.java with
+    # their own fallback defaults - only the border/back button live here.
+    items:
+      border:
+        slot: "border"
+        material: "RED_STAINED_GLASS_PANE"
+        name: " "
+
+      back:
+        slot: 45
+        material: "ARROW"
+        name: "&c← Back"
+        action: "back"
+
 # ==========================================
 # NOTES:
 # ==========================================

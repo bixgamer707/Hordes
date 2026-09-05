@@ -17,7 +17,7 @@ public class ArenaEditorGUI extends BaseGUI {
     private final String arenaId;
 
     public ArenaEditorGUI(Hordes plugin, Player player, Arena arena) {
-        super(plugin, player, "admin-arena-editor");
+        super(plugin, player, "admin-arena-editor", java.util.Collections.singletonMap("arena_id", arena.getId()));
         this.arena = arena;
         this.arenaId = arena.getId();
     }
@@ -42,43 +42,43 @@ public class ArenaEditorGUI extends BaseGUI {
         });
 
         // Player settings
-        updateItemLore("player-settings", new String[]{
+        updateItemLore("edit-players", new String[]{
                 String.valueOf(arena.getConfig().getMinPlayers()),
                 String.valueOf(arena.getConfig().getMaxPlayers()),
                 String.valueOf(arena.getConfig().getCountdownTime())
         });
 
         // Wave settings
-        updateItemLore("wave-settings", new String[]{
+        updateItemLore("edit-waves", new String[]{
                 String.valueOf(arena.getConfig().getTotalWaves()),
                 String.valueOf(arena.getConfig().getWaveDelay()),
                 arena.getConfig().getProgressionType().name()
         });
 
         // Mode settings
-        updateItemLore("mode-settings", new String[]{
+        updateItemLore("edit-modes", new String[]{
                 arena.getConfig().getSurvivalMode().isEnabled() ?
-                        Text.createTextWithLang("guis."+guiId+".text.survival").build() :
-                        Text.createTextWithLang("guis."+guiId+".text.arena").build(),
+                        Text.createTextWithLang("guis."+guiId+".text.survival", guiConfig).build() :
+                        Text.createTextWithLang("guis."+guiId+".text.arena", guiConfig).build(),
                 arena.getConfig().getDeathHandling().getAction().name(),
                 arena.getConfig().getItemHandling().getDropMode().name()
         });
 
         // Spawn settings
-        updateItemLore("spawn-settings", new String[]{
+        updateItemLore("edit-spawns", new String[]{
                 arena.getConfig().getLobbySpawn() != null ?
-                        Text.createTextWithLang("guis."+guiId+".text.spawn-set").build() :
-                        Text.createTextWithLang("guis."+guiId+".text.spawn-no-set").build(),
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-set", guiConfig).build() :
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-not-set", guiConfig).build(),
                 arena.getConfig().getArenaSpawn() != null ?
-                        Text.createTextWithLang("guis."+guiId+".text.spawn-set").build() :
-                        Text.createTextWithLang("guis."+guiId+".text.spawn-no-set").build(),
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-set", guiConfig).build() :
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-not-set", guiConfig).build(),
                 arena.getConfig().getExitLocation() != null ?
-                        Text.createTextWithLang("guis."+guiId+".text.spawn-set").build() :
-                        Text.createTextWithLang("guis."+guiId+".text.spawn-no-set").build()
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-set", guiConfig).build() :
+                        Text.createTextWithLang("guis."+guiId+".text.spawn-not-set", guiConfig).build()
         });
 
         // Reward settings
-        updateItemLore("reward-settings", new String[]{
+        updateItemLore("edit-rewards", new String[]{
                 arena.getConfig().getRewardConfig().getType().name(),
                 String.format("%.2f", arena.getConfig().getRewardConfig().getMoney()),
                 String.valueOf(arena.getConfig().getRewardConfig().getItems().size())
@@ -93,16 +93,15 @@ public class ArenaEditorGUI extends BaseGUI {
                 break;
 
             case "edit-players":
-                player.sendMessage(Text.createTextWithLang("admin.feature-coming-soon").build(player));
+                new PlayerSettingsGUI(plugin, player, arena).open();
                 break;
 
             case "edit-waves":
-                player.sendMessage(Text.createTextWithLang("admin.feature-coming-soon").build(player));
-
+                new WaveEditorGUI(plugin, player, arena).open();
                 break;
 
             case "edit-modes":
-                player.sendMessage(Text.createTextWithLang("admin.feature-coming-soon").build(player));
+                new ModeSettingsGUI(plugin, player, arena).open();
                 break;
 
             case "edit-spawns":
@@ -219,7 +218,7 @@ public class ArenaEditorGUI extends BaseGUI {
     private void saveArena() {
         try {
             plugin.getFileManager().getArenas().save();
-            plugin.getArenaManager().loadArenas();
+            plugin.getArenaManager().reloadArenas();
 
             sendConfigMessage("Messages.admin.save-success", plugin.getFileManager().getMessages());
             playSound("success");
@@ -249,7 +248,7 @@ public class ArenaEditorGUI extends BaseGUI {
      */
     private void reloadAndReopen() {
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            plugin.getArenaManager().loadArenas();
+            plugin.getArenaManager().reloadArenas();
             Arena reloaded = plugin.getArenaManager().getArena(arenaId);
 
             if (reloaded != null) {
