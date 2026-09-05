@@ -327,8 +327,10 @@ public class ArenaManager {
             return;
         }
 
+        // unregisterPlayer() is now called from inside Arena.removePlayer()
+        // itself, since that's the one method every exit path actually goes
+        // through (death-kick, arena end, and this explicit leave command).
         arena.removePlayer(player, restore);
-        unregisterPlayer(player.getUniqueId());
     }
 
     /**

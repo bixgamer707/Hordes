@@ -193,6 +193,16 @@ public class WaveEditorGUI extends BaseGUI {
                     .set("arenas." + arenaId + ".waves", newWave);
             plugin.getFileManager().getArenas().save();
 
+            plugin.getFileManager().getFile("mobs.yml")
+                    .set(arenaId + ".wave-" + newWave + ".mobs-per-spawn", 1);
+
+            plugin.getFileManager().getFile("mobs.yml")
+                    .set(arenaId + ".wave-" + newWave + ".spawn-delay", 20);
+
+            plugin.getFileManager().getFile("mobs.yml")
+                    .set(arenaId + ".wave-" + newWave + ".mobs", new ArrayList<>());
+            plugin.getFileManager().getMobs().save();
+
             player.sendMessage(Text.createTextWithLang("admin.wave-added")
                     .replace("{count}", String.valueOf(newWave))
                     .build());

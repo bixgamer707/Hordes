@@ -67,9 +67,6 @@ public class EntityListener implements Listener {
                     plugin.getStatisticsManager().getStatistics(killer.getUniqueId(), killer.getName()).addKill(arenaId);
                     plugin.getStatisticsManager().markDirty(killer.getUniqueId());
                 }
-                /*
-                Estas son mis clases para el texto, quiero que todos los mensajes esten en los archivos de mensajes (en_us.yml) no debe haber un solo mensaje por fuera de este archivo asi que actualiza todos los archivos que lo hagan (todos los mensajes que reciba el jugador deben estar para configurar)
-                 */
             }
         }
 
@@ -79,12 +76,6 @@ public class EntityListener implements Listener {
         if (currentWave != null) {
             currentWave.onMobDeath(entity.getUniqueId());
         }
-
-        // Clear drops if configured
-        // This prevents arena mobs from dropping items/experience
-        // Can be made configurable later
-        event.getDrops().clear();
-        event.setDroppedExp(0);
     }
 
     /**
@@ -156,7 +147,7 @@ public class EntityListener implements Listener {
         Arena arena = arenaManager.getArena(arenaId);
 
         if (arena == null) {
-            event.setCancelled(true);
+            event.setCancelled(false);
             return;
         }
 
@@ -190,6 +181,8 @@ public class EntityListener implements Listener {
         if (!entity.hasMetadata("hordes_arena")) {
             return;
         }
+
+
 
         // Prevent block damage from arena mobs
         // This prevents creepers from destroying the arena

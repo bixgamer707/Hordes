@@ -234,6 +234,13 @@ public class Arena {
             return;
         }
 
+        // Unregister from the ArenaManager here, in the ONE place every exit
+        // path (death-kick, arena end/victory/defeat, and /hordes leave) always
+        // goes through. Without this, ArenaManager kept thinking the player
+        // was still in this arena forever, silently blocking them from ever
+        // joining any arena again.
+        plugin.getArenaManager().unregisterPlayer(uuid);
+
         // Hide boss bar
         plugin.getBossBarManager().hideBossBar(player);
 
@@ -577,6 +584,8 @@ public class Arena {
                 break;
 
             case MIXED:
+                // Per-wave override: each wave's own "progression: MANUAL/AUTO"
+                // (set from the Wave Editor GUI) decides how THIS wave behaves.
                 if (currentWave != null && currentWave.getConfig().isManualProgression()) {
                     waitForManualProgression();
                 } else {
