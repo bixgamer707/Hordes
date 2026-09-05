@@ -3,23 +3,15 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Add localized messages for arena management; improve error handling and message formatting">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveDetailGUI.java" afterDir="false" />
+    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Enhance arena management by adding wave removal functionality; improve GUI title handling and localization">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/ArenaManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/arena/ArenaManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/commands/HordesAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/commands/HordesAdminCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/BaseGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/BaseGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaEditorGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ModeSettingsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ModeSettingsGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/PlayerSettingsGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/PlayerSettingsGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveEditorGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaInfoGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/player/ArenaInfoGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/wave/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/wave/Wave.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveDetailGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/WaveDetailGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/guis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/guis.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/messages/en_us.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages/en_us.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/messages/es_es.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages/es_es.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +63,19 @@
     <option name="inlineTemplate">
       <template>
         <option name="modeId" value="InlineAgent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="BACKGROUND" />
+        <option name="worktreeMode" value="WORKSPACE" />
+      </template>
+    </option>
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Agent" />
         <option name="model">
           <model>
             <option name="modelType" value="builtin_id" />
@@ -196,7 +201,8 @@
     <MESSAGE value="Refactor ArenaSelectionGUI for improved readability; adjust formatting and remove unnecessary whitespace" />
     <MESSAGE value="Add localized messages for arena management and player rewards; improve chat prompts and error messages" />
     <MESSAGE value="Add localized messages for arena management; improve error handling and message formatting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add localized messages for arena management; improve error handling and message formatting" />
+    <MESSAGE value="Enhance arena management by adding wave removal functionality; improve GUI title handling and localization" />
+    <option name="LAST_COMMIT_MESSAGE" value="Enhance arena management by adding wave removal functionality; improve GUI title handling and localization" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

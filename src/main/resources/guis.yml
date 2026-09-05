@@ -1275,14 +1275,112 @@ guis:
       success: "ENTITY_PLAYER_LEVELUP"
       error: "ENTITY_VILLAGER_NO"
 
-    # spawn-delay, mobs-per-spawn, progression, mob grid, add-mob and
-    # remove-mob buttons are all built directly by WaveDetailGUI.java with
-    # their own fallback defaults - only the border/back button live here.
+    # Static items are configured here and built by WaveDetailGUI.buildItems().
+    # Dynamic mob entries are still rendered by the class itself.
     items:
       border:
         slot: "border"
         material: "RED_STAINED_GLASS_PANE"
         name: " "
+
+      info:
+        slot: 4
+        material: "BOOK"
+        name: "&c&lWave {wave_number}"
+        lore:
+          - "&7Arena: &e{arena_name}"
+          - "&7Total waves: &e{total_waves}"
+          - ""
+          - "&7Left-click a mob to edit amount"
+          - "&7Shift-click a mob to edit multipliers"
+          - "&7Right-click a mob to remove it"
+
+      spawn-delay:
+        slot: 10
+        material: "CLOCK"
+        name: "&e&lSpawn Delay"
+        lore:
+          - "&7Ticks between each mob batch"
+          - "&7(20 ticks = 1 second)"
+          - ""
+          - "&7Current: &e{spawn_delay} ticks"
+          - ""
+          - "&eClick to change"
+        action: "spawn-delay"
+
+      mobs-per-spawn:
+        slot: 12
+        material: "CHEST"
+        name: "&e&lMobs Per Batch"
+        lore:
+          - "&7How many mobs spawn together"
+          - "&7every spawn-delay tick cycle"
+          - ""
+          - "&7Current: &e{mobs_per_spawn}"
+          - ""
+          - "&eClick to change"
+        action: "mobs-per-spawn"
+
+      progression:
+        slot: 14
+        material-auto: "REPEATER"
+        material-manual: "LEVER"
+        name: "&e&lWave Progression"
+        lore:
+          - "&7Only matters if the arena's own"
+          - "&7wave-progression is set to &eMIXED"
+          - ""
+          - "&7Current: &e{progression}"
+          - ""
+          - "&eClick to toggle"
+        action: "toggle-progression"
+
+      clear-mobs:
+        slot: 16
+        material: "TNT"
+        name: "&c&lClear All Mobs"
+        lore:
+          - "&7Removes all &e{mobs_count} &7mob entries"
+          - "&7from this wave"
+          - ""
+          - "&eClick to clear"
+        action: "clear-mobs"
+
+      add-vanilla:
+        slot: 49
+        material: "EMERALD"
+        name: "&a&l+ Add Vanilla Mob"
+        lore:
+          - "&7Add a vanilla Minecraft mob"
+          - "&7(e.g. ZOMBIE, SKELETON, CREEPER)"
+          - ""
+          - "&eClick to add"
+        action: "add-vanilla"
+
+      add-mythic:
+        slot: 51
+        material: "NETHER_STAR"
+        name: "&d&l+ Add MythicMob"
+        lore:
+          - "&7Add a mob from MythicMobs"
+          - "&7(internal mob name)"
+          - ""
+          - "&eClick to add"
+        action: "add-mythic"
+
+      mob-item:
+        material-vanilla: "ZOMBIE_HEAD"
+        material-mythic: "NETHER_STAR"
+        name: "&e&l{mob_id}"
+        lore:
+          - "&7Type: &e{mob_type}"
+          - "&7Amount: &e{mob_amount}"
+          - "&7Health x: &e{mob_health_mult}"
+          - "&7Damage x: &e{mob_damage_mult}"
+          - ""
+          - "&eLeft-click: &7edit amount"
+          - "&eShift-click: &7edit multipliers"
+          - "&cRight-click: &7remove"
 
       back:
         slot: 45
