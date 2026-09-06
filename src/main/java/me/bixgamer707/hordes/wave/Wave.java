@@ -29,12 +29,14 @@ public class Wave {
     // Mob tracking
     private final List<HordeMob> mobsToSpawn;
     private final Set<UUID> spawnedMobs;
+    private final Set<UUID> deadMobs;
     private int mobsAlive;
     private final int totalMobs;
 
     // State
     private WaveState state;
     private BukkitTask spawnTask;
+    private BukkitTask watchdogTask;
     private long startTime;
 
     public Wave(Arena arena, int waveNumber, WaveConfig config) {
@@ -44,6 +46,7 @@ public class Wave {
 
         this.mobsToSpawn = new ArrayList<>(config.getMobs());
         this.spawnedMobs = new HashSet<>();
+        this.deadMobs = new HashSet<>();
         this.totalMobs = mobsToSpawn.size();
         this.mobsAlive = 0;
 
@@ -67,6 +70,13 @@ public class Wave {
 
         // Start spawning mobs
         startSpawning();
+
+        // Safety net: periodically verify tracked mobs still actually exist.
+        // Covers any way a mob can disappear without EntityDeathEvent firing
+        // through our listener (chunk unloads removing it, another plugin
+        // removing it, edge cases in how certain deaths get attributed, etc.)
+        // so the wave/arena never gets stuck waiting on a mob that's gone.
+        startWatchdog();
     }
 
     private void startSpawning() {
@@ -97,6 +107,38 @@ public class Wave {
                 }
             }
         }.runTaskTimer(arena.getPlugin(), 0L, spawnDelay);
+    }
+
+    /**
+     * Periodically checks that every tracked mob is still actually alive in
+     * the world. If one is gone (dead or removed) without ever going through
+     * onMobDeath(), it's counted here instead - this is what catches deaths
+     * from causes our own EntityDeathEvent listener might miss, and mobs that
+     * simply disappear (chunk unload, another plugin removing them, etc.).
+     */
+    private void startWatchdog() {
+        watchdogTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (state != WaveState.SPAWNING && state != WaveState.ACTIVE) {
+                    cancel();
+                    return;
+                }
+
+                for (UUID mobUuid : new HashSet<>(spawnedMobs)) {
+                    if (deadMobs.contains(mobUuid)) {
+                        continue;
+                    }
+
+                    Entity entity = Bukkit.getEntity(mobUuid);
+                    boolean stillAlive = entity != null && entity.isValid() && !entity.isDead();
+
+                    if (!stillAlive) {
+                        onMobDeath(mobUuid);
+                    }
+                }
+            }
+        }.runTaskTimer(arena.getPlugin(), 60L, 60L); // every 3 seconds
     }
 
     private void spawnMob(HordeMob mobConfig) {
@@ -185,11 +227,13 @@ public class Wave {
      * @param mobUuid UUID of the dead mob
      */
     public void onMobDeath(UUID mobUuid) {
-        // Check if this mob belongs to this wave
-        if (!spawnedMobs.contains(mobUuid)) {
+        // Check if this mob belongs to this wave, and hasn't already been
+        // counted (either via a normal death event or the watchdog).
+        if (!spawnedMobs.contains(mobUuid) || deadMobs.contains(mobUuid)) {
             return;
         }
 
+        deadMobs.add(mobUuid);
         mobsAlive--;
 
         // Broadcast progress at intervals
@@ -219,6 +263,11 @@ public class Wave {
             spawnTask.cancel();
         }
 
+        // Cancel watchdog - wave is done, nothing left to monitor
+        if (watchdogTask != null && !watchdogTask.isCancelled()) {
+            watchdogTask.cancel();
+        }
+
         // Notify arena
         arena.onWaveComplete();
     }
@@ -233,6 +282,11 @@ public class Wave {
         // Cancel spawn task
         if (spawnTask != null && !spawnTask.isCancelled()) {
             spawnTask.cancel();
+        }
+
+        // Cancel watchdog
+        if (watchdogTask != null && !watchdogTask.isCancelled()) {
+            watchdogTask.cancel();
         }
 
         // Remove all spawned mobs
