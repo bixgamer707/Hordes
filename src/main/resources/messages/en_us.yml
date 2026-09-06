@@ -46,6 +46,8 @@ Messages:
     death-kicked: "&cYou have been removed from the arena."
     death-spectate: "&eYou are now spectating. Use &a/hordes leave &eto exit."
     death-rejoin: "&eYou can rejoin in &a{0} &eseconds."
+    death-rejoin-spectating: "&eYou died! Spectating for &a{0} &eseconds before you're back in the fight."
+    death-rejoin-returned: "&a&lYou're back in the fight!"
     death-respawned: "&aYou have respawned!"
 
     # Kill Notifications
@@ -280,6 +282,8 @@ Messages:
     gamemode-force-changed: "&a✔ Forced gamemode set to: &e{mode}"
     drop-items-on-death-toggled: "&a✔ Drop items on death &e{status}!"
     teleport-on-death-toggled: "&a✔ Teleport on death &e{status}!"
+    spectate-on-death-toggled: "&a✔ Spectate while waiting (Rejoin) &e{status}!"
+    can-rejoin-toggled: "&a✔ Can rejoin after kick &e{status}!"
     reward-status-toggled: "&a✔ Rewards &e{status} &afor this arena!"
     reward-type-changed: "&a✔ Reward type set to: &e{type}"
     wave-edit-coming-soon: "&e⚠ Wave editor coming soon!"

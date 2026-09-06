@@ -46,6 +46,8 @@ Messages:
     death-kicked: "&cHas sido eliminado de la arena."
     death-spectate: "&eAhora estás espectando. Usa &a/hordes leave &epara salir."
     death-rejoin: "&ePuedes volver a unirte en &a{0} &esegundos."
+    death-rejoin-spectating: "&e¡Moriste! Espectando por &a{0} &esegundos antes de volver a la pelea."
+    death-rejoin-returned: "&a&l¡Volviste a la pelea!"
     death-respawned: "&a¡Has reaparecido!"
 
     # Mensajes de Enfriamiento
@@ -217,6 +219,8 @@ Messages:
     gamemode-force-changed: "&a✔ Modo de juego forzado establecido en: &e{mode}"
     drop-items-on-death-toggled: "&a✔ Soltar items al morir &e{status}!"
     teleport-on-death-toggled: "&a✔ Teletransportar al morir &e{status}!"
+    spectate-on-death-toggled: "&a✔ Espectar mientras se espera (Rejoin) &e{status}!"
+    can-rejoin-toggled: "&a✔ Puede reingresar tras expulsión &e{status}!"
 
     # Recompensas (RewardEditorGUI)
     reward-status-toggled: "&a✔ Recompensas &e{status} &apara esta arena!"

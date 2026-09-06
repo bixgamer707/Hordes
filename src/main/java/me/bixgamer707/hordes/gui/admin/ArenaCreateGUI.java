@@ -107,10 +107,28 @@ public class ArenaCreateGUI extends BaseGUI {
         arenasFile.set("arenas." + arenaId + ".wave-progression", defaultWaveProgression);
         arenasFile.set("arenas." + arenaId + ".global-cooldown", defaultGlobalCooldown);
 
+        // Default all 3 spawn points to the creator's current location so the
+        // arena is immediately valid (ArenaConfig.isValid() requires all three).
+        // Without this, the arena fails to load, never appears in any GUI, and
+        // even /hordesadmin setspawn can be confusing to reach for a brand new
+        // arena. The admin can fine-tune each spawn point afterwards via the
+        // "Edit Spawns" screen.
+        org.bukkit.Location loc = player.getLocation();
+        for (String spawnKey : new String[]{"lobby-spawn", "arena-spawn", "exit-location"}) {
+            String base = "arenas." + arenaId + "." + spawnKey;
+            arenasFile.set(base + ".world", loc.getWorld().getName());
+            arenasFile.set(base + ".x", loc.getBlockX());
+            arenasFile.set(base + ".y", loc.getBlockY());
+            arenasFile.set(base + ".z", loc.getBlockZ());
+            arenasFile.set(base + ".yaw", loc.getYaw());
+            arenasFile.set(base + ".pitch", loc.getPitch());
+        }
+
         plugin.getFileManager().getArenas().save();
 
-        // Reload arenas
-        plugin.getArenaManager().loadArenas();
+        // Safely reload: ends any currently active arenas first, so creating
+        // a new arena can never orphan someone else's in-progress game.
+        plugin.getArenaManager().reloadArenas();
     }
 
     @Override

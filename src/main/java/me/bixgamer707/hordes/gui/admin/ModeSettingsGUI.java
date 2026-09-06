@@ -45,7 +45,9 @@ public class ModeSettingsGUI extends BaseGUI {
         updateItemDropMode();
         updateDropItemsOnDeath();
         updateTeleportOnDeath();
+        updateSpectateOnDeath();
         updateRejoinCooldown();
+        updateCanRejoin();
     }
 
     // ==========================================
@@ -497,6 +499,124 @@ public class ModeSettingsGUI extends BaseGUI {
         plugin.getFileManager().getArenas().save();
 
         player.sendMessage(Text.createTextWithLang("admin.teleport-on-death-toggled")
+                .replace("{status}", newValue ? "enabled" : "disabled").build(player));
+
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
+        reopenGUI();
+    }
+
+    // ==========================================
+    // SPECTATE ON DEATH (REJOIN action)
+    // ==========================================
+
+    private void updateSpectateOnDeath() {
+        int slot = guiConfig.getInt("guis."+guiId+".items.spectate-on-death.slot", 32);
+        boolean enabled = arena.getConfig().getDeathHandling().shouldSpectate();
+
+        String materialKey = enabled ? "material-enabled" : "material-disabled";
+        ItemStack item = new ItemStack(Material.valueOf(
+                guiConfig.getString("guis."+guiId+".items.spectate-on-death." + materialKey,
+                        enabled ? "ENDER_EYE" : "GRAY_DYE")));
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta != null) {
+            String name = guiConfig.getString("guis."+guiId+".items.spectate-on-death.name", "&5&lSpectate While Waiting")
+                    .replace("{status}", enabled ? "&aEnabled" : "&cDisabled");
+            meta.setDisplayName(Text.createText(name).build(player));
+
+            List<String> lore = guiConfig.getStringList("guis."+guiId+".items.spectate-on-death.lore");
+            List<String> processedLore = new ArrayList<>();
+            if (lore.isEmpty()) {
+                processedLore.add(Text.createText("&7Only applies to the &eREJOIN &7death action.").build(player));
+                processedLore.add(Text.createText("&7If enabled, dead players become a").build(player));
+                processedLore.add(Text.createText("&7spectator inside the arena while").build(player));
+                processedLore.add(Text.createText("&7waiting on the rejoin cooldown,").build(player));
+                processedLore.add(Text.createText("&7then automatically return to the fight.").build(player));
+                processedLore.add("");
+                processedLore.add(Text.createText("&7Status: " + (enabled ? "&aEnabled" : "&cDisabled")).build(player));
+                processedLore.add("");
+                processedLore.add(Text.createText("&eClick to toggle").build(player));
+            } else {
+                for (String line : lore) {
+                    processedLore.add(Text.createText(line.replace("{status}", enabled ? "&aEnabled" : "&cDisabled"))
+                            .build(player));
+                }
+            }
+            meta.setLore(processedLore);
+            item.setItemMeta(meta);
+        }
+
+        inventory.setItem(slot, item);
+        clickHandlers.put(slot + "", p -> toggleSpectateOnDeath());
+    }
+
+    private void toggleSpectateOnDeath() {
+        boolean newValue = !arena.getConfig().getDeathHandling().shouldSpectate();
+
+        plugin.getFileManager().getArenas()
+                .set("arenas." + arenaId + ".death-handling.spectate-on-death", newValue);
+        plugin.getFileManager().getArenas().save();
+
+        player.sendMessage(Text.createTextWithLang("admin.spectate-on-death-toggled")
+                .replace("{status}", newValue ? "enabled" : "disabled").build(player));
+
+        playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));
+        reopenGUI();
+    }
+
+    // ==========================================
+    // CAN REJOIN (KICK action)
+    // ==========================================
+
+    private void updateCanRejoin() {
+        int slot = guiConfig.getInt("guis."+guiId+".items.can-rejoin.slot", 34);
+        boolean enabled = arena.getConfig().getDeathHandling().canRejoin();
+
+        String materialKey = enabled ? "material-enabled" : "material-disabled";
+        ItemStack item = new ItemStack(Material.valueOf(
+                guiConfig.getString("guis."+guiId+".items.can-rejoin." + materialKey,
+                        enabled ? "EXPERIENCE_BOTTLE" : "GLASS_BOTTLE")));
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta != null) {
+            String name = guiConfig.getString("guis."+guiId+".items.can-rejoin.name", "&b&lCan Rejoin After Kick")
+                    .replace("{status}", enabled ? "&aEnabled" : "&cDisabled");
+            meta.setDisplayName(Text.createText(name).build(player));
+
+            List<String> lore = guiConfig.getStringList("guis."+guiId+".items.can-rejoin.lore");
+            List<String> processedLore = new ArrayList<>();
+            if (lore.isEmpty()) {
+                processedLore.add(Text.createText("&7Only applies to the &eKICK &7death action.").build(player));
+                processedLore.add(Text.createText("&7Disabled: dying is treated like a loss -").build(player));
+                processedLore.add(Text.createText("&7the full arena cooldown applies.").build(player));
+                processedLore.add(Text.createText("&7Enabled: only the (usually shorter)").build(player));
+                processedLore.add(Text.createText("&7rejoin-cooldown applies instead.").build(player));
+                processedLore.add("");
+                processedLore.add(Text.createText("&7Status: " + (enabled ? "&aEnabled" : "&cDisabled")).build(player));
+                processedLore.add("");
+                processedLore.add(Text.createText("&eClick to toggle").build(player));
+            } else {
+                for (String line : lore) {
+                    processedLore.add(Text.createText(line.replace("{status}", enabled ? "&aEnabled" : "&cDisabled"))
+                            .build(player));
+                }
+            }
+            meta.setLore(processedLore);
+            item.setItemMeta(meta);
+        }
+
+        inventory.setItem(slot, item);
+        clickHandlers.put(slot + "", p -> toggleCanRejoin());
+    }
+
+    private void toggleCanRejoin() {
+        boolean newValue = !arena.getConfig().getDeathHandling().canRejoin();
+
+        plugin.getFileManager().getArenas()
+                .set("arenas." + arenaId + ".death-handling.can-rejoin", newValue);
+        plugin.getFileManager().getArenas().save();
+
+        player.sendMessage(Text.createTextWithLang("admin.can-rejoin-toggled")
                 .replace("{status}", newValue ? "enabled" : "disabled").build(player));
 
         playSound(guiConfig.getString("guis."+guiId+".sounds.click", "UI_BUTTON_CLICK"));

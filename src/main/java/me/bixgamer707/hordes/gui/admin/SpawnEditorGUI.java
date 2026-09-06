@@ -128,7 +128,7 @@ public class SpawnEditorGUI extends BaseGUI {
                     spawnType.substring(0,1).toUpperCase() + spawnType.substring(1));
             playSound("success");
 
-            plugin.getArenaManager().loadArenas();
+            plugin.getArenaManager().reloadArenas();
             refresh();
         } else {
             sendConfigMessage("Messages.admin.spawn-set-failed", plugin.getFileManager().getMessages());

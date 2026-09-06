@@ -7,9 +7,9 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Refactor arena player management; ensure proper player unregistration on exit and improve wave configuration handling">
+    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Add watchdog functionality to wave management; ensure proper tracking of mob states and prevent stuck waves">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/wave/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/wave/Wave.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaCreateGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaCreateGUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +202,8 @@
     <MESSAGE value="Enhance arena management by adding wave removal functionality; improve GUI title handling and localization" />
     <MESSAGE value="Enhance wave management by adding dynamic item configuration; improve GUI item handling and localization" />
     <MESSAGE value="Refactor arena player management; ensure proper player unregistration on exit and improve wave configuration handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor arena player management; ensure proper player unregistration on exit and improve wave configuration handling" />
+    <MESSAGE value="Add watchdog functionality to wave management; ensure proper tracking of mob states and prevent stuck waves" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add watchdog functionality to wave management; ensure proper tracking of mob states and prevent stuck waves" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

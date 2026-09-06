@@ -754,6 +754,34 @@ guis:
           - ""
           - "&eClick to change"
 
+      spectate-on-death:
+        slot: 32
+        material-enabled: "ENDER_EYE"
+        material-disabled: "GRAY_DYE"
+        name: "&5&lSpectate While Waiting: {status}"
+        lore:
+          - "&7Only applies to the &eREJOIN &7death action."
+          - "&7If enabled, dead players become a"
+          - "&7spectator inside the arena while"
+          - "&7waiting on the rejoin cooldown,"
+          - "&7then automatically return to the fight."
+          - ""
+          - "&eClick to toggle"
+
+      can-rejoin:
+        slot: 34
+        material-enabled: "EXPERIENCE_BOTTLE"
+        material-disabled: "GLASS_BOTTLE"
+        name: "&b&lCan Rejoin After Kick: {status}"
+        lore:
+          - "&7Only applies to the &eKICK &7death action."
+          - "&7Disabled: dying is treated like a loss -"
+          - "&7the full arena cooldown applies."
+          - "&7Enabled: only the (usually shorter)"
+          - "&7rejoin-cooldown applies instead."
+          - ""
+          - "&eClick to toggle"
+
       back:
         slot: 40
         material: "BARRIER"

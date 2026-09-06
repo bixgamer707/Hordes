@@ -341,6 +341,29 @@ public class Arena {
      * Handles KICK death action
      */
     private void handleDeathKick(Player player, HordePlayer hordePlayer) {
+        ArenaConfig.DeathHandlingConfig deathConfig = config.getDeathHandling();
+        UUID uuid = player.getUniqueId();
+
+        // can-rejoin decides how harsh dying is:
+        // - false (default): treated like a loss - the full arena cooldown applies.
+        // - true: only the short rejoin-cooldown applies (can be 0 = instant),
+        //   letting players jump back into a new attempt quickly after a death.
+        if (deathConfig.canRejoin()) {
+            int rejoinCooldown = deathConfig.getRejoinCooldown();
+            if (rejoinCooldown > 0) {
+                plugin.getCooldownManager().setTempCooldown(uuid, id, rejoinCooldown);
+            }
+        } else {
+            long cooldownDuration = config.getCooldownDuration();
+            if (cooldownDuration > 0) {
+                if (config.isGlobalCooldown()) {
+                    plugin.getCooldownManager().setGlobalCooldown(uuid, cooldownDuration);
+                } else {
+                    plugin.getCooldownManager().setCooldown(uuid, id, cooldownDuration);
+                }
+            }
+        }
+
         // Schedule removal after a delay
         new BukkitRunnable() {
             @Override
@@ -382,6 +405,11 @@ public class Arena {
     private void handleDeathRejoin(Player player, HordePlayer hordePlayer) {
         int rejoinCooldown = config.getDeathHandling().getRejoinCooldown();
 
+        if (config.getDeathHandling().shouldSpectate()) {
+            handleRejoinWithSpectate(player, hordePlayer, rejoinCooldown);
+            return;
+        }
+
         // Temporarily remove from arena
         if (config.getDeathHandling().shouldTeleport()) {
             player.teleport(config.getExitLocation());
@@ -397,6 +425,48 @@ public class Arena {
         }
 
         sendMessage(player, "arena.death-rejoin", String.valueOf(rejoinCooldown));
+    }
+
+    /**
+     * REJOIN + spectate-on-death: instead of being teleported out, the player
+     * becomes a spectator inside the arena so they can keep watching the
+     * fight, then automatically returns to active play once the
+     * rejoin-cooldown expires (as long as the arena is still going).
+     */
+    private void handleRejoinWithSpectate(Player player, HordePlayer hordePlayer, int rejoinCooldown) {
+        UUID uuid = player.getUniqueId();
+
+        hordePlayer.setState(PlayerState.SPECTATING);
+        player.setGameMode(GameMode.SPECTATOR);
+        player.teleport(config.getArenaSpawn());
+
+        sendMessage(player, "arena.death-rejoin-spectating", String.valueOf(Math.max(rejoinCooldown, 1)));
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!player.isOnline() || state != ArenaState.ACTIVE || !players.containsKey(uuid)) {
+                    return;
+                }
+
+                // Return to active play
+                if (config.getSurvivalMode().shouldForceGameMode()) {
+                    player.setGameMode(config.getSurvivalMode().getGameMode());
+                } else {
+                    player.setGameMode(GameMode.SURVIVAL);
+                }
+
+                player.teleport(config.getArenaSpawn());
+                player.setHealth(player.getMaxHealth());
+                player.setFoodLevel(20);
+
+                deadPlayers.remove(uuid);
+                alivePlayers.add(uuid);
+                hordePlayer.setState(PlayerState.PLAYING);
+
+                sendMessage(player, "arena.death-rejoin-returned");
+            }
+        }.runTaskLater(plugin, Math.max(rejoinCooldown, 1) * 20L);
     }
 
     /**
