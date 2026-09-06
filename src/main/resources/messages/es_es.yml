@@ -333,6 +333,12 @@ Messages:
     invalid-item-format: "&c&l✖ ¡Formato de objeto inválido! Usa: &eMATERIAL CANTIDAD"
     invalid-material: "&c&l✖ ¡Material inválido! Usa un nombre de Material de Bukkit válido"
 
+    # Administrador de recompensas de ítems (ItemRewardsGUI)
+    item-reward-removed: "&a&l✔ Recompensa eliminada: {0}"
+    item-reward-amount: "&e&l❖ Ingresa la nueva cantidad para este ítem:"
+    item-reward-amount-updated: "&a&l✔ ¡Cantidad actualizada! Actual: {0}"
+    item-reward-added: "&a&l✔ Recompensa añadida: {0} x{1}"
+
     # Recompensas de comandos
     command-rewards-prompt: "&e&l❖ Ingresa un comando (o 'done'/'cancel'):"
     command-added: "&a&l✔ Recompensa de comando añadida: {command}"

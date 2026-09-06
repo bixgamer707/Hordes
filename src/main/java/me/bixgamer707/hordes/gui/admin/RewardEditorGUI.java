@@ -314,68 +314,7 @@ public class RewardEditorGUI extends BaseGUI {
     }
 
     private void editItemRewards() {
-        close();
-
-        collectItemRewards(new ArrayList<>());
-    }
-
-    /**
-     * FIX (punto 1): antes usaba InputValidators.arenaId(), que rechaza mayúsculas
-     * y espacios, por lo que "DIAMOND 64" nunca pasaba la validación y era
-     * imposible añadir recompensas de ítems. Ahora solo exige que no esté vacío;
-     * el formato real (MATERIAL AMOUNT) se sigue validando más abajo con
-     * Material.valueOf(...) / Integer.parseInt(...).
-     */
-    private void collectItemRewards(List<String> items) {
-        plugin.getChatInputManager().requestInput(player)
-                .withPrompt(Text.createTextWithLang("prompts.item-rewards-info").build())
-                .withValidator(InputValidators.notEmpty())
-                .withCancelMessage(Text.createTextWithLang("prompts.cancelled-message").build())
-                .onComplete(input -> {
-                    if (input.equalsIgnoreCase("done")) {
-                        plugin.getFileManager().getArenas()
-                                .set("arenas." + arenaId + ".rewards.items", items);
-                        plugin.getFileManager().getArenas().save();
-
-                        player.sendMessage(Text.createTextWithLang("prompts.item-rewards-updated")
-                                .replace("{count}", String.valueOf(items.size())).build(player));
-
-                        reopenGUI();
-                        return;
-                    }
-
-                    if (input.equalsIgnoreCase("cancel")) {
-                        player.sendMessage(Text.createTextWithLang("prompts.cancelled-message").build());
-                        reopenGUI();
-                        return;
-                    }
-
-                    // Validate format: MATERIAL AMOUNT
-                    String[] parts = input.split(" ");
-                    if (parts.length != 2) {
-                        player.sendMessage(Text.createTextWithLang("prompts.invalid-item-format").build());
-                        collectItemRewards(items);
-                        return;
-                    }
-
-                    try {
-                        Material.valueOf(parts[0].toUpperCase());
-                        Integer.parseInt(parts[1]);
-
-                        items.add(input.toUpperCase());
-                        player.sendMessage(Text.createTextWithLang("prompts.item-added")
-                                .replace("{item}", input.toUpperCase())
-                                .replace("{count}", String.valueOf(items.size())).build(player));
-
-                        collectItemRewards(items);
-
-                    } catch (IllegalArgumentException e) {
-                        player.sendMessage(Text.createTextWithLang("prompts.invalid-material").build());
-                        collectItemRewards(items);
-                    }
-                })
-                .onCancel(this::reopenGUI)
-                .start();
+        new ItemRewardsGUI(plugin, player, arena).open();
     }
 
     private void editCommandRewards() {

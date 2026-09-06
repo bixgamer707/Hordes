@@ -7,9 +7,13 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Add watchdog functionality to wave management; ensure proper tracking of mob states and prevent stuck waves">
+    <list default="true" id="c5065f61-1aa3-4961-9a6d-44445f41635d" name="Changes" comment="Add death handling options; implement rejoin cooldown and spectate functionality on death">
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ItemRewardsGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaCreateGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/ArenaCreateGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/RewardEditorGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/bixgamer707/hordes/gui/admin/RewardEditorGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/guis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/guis.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages/en_us.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages/en_us.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages/es_es.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages/es_es.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,7 +207,8 @@
     <MESSAGE value="Enhance wave management by adding dynamic item configuration; improve GUI item handling and localization" />
     <MESSAGE value="Refactor arena player management; ensure proper player unregistration on exit and improve wave configuration handling" />
     <MESSAGE value="Add watchdog functionality to wave management; ensure proper tracking of mob states and prevent stuck waves" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add watchdog functionality to wave management; ensure proper tracking of mob states and prevent stuck waves" />
+    <MESSAGE value="Add death handling options; implement rejoin cooldown and spectate functionality on death" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add death handling options; implement rejoin cooldown and spectate functionality on death" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

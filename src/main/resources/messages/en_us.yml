@@ -326,6 +326,12 @@ Messages:
     item-added: "&a&l✔ Added item reward: {item} x{count}"
     invalid-material: "&c&l✖ Invalid material! Use a valid Bukkit Material name"
 
+    # Item Rewards manager (ItemRewardsGUI)
+    item-reward-removed: "&a&l✔ Removed reward: {0}"
+    item-reward-amount: "&e&l❖ Enter the new amount for this item:"
+    item-reward-amount-updated: "&a&l✔ Amount updated! Current: {0}"
+    item-reward-added: "&a&l✔ Added reward: {0} x{1}"
+
     items-cleared: "&a&l✔ All item rewards cleared!"
     commands-cleared: "&a&l✔ All command rewards cleared!"
 

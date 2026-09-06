@@ -926,19 +926,125 @@ guis:
       success: "ENTITY_PLAYER_LEVELUP"
       error: "ENTITY_VILLAGER_NO"
 
-    # Most items in this GUI (reward-status, reward-type, money-reward,
-    # item-rewards, command-rewards, progressive-multiplier) are built directly
-    # by RewardEditorGUI.java with their own fallback defaults - only the
-    # decorative border and navigation button need to be defined here.
+    # Reward type descriptions, shown in reward-type's lore via {type_desc}
+    descriptions:
+      reward-type-desc-completion_only: "Rewards are only given once,"
+      reward-type-desc-progressive: "Rewards are given after EVERY wave,"
+      reward-type-desc-both: "Rewards are given after every wave"
+
     items:
       border:
         slot: "border"
         material: "YELLOW_STAINED_GLASS_PANE"
         name: " "
 
+      reward-status:
+        slot: 4
+        material-enabled: "EMERALD"
+        material-disabled: "REDSTONE"
+        name: "&6&lReward System: {status}"
+        lore:
+          - "&7Whether this arena gives out any"
+          - "&7rewards at all when played."
+          - ""
+          - "&eClick to toggle"
+
+      reward-type:
+        slot: 10
+        material-completion_only: "NETHER_STAR"
+        material-progressive: "EXPERIENCE_BOTTLE"
+        material-both: "BEACON"
+        name: "&e&lReward Type: {type}"
+        lore:
+          - "&7{type_desc}"
+          - "&7and additionally when the whole"
+          - "&7arena is completed."
+          - ""
+          - "&eClick to cycle"
+
+      money-reward:
+        slot: 12
+        material: "GOLD_INGOT"
+        name: "&6&lEconomy Reward"
+        lore:
+          - "&7Money given to each player,"
+          - "&7subject to the Reward Type above."
+          - ""
+          - "&7Current: &e${money}"
+          - ""
+          - "&eClick to change"
+
+      item-rewards:
+        slot: 14
+        material: "DIAMOND"
+        name: "&b&lItem Rewards"
+        lore-header:
+          - "&7Items given to each player,"
+          - "&7subject to the Reward Type above."
+          - ""
+          - "&7Configured items: &e{count}"
+        lore-footer:
+          - "&eClick to manage"
+
+      command-rewards:
+        slot: 16
+        material: "COMMAND_BLOCK"
+        name: "&c&lCommand Rewards"
+        lore-header:
+          - "&7Console commands run for each player,"
+          - "&7subject to the Reward Type above."
+          - "&7Use %player% for the player's name."
+          - ""
+          - "&7Configured commands: &e{count}"
+        lore-footer:
+          - "&eClick to manage"
+
+      progressive-multiplier:
+        slot: 22
+        material: "EXPERIENCE_BOTTLE"
+        name: "&a&lProgressive Multiplier"
+        lore:
+          - "&7Only applies with reward type"
+          - "&7&ePROGRESSIVE &7or &eBOTH&7."
+          - "&7Each wave's reward grows by this %."
+          - ""
+          - "&7Current: &e+{multiplier}% &7per wave"
+          - "&7Example: wave 5 money reward would be"
+          - "&7&e${example} &7of the base amount."
+          - ""
+          - "&eClick to change"
+
       back:
         slot: 31
         material: "BARRIER"
+        name: "&c← Back"
+        action: "back"
+
+  # ==========================================
+  # ADMIN ITEM REWARDS GUI (visual item reward manager)
+  # ==========================================
+  admin-item-rewards:
+    title: "&b&lItem Rewards: {arena_id}"
+    rows: 5
+
+    sounds:
+      open: "UI_BUTTON_CLICK"
+      close: "UI_BUTTON_CLICK"
+      click: "UI_BUTTON_CLICK"
+      success: "ENTITY_PLAYER_LEVELUP"
+      error: "ENTITY_VILLAGER_NO"
+
+    # The info item, item grid and add buttons are all built directly by
+    # ItemRewardsGUI.java - only the border/back button live here.
+    items:
+      border:
+        slot: "border"
+        material: "BLUE_STAINED_GLASS_PANE"
+        name: " "
+
+      back:
+        slot: 45
+        material: "ARROW"
         name: "&c← Back"
         action: "back"
 
