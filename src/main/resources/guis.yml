@@ -1247,6 +1247,7 @@ guis:
       lobby: 11
       arena: 13
       exit: 15
+      trigger: 22
 
     items:
       border:
@@ -1260,8 +1261,11 @@ guis:
         material: "BOOK"
         name: "&d&lSpawn Point Editor"
         lore:
-          - "&7Click a spawn type to set it"
-          - "&7to your current location"
+          - "&7Click Lobby/Arena/Exit to set them"
+          - "&7to your current location."
+          - "&7For Trigger, look directly at a"
+          - "&7button/lever/pressure plate/sign"
+          - "&7and click it."
         amount: 1
 
       # Spawn items (dynamically generated)
@@ -1285,6 +1289,31 @@ guis:
           - "&c✘ Not configured"
           - ""
           - "&eClick to set to your location"
+
+        # Trigger-specific overrides: it's the button/lever/plate/sign that
+        # advances a MANUAL wave, not a place a player stands - only needed
+        # for arenas using MANUAL or MIXED wave-progression.
+        lore-set-trigger:
+          - "&a✔ Configured"
+          - ""
+          - "&7World: &e{world}"
+          - "&7X: &e{x}"
+          - "&7Y: &e{y}"
+          - "&7Z: &e{z}"
+          - ""
+          - "&7Only used by &eMANUAL&7/&eMIXED"
+          - "&7wave-progression."
+          - ""
+          - "&eLook at a new block and click to update"
+
+        lore-not-set-trigger:
+          - "&c✘ Not configured"
+          - ""
+          - "&7Only needed if this arena uses"
+          - "&eMANUAL&7/&eMIXED &7wave-progression."
+          - ""
+          - "&eLook at a button/lever/pressure"
+          - "&eplate/sign and click to set it"
 
       # Back button
       back:

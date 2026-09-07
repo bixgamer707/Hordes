@@ -217,9 +217,11 @@ Messages:
 
 
     # SetSpawn
-    setspawn-usage: "&cUsage: /hordesadmin setspawn <arena> <lobby|arena|exit>"
+    setspawn-usage: "&cUsage: /hordesadmin setspawn <arena> <lobby|arena|exit|trigger>"
     setspawn-arena-not-found: "&cArena '&e{0}&c' not found."
-    setspawn-invalid-type: "&cInvalid type. Use: lobby, arena, or exit"
+    setspawn-invalid-type: "&cInvalid type. Use: lobby, arena, exit, or trigger"
+    setspawn-no-block-targeted: "&cLook directly at a button, lever, pressure plate, or sign to set it as the wave trigger."
+    setspawn-invalid-trigger-block: "&cThat's not a button, lever, pressure plate, or sign. Look at one of those and try again."
     setspawn:
       - "&a&l✔ Spawn point set!"
       - ""
@@ -249,6 +251,9 @@ Messages:
 
     # ForceStop
     forcestop-usage: "&cUsage: /hordesadmin forcestop <arena>"
+    nextwave-usage: "&cUsage: /hordesadmin nextwave <arena>"
+    nextwave-not-waiting: "&cArena '&e{0}&c' isn't currently waiting for manual wave progression."
+    nextwave-success: "&a✔ Advanced arena '&e{0}&a' to the next wave."
     forcestop: "&aForce stopping arena &e{0}"
     forcestop-success: "&a✔ Arena forcefully stopped"
 

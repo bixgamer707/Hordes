@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -204,7 +205,13 @@ public class PlayerListener implements Listener {
 
     /**
      * Handles player interact
-     * Manual wave progression via buttons/signs
+     * Manual wave progression via buttons/levers/pressure plates/signs.
+     * <p>
+     * Compares against the arena's configured progression-trigger LOCATION
+     * (set via /hordesadmin setspawn <arena> trigger or the Spawn Editor GUI)
+     * rather than transient block metadata, since Bukkit metadata does not
+     * survive a server restart or chunk unload - a location stored in
+     * arenas.yml does.
      */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -215,24 +222,43 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        // Check if clicking a button or sign
         if (event.getClickedBlock() == null) {
             return;
         }
 
+        // Buttons/levers/signs fire on RIGHT_CLICK_BLOCK; pressure plates and
+        // tripwires fire on PHYSICAL (stepping on them, no click involved).
+        Action action = event.getAction();
+        if (action != Action.RIGHT_CLICK_BLOCK && action != Action.PHYSICAL) {
+            return;
+        }
+
         String blockType = event.getClickedBlock().getType().name();
+        boolean isTriggerType = blockType.contains("BUTTON")
+                || blockType.contains("LEVER")
+                || blockType.contains("PRESSURE_PLATE")
+                || blockType.contains("SIGN");
 
-        if (blockType.contains("BUTTON") || blockType.contains("SIGN")) {
-            // Check if it's marked as a progression trigger
-            if (event.getClickedBlock().hasMetadata("hordes_progression")) {
-                String triggerArenaId = event.getClickedBlock()
-                        .getMetadata("hordes_progression").get(0).asString();
+        if (!isTriggerType) {
+            return;
+        }
 
-                if (triggerArenaId.equals(arena.getId())) {
-                    arena.triggerNextWave();
-                    event.setCancelled(true);
-                }
-            }
+        org.bukkit.Location triggerLoc = arena.getConfig().getProgressionTrigger();
+        if (triggerLoc == null) {
+            return;
+        }
+
+        org.bukkit.Location clicked = event.getClickedBlock().getLocation();
+
+        boolean sameBlock = triggerLoc.getWorld() != null
+                && triggerLoc.getWorld().equals(clicked.getWorld())
+                && triggerLoc.getBlockX() == clicked.getBlockX()
+                && triggerLoc.getBlockY() == clicked.getBlockY()
+                && triggerLoc.getBlockZ() == clicked.getBlockZ();
+
+        if (sameBlock) {
+            arena.triggerNextWave();
+            event.setCancelled(true);
         }
     }
 

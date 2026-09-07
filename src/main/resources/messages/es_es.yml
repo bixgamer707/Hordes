@@ -257,9 +257,11 @@ Messages:
     delete-success: "&a✔ Arena '&e{0}&a' eliminada exitosamente."
 
     # SetSpawn - Lista optimizada
-    setspawn-usage: "&cUso: /hordesadmin setspawn <arena> <lobby|arena|exit>"
+    setspawn-usage: "&cUso: /hordesadmin setspawn <arena> <lobby|arena|exit|trigger>"
     setspawn-arena-not-found: "&cArena '&e{0}&c' no encontrada."
-    setspawn-invalid-type: "&cTipo inválido. Usa: lobby, arena o exit"
+    setspawn-invalid-type: "&cTipo inválido. Usa: lobby, arena, exit o trigger"
+    setspawn-no-block-targeted: "&cMira directamente a un botón, palanca, placa de presión o cartel para asignarlo como disparador de wave."
+    setspawn-invalid-trigger-block: "&cEso no es un botón, palanca, placa de presión ni cartel. Mira a uno de esos y volvé a intentar."
     setspawn:
       - "&a&l✔ ¡Punto de aparición establecido!"
       - ""
@@ -289,6 +291,9 @@ Messages:
 
     # ForceStop
     forcestop-usage: "&cUso: /hordesadmin forcestop <arena>"
+    nextwave-usage: "&cUso: /hordesadmin nextwave <arena>"
+    nextwave-not-waiting: "&cLa arena '&e{0}&c' no está esperando progresión manual de wave actualmente."
+    nextwave-success: "&a✔ Se avanzó la arena '&e{0}&a' a la siguiente wave."
     forcestop: "&aForzando parada de la arena &e{0}"
     forcestop-success: "&a✔ Arena detenida forzosamente"
 

@@ -29,6 +29,7 @@ public class ArenaConfig {
     private Location lobbySpawn;
     private Location arenaSpawn;
     private Location exitLocation;
+    private Location progressionTrigger; // button/lever/sign/pressure plate that advances a MANUAL/MIXED wave
 
     // Waves
     private int totalWaves;
@@ -101,6 +102,7 @@ public class ArenaConfig {
         config.lobbySpawn = loadLocation(section.getConfigurationSection("lobby-spawn"));
         config.arenaSpawn = loadLocation(section.getConfigurationSection("arena-spawn"));
         config.exitLocation = loadLocation(section.getConfigurationSection("exit-location"));
+        config.progressionTrigger = loadLocation(section.getConfigurationSection("progression-trigger"));
 
         // Waves
         config.totalWaves = section.getInt("waves", 5);
@@ -226,6 +228,7 @@ public class ArenaConfig {
     public Location getLobbySpawn() { return lobbySpawn; }
     public Location getArenaSpawn() { return arenaSpawn; }
     public Location getExitLocation() { return exitLocation; }
+    public Location getProgressionTrigger() { return progressionTrigger; }
     public int getTotalWaves() { return totalWaves; }
     public int getWaveDelay() { return waveDelay; }
     public WaveProgressionType getProgressionType() { return progressionType; }

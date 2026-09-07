@@ -39,7 +39,7 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
     );
 
     private static final List<String> SPAWN_TYPES = Arrays.asList(
-            "lobby", "arena", "exit"
+            "lobby", "arena", "exit", "trigger"
     );
 
     public HordesAdminCommand(Hordes plugin) {
@@ -81,6 +81,9 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
 
             case "forcestop":
                 return handleForceStop(sender, args);
+
+            case "nextwave":
+                return handleNextWave(sender, args);
 
             case "tp":
                 return handleTeleport(sender, args);
@@ -294,9 +297,11 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         String arenaId = args[1];
         String spawnType = args[2].toLowerCase();
 
-        Arena arena = arenaManager.getArena(arenaId);
-
-        if (arena == null) {
+        // Check against the raw config file, not the loaded/valid arenas map -
+        // an invalid arena (e.g. missing spawns) never loads into that map, so
+        // checking there would make it impossible to ever set its spawns via
+        // this exact command.
+        if (!plugin.getFileManager().getArenas().contains("arenas." + arenaId)) {
             sendMessage(sender, "admin.setspawn-arena-not-found", arenaId);
             return true;
         }
@@ -306,8 +311,33 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Get player location
-        Location loc = player.getLocation();
+        Location loc;
+
+        if (spawnType.equals("trigger")) {
+            // The progression trigger is a BLOCK (button/lever/pressure
+            // plate/sign) the admin looks at, not their own standing position.
+            org.bukkit.block.Block target = player.getTargetBlockExact(10);
+
+            if (target == null || target.getType().isAir()) {
+                sendMessage(sender, "admin.setspawn-no-block-targeted");
+                return true;
+            }
+
+            String typeName = target.getType().name();
+            boolean validTriggerBlock = typeName.contains("BUTTON")
+                    || typeName.contains("LEVER")
+                    || typeName.contains("PRESSURE_PLATE")
+                    || typeName.contains("SIGN");
+
+            if (!validTriggerBlock) {
+                sendMessage(sender, "admin.setspawn-invalid-trigger-block");
+                return true;
+            }
+
+            loc = target.getLocation();
+        } else {
+            loc = player.getLocation();
+        }
 
         // Save to configuration
         SpawnConfigManager spawnManager = new SpawnConfigManager(plugin);
@@ -325,6 +355,8 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
                     String.format("%.1f", loc.getYaw()),        // {6}
                     String.format("%.1f", loc.getPitch())       // {7}
             );
+
+            plugin.getArenaManager().reloadArenas();
         } else {
             sendMessage(sender, "admin.setspawn-failed");
             sendMessage(sender, "admin.setspawn-check-console");
@@ -398,6 +430,42 @@ public class HordesAdminCommand implements CommandExecutor, TabCompleter {
         // Force stop
         arena.endArena(false);
         sendMessage(sender, "admin.forcestop", arenaId);
+
+        return true;
+    }
+
+    /**
+     * Handles /hordesadmin nextwave <arena>
+     * Manually forces the next wave to start - useful as a fallback when no
+     * physical trigger block is configured, or to force progression during
+     * testing/emergencies.
+     */
+    private boolean handleNextWave(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("hordes.admin.nextwave")) {
+            sendMessage(sender, "commands.no-permission");
+            return true;
+        }
+
+        if (args.length < 2) {
+            sendMessage(sender, "admin.nextwave-usage");
+            return true;
+        }
+
+        String arenaId = args[1];
+        Arena arena = arenaManager.getArena(arenaId);
+
+        if (arena == null) {
+            sendMessage(sender, "commands.arena-not-found", arenaId);
+            return true;
+        }
+
+        if (!arena.isWaitingForManualProgression()) {
+            sendMessage(sender, "admin.nextwave-not-waiting", arenaId);
+            return true;
+        }
+
+        arena.triggerNextWave();
+        sendMessage(sender, "admin.nextwave-success", arenaId);
 
         return true;
     }

@@ -35,9 +35,10 @@ commands:
       /<command> reload - Reload configurations
       /<command> create <arena> - Create a new arena
       /<command> delete <arena> - Delete an arena
-      /<command> setspawn <arena> <type> - Set spawn points
+      /<command> setspawn <arena> <lobby|arena|exit|trigger> - Set spawn points
       /<command> forcestart <arena> - Force start an arena
       /<command> forcestop <arena> - Force stop an arena
+      /<command> nextwave <arena> - Manually advance to the next wave
       /<command> tp <arena> - Teleport to arena
       /<command> debug - Show debug information
       /<command> config - Open the admin configuration GUI
@@ -114,6 +115,7 @@ permissions:
       hordes.admin.setspawn: true
       hordes.admin.forcestart: true
       hordes.admin.forcestop: true
+      hordes.admin.nextwave: true
       hordes.admin.tp: true
       hordes.admin.debug: true
       hordes.admin.config: true
@@ -144,6 +146,10 @@ permissions:
 
   hordes.admin.forcestop:
     description: Force stop arenas
+    default: op
+
+  hordes.admin.nextwave:
+    description: Manually force the next wave to start
     default: op
 
   hordes.admin.tp:

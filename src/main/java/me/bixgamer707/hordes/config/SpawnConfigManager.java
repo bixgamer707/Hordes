@@ -23,9 +23,9 @@ public class SpawnConfigManager {
     /**
      * Sets a spawn point for an arena
      * Modifies arenas.yml directly
-     * 
+     *
      * @param arenaId Arena ID
-     * @param spawnType Type: "lobby", "arena", or "exit"
+     * @param spawnType Type: "lobby", "arena", "exit", or "trigger"
      * @param location Location to set
      * @return true if successful
      */
@@ -34,29 +34,29 @@ public class SpawnConfigManager {
             // Get the actual file from FileManager
             me.bixgamer707.hordes.file.File arenasConfig = plugin.getFileManager().getArenas();
             File arenasFile = new File(plugin.getDataFolder(), "arenas.yml");
-            
+
             if (!arenasFile.exists()) {
                 return false;
             }
-            
+
             // Read file
             List<String> lines = readFile(arenasFile);
-            
+
             // Find and update spawn
-            boolean found = modifySpawn(lines, arenaId, spawnType, location);
-            
+            boolean found = modifySpawn(lines, arenaId, resolveSpawnKey(spawnType), location);
+
             if (found) {
                 // Write back to file
                 writeFile(arenasFile, lines);
-                
+
                 // Reload the File object
                 arenasConfig.reload();
-                
+
                 return true;
             }
-            
+
             return false;
-            
+
         } catch (Exception e) {
             plugin.logError("Failed to set spawn: " + e.getMessage());
             if (plugin.getFileManager().getFile("config.yml").getBoolean("debug-mode", false)) {
@@ -67,18 +67,41 @@ public class SpawnConfigManager {
     }
 
     /**
+     * Maps a spawnType keyword to its actual YAML key name.
+     * FIX: "exit" used to naively become "exit-spawn" (spawnType + "-spawn"),
+     * but ArenaConfig actually reads "exit-location" - meaning the exit
+     * location could never really be set through /hordesadmin setspawn or the
+     * Spawn Editor GUI. This explicit mapping avoids that class of mismatch
+     * for any future spawn type too (like the new "trigger").
+     */
+    private String resolveSpawnKey(String spawnType) {
+        switch (spawnType.toLowerCase()) {
+            case "lobby":
+                return "lobby-spawn";
+            case "arena":
+                return "arena-spawn";
+            case "exit":
+                return "exit-location";
+            case "trigger":
+                return "progression-trigger";
+            default:
+                return spawnType + "-spawn";
+        }
+    }
+
+    /**
      * Reads file into list of lines
      */
     private List<String> readFile(File file) throws IOException {
         List<String> lines = new ArrayList<>();
-        
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
             }
         }
-        
+
         return lines;
     }
 
@@ -99,30 +122,30 @@ public class SpawnConfigManager {
     /**
      * Modifies spawn configuration in lines
      */
-    private boolean modifySpawn(List<String> lines, String arenaId, String spawnType, Location location) {
+    private boolean modifySpawn(List<String> lines, String arenaId, String resolvedKey, Location location) {
         // Find arena section
         int arenaLineIndex = -1;
         int indentLevel = 0;
-        
+
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             String trimmed = line.trim();
-            
+
             if (trimmed.equals(arenaId + ":")) {
                 arenaLineIndex = i;
                 indentLevel = getIndentLevel(line);
                 break;
             }
         }
-        
+
         if (arenaLineIndex == -1) {
             return false;
         }
-        
+
         // Find or create spawn section
-        String spawnKey = spawnType + "-spawn:";
+        String spawnKey = resolvedKey + ":";
         int spawnLineIndex = findSpawnSection(lines, arenaLineIndex, spawnKey, indentLevel);
-        
+
         if (spawnLineIndex == -1) {
             // Add new spawn section
             spawnLineIndex = addSpawnSection(lines, arenaLineIndex, spawnKey, location, indentLevel);
@@ -130,7 +153,7 @@ public class SpawnConfigManager {
             // Update existing spawn section
             updateSpawnSection(lines, spawnLineIndex, location, indentLevel);
         }
-        
+
         return true;
     }
 
@@ -141,17 +164,17 @@ public class SpawnConfigManager {
         for (int i = startIndex + 1; i < lines.size(); i++) {
             String line = lines.get(i);
             int indent = getIndentLevel(line);
-            
+
             // If we're back to arena level or less, spawn doesn't exist
             if (indent <= arenaIndent && !line.trim().isEmpty()) {
                 return -1;
             }
-            
+
             if (line.trim().equals(spawnKey)) {
                 return i;
             }
         }
-        
+
         return -1;
     }
 
@@ -161,21 +184,21 @@ public class SpawnConfigManager {
     private int addSpawnSection(List<String> lines, int arenaLineIndex, String spawnKey, Location location, int arenaIndent) {
         int indent = arenaIndent + 2;
         String indentStr = getIndentString(indent);
-        
+
         // Find where to insert (after arena line, before next arena or end)
         int insertIndex = arenaLineIndex + 1;
-        
+
         // Skip existing content
         for (int i = arenaLineIndex + 1; i < lines.size(); i++) {
             String line = lines.get(i);
             int lineIndent = getIndentLevel(line);
-            
+
             if (lineIndent <= arenaIndent && !line.trim().isEmpty()) {
                 break;
             }
             insertIndex = i + 1;
         }
-        
+
         // Insert spawn section
         lines.add(insertIndex, indentStr + spawnKey);
         lines.add(insertIndex + 1, indentStr + "  world: " + location.getWorld().getName());
@@ -184,7 +207,7 @@ public class SpawnConfigManager {
         lines.add(insertIndex + 4, indentStr + "  z: " + location.getBlockZ());
         lines.add(insertIndex + 5, indentStr + "  yaw: " + String.format("%.1f", location.getYaw()));
         lines.add(insertIndex + 6, indentStr + "  pitch: " + String.format("%.1f", location.getPitch()));
-        
+
         return insertIndex;
     }
 
@@ -194,20 +217,20 @@ public class SpawnConfigManager {
     private void updateSpawnSection(List<String> lines, int spawnLineIndex, Location location, int arenaIndent) {
         int indent = arenaIndent + 4; // spawn properties are 2 levels deeper
         String indentStr = getIndentString(indent);
-        
+
         // Remove old spawn data
         int i = spawnLineIndex + 1;
         while (i < lines.size()) {
             String line = lines.get(i);
             int lineIndent = getIndentLevel(line);
-            
+
             if (lineIndent <= arenaIndent + 2 && !line.trim().isEmpty()) {
                 break;
             }
-            
+
             lines.remove(i);
         }
-        
+
         // Add new spawn data
         lines.add(spawnLineIndex + 1, indentStr + "world: " + location.getWorld().getName());
         lines.add(spawnLineIndex + 2, indentStr + "x: " + location.getBlockX());
